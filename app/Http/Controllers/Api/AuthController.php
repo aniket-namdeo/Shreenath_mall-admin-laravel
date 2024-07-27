@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\User_addresses;
 use Exception;
 use Illuminate\Support\Str;
 
@@ -143,7 +144,6 @@ class AuthController extends Controller
         return response()->json(['message' => 'Password set successfully'], 200);
     }
 
-
     public function updateProfile(Request $request, $id)
     {
         $data = [];
@@ -176,11 +176,88 @@ class AuthController extends Controller
         return response()->json(['message' => 'User updated successfully'], 200);
     }
 
-
     public function getUser($id)
     {
         $result = User::select('id', 'name', 'email', 'mobile', 'gender', 'dob', 'image', 'address', 'state', 'city')->where('id', $id)->get();
         return response()->json(['data' => $result], 200);
+    }
+
+    public function addAddress(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|integer',
+            'house_address' => 'required|string',
+            'street_address' => 'required|string',
+            'landmark' => 'nullable|string',
+            'city' => 'required|string',
+            'state' => 'required|string',
+            'country' => 'required|string',
+            'pincode' => 'required|string',
+            'default_address' => 'nullable|integer|in:0,1',
+        ]);
+
+        $address = User_addresses::create($validated);
+
+        if ($request->input('default_address') == 1) {
+            User_addresses::where('user_id', $request->input('user_id'))
+                ->where('id', '!=', $address->id)
+                ->update(['default_address' => 0]);
+        }
+
+        return response()->json(['message' => 'Address created successfully', 'data' => $address], 201);
+    }
+
+
+    public function getUserAddress($id)
+    {
+        $addresses = User_addresses::where('user_id', $id)->get();
+
+        if ($addresses->isEmpty()) {
+            return response()->json(['error' => 'No addresses found for the user'], 404);
+        }
+
+        return response()->json(['message' => 'Addresses retrieved successfully', 'data' => $addresses], 200);
+
+    }
+
+    public function addressUpdate(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|integer',
+            'house_address' => 'required|string',
+            'street_address' => 'required|string',
+            'landmark' => 'nullable|string',
+            'city' => 'required|string',
+            'state' => 'required|string',
+            'country' => 'required|string',
+            'pincode' => 'required|string',
+            'default_address' => 'nullable|integer|in:0,1',
+        ]);
+        $checkaddresses = User_addresses::where('id', $id)->get();
+
+        if ($checkaddresses->isEmpty()) {
+            return response()->json(['error' => 'No addresses found with this id'], 404);
+        }
+        
+        $address = User_addresses::findOrFail($id);
+
+        if ($request->input('default_address') == 1) {
+            User_addresses::where('user_id', $request->input('user_id'))
+                ->where('id', '!=', $id)
+                ->update(['default_address' => 0]);
+        }
+
+        $address->update($validated);
+
+        return response()->json(['message' => 'Address updated successfully', 'data' => $address]);
+    }
+
+
+    public function deleteAddress($id)
+    {
+        $address = User_addresses::findOrFail($id);
+        $address->delete();
+        return response()->json(['message' => 'Address deleted successfully',], 201);
     }
 
 }
