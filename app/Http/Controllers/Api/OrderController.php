@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\order;
-use App\Models\order_items;
+use App\Models\Order;
+use App\Models\Order_items;
 use App\Models\User_addresses;
 use Illuminate\Support\Facades\DB;
 
@@ -55,7 +55,7 @@ class OrderController extends Controller
             ]);
 
             foreach ($request->items as $item) {
-                order_items::create([
+                Order_items::create([
                     'order_id' => $order->id,
                     'product_id' => $item['product_id'],
                     'product_name' => $item['product_name'],
@@ -179,7 +179,7 @@ class OrderController extends Controller
 
     public function cancelOrdersItems($id)
     {
-        $checkData = order_items::find($id);
+        $checkData = Order_items::find($id);
         if ($checkData) {
             $checkData->update([
                 'isCancelled' => 1

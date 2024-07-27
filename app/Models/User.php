@@ -25,7 +25,8 @@ class User extends Authenticatable
         'gender',
         'profile_image',
         'is_blocked',
-        'status'
+        'status',
+        'user_type'
     ];
 
     /**

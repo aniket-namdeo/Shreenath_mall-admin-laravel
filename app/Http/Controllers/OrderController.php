@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\order;
+use App\Models\Order;
 use App\Models\User;
-use App\Models\order_items;
+use App\Models\Order_items;
 
 class OrderController extends Controller
 {
@@ -105,7 +105,7 @@ class OrderController extends Controller
     public function cancelOrdersItems($id)
     {
         $data = array('isCancelled' => 1);
-        $result = order_items::where(array('id' => $id))->update($data);
+        $result = Order_items::where(array('id' => $id))->update($data);
         if ($result > 0) {
             return redirect()->back()->with('success', 'Order Item cancelled');
         } else {
