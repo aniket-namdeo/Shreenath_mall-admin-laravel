@@ -1,0 +1,129 @@
+:root {
+    --whitecolor: #212121;
+    --blackcolor: #ffffff;
+    --websitecolor: #19838a;
+    --websitelightcolor: #19838a2b;
+    --bodycolor: #acacac;
+    --lightgreycolor: #181818;
+    --greycolor: #bbbbbb;
+    --greyrgb: #b9b9b94f;
+    --inputborder: #181818;
+    --inputcolor: #bfbfbf;
+}
+
+.dropdown-menu {
+    background: var(--whitecolor) !important;
+    color: var(--bodycolor) !important;
+}
+
+.dropdown-item {
+    color: var(--bodycolor);
+}
+
+.btn,
+.btn:hover {
+    color: var(--blackcolor) !important;
+}
+
+.sidebar-nav li.active a i,
+.sidebar-nav li.active a:hover i,
+.sidebar-nav li.active a:focus i {
+    color: var(--blackcolor) !important;
+}
+
+.sidebar-nav li.active a,
+.sidebar-nav li.active a:hover,
+.sidebar-nav li.active a:focus {
+    color: var(--blackcolor) !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--blackcolor) !important;
+}
+
+.price-card .price-inner-card {
+    border: none !important;
+}
+
+.career-card .career-img .bg {
+    color: var(--blackcolor) !important;
+}
+
+.accordion-item {
+    background-color: var(--whitecolor) !important;
+}
+
+.accordion-button {
+    background-color: var(--whitecolor) !important;
+}
+
+.web-accordion .accordion-button:focus {
+    background: var(--whitecolor);
+}
+
+.web-accordion .accordion-button::after {
+    filter: invert(80%) sepia(0%) saturate(1344%) hue-rotate(227deg)
+        brightness(88%) contrast(85%) !important;
+}
+
+.bg-light {
+    background-color: transparent !important;
+}
+
+.sales-summary .card-body {
+    background: var(--whitecolor) !important;
+}
+
+.modal-content {
+    background-color: var(--whitecolor);
+}
+
+.btn-close {
+    filter: invert(100%) sepia(0%) saturate(7427%) hue-rotate(23deg)
+        brightness(118%) contrast(118%);
+}
+
+.sign-div {
+    color: var(--blackcolor) !important;
+}
+
+.form-switch .form-check-input {
+    background-color: var(--greyrgb) !important;
+}
+
+.form-switch .form-check-input:checked {
+    background-color: var(--websitecolor) !important;
+}
+
+.form-control {
+    color: var(--bodycolor) !important;
+}
+
+.form-check-input {
+    background-color: var(--greyrgb) !important;
+}
+
+.filter-dropdown ul {
+    box-shadow: 0px 5px 25px rgba(0, 0, 0, 30%) !important;
+}
+
+.header .header-nav li .dropdown-menu {
+    box-shadow: 0px 5px 25px rgba(0, 0, 0, 30%) !important;
+}
+
+.card {
+    box-shadow: none !important;
+}
+
+.header {
+    box-shadow: none !important;
+}
+
+.sidebar-nav > .sidebar-brand img {
+    content: url("../images/logo-white.png");
+}

@@ -1,0 +1,766 @@
+@media (min-width: 992px) and (max-width: 1227px) {
+    .statistics .box {
+        display: block;
+        text-align: center;
+    }
+
+    .statistics .box .icon {
+        margin: 0 auto;
+    }
+
+    .statistics .box .title {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .profile-card .user-img-div + div {
+        display: block !important;
+    }
+
+    .profile-card .profile-card-btns .btn {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .profile-card .user-content-div .upper-content-div .user-details-list {
+        display: block;
+    }
+
+    .profile-card .user-content-div .upper-content-div .user-details-list li {
+        margin-right: 0px;
+    }
+
+    .profile-card .user-content-div .middle-content-div ul li {
+        text-align: center;
+    }
+
+    .profile-card .user-content-div .middle-content-div ul li h6 {
+        font-size: 16px;
+    }
+
+    .profile-card .user-content-div .middle-content-div ul li p {
+        font-size: 12px;
+    }
+
+    .single-blog-div ul li {
+        font-size: 12px;
+        margin-left: 15px;
+    }
+
+    .single-blog-div .heading-a-tag h6 {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    .blog-search .post-box {
+        display: block;
+    }
+
+    .blog-search .post-box img {
+        margin-right: 0px;
+        width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+    }
+
+    .single-blog-div .mini-profile-div {
+        padding: 20px;
+    }
+
+    .single-blog-div .mini-profile-div .mini-content-div {
+        font-size: 12px;
+    }
+
+    .price-card .price-inner-card {
+        margin-top: 20px;
+        padding: 20px;
+    }
+
+    .price-card .price-inner-card.advance-inner-card {
+        padding: 20px !important;
+    }
+
+    .price-card .price-inner-card .checklist li {
+        margin: 10px 0px;
+    }
+
+    .login-page .card .upper-div img {
+        width: 128px;
+    }
+
+    .overview-div .btn-div a {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .product-card .product-div .small-product-div {
+        padding: 15px;
+    }
+
+    .product-card .product-div .small-product-div img {
+        width: 30px;
+    }
+
+    .product-card .product-div .small-product-div .product-content {
+        width: calc(100% - 45px);
+    }
+
+    .product-card .product-div .small-product-div .product-content a p {
+        font-size: 12px;
+    }
+
+    .product-card .product-div .small-product-div .product-content .d-flex {
+        display: block !important;
+    }
+
+    .product-card .product-div .small-product-div .product-content .d-flex p {
+        width: 100%;
+    }
+
+    .sales-summary .card-body {
+        margin: -75px auto 0px;
+        width: 100%;
+    }
+
+    .sales-summary .card-body ul li .icon {
+        display: none;
+    }
+
+    .sales-summary .card-body ul li .text {
+        width: 100%;
+    }
+
+    .user-base #user-base-chart {
+        margin-bottom: 0px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    #wrapper.toggled #sidebar-wrapper {
+        width: 75px;
+    }
+
+    #sidebar-wrapper {
+        width: 265px;
+    }
+
+    #wrapper.toggled .hamburger {
+        transform: rotate(180deg);
+    }
+
+    .hamburger {
+        transform: rotate(0deg);
+    }
+
+    #wrapper.toggled .sidebar-nav li a span {
+        opacity: 0;
+    }
+
+    #wrapper .sidebar-nav li a span {
+        opacity: 1;
+    }
+
+    #wrapper.toggled {
+        padding-left: 75px;
+    }
+
+    #wrapper {
+        padding-left: 75px;
+    }
+
+    #wrapper.toggled .header {
+        width: calc(100% - 60px - 75px);
+        left: 105px;
+    }
+
+    #wrapper .header {
+        width: calc(100% - 60px - 75px);
+        left: 105px;
+    }
+
+    .aboutus-card .card-body {
+        padding: 20px !important;
+    }
+
+    .aboutus-card .aboutus-img-div {
+        height: 300px;
+    }
+
+    .aboutus-card .content {
+        margin: 20px 0px;
+    }
+
+    .aboutus-card .aboutus-inner-card {
+        margin: 0px;
+        padding: 20px;
+    }
+
+    .aboutus-card .aboutus-inner-card .about-circle {
+        width: 165px;
+        height: 165px;
+        margin: 0 auto;
+    }
+
+    .aboutus-card .aboutus-inner-card .about-circle img {
+        width: 30px;
+    }
+
+    .aboutus-card .aboutus-inner-card h6 {
+        font-size: 14px;
+    }
+
+    .price-card .price-inner-card {
+        padding: 20px;
+        font-size: 12px;
+        margin-top: 20px;
+    }
+
+    .price-card .price-inner-card.advance-inner-card {
+        padding: 20px !important;
+    }
+
+    .career-card .career-img .bg {
+        padding: 40px 20px;
+        text-align: center;
+    }
+
+    .profile-card .user-content-div .upper-content-div .user-details-list li {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .blog-div h6 {
+        line-height: 18px;
+        font-size: 14px;
+        margin: 10px 0px;
+    }
+
+    .blog-div p {
+        line-height: 16px;
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
+
+    .single-blog-div ul li {
+        font-size: 12px;
+        margin-left: 15px;
+    }
+
+    .single-blog-div .heading-a-tag h6 {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    .blog-search .post-box {
+        display: block;
+    }
+
+    .blog-search .post-box img {
+        margin-right: 0px;
+        width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+    }
+
+    .single-blog-div .mini-profile-div {
+        padding: 20px;
+    }
+
+    .single-blog-div .mini-profile-div .mini-content-div {
+        font-size: 12px;
+    }
+
+    .contact-card .contact-box {
+        margin-top: 15px !important;
+    }
+
+    .profile-card .user-content-div .middle-content-div ul li {
+        text-align: center;
+    }
+
+    .profile-card .user-content-div .middle-content-div ul li h6 {
+        font-size: 14px;
+    }
+
+    .profile-card .user-content-div .middle-content-div ul li .profile-icon-1 {
+        font-size: 15px;
+    }
+
+    .profile-card .user-content-div .middle-content-div ul li p {
+        font-size: 12px;
+    }
+
+    .sales-summary .card-body {
+        width: 100%;
+        margin-bottom: 0px;
+    }
+
+    .sales-summary .card-body ul li .icon {
+        display: none;
+    }
+
+    .sales-summary .card-body ul li .text {
+        width: 100%;
+    }
+
+    .sales-summary .card-body p {
+        font-size: 10px;
+    }
+
+    .user-base #user-base-chart {
+        margin-bottom: -15px;
+    }
+}
+
+@media (max-width: 767px) {
+    body {
+        font-size: 12px;
+    }
+
+    .card {
+        margin-top: 15px;
+        height: auto;
+    }
+
+    .social-icons {
+        flex-wrap: wrap;
+    }
+
+    .social-icons li a {
+        margin-top: 8px;
+    }
+
+    .table tr th,
+    .table tr td {
+        padding: 10px;
+    }
+
+    .btn-default,
+    .web-btn {
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+
+    .filter-dropdown .dropdown-toggle {
+        font-size: 20px;
+    }
+
+    .page-heading {
+        margin-bottom: 20px;
+    }
+
+    .pt-xs-20 {
+        padding-top: 20px;
+    }
+
+    .mt-xs-20 {
+        margin-top: 20px !important;
+    }
+
+    .mb-xs-20 {
+        margin-bottom: 20px !important;
+    }
+
+    #wrapper {
+        padding-left: 0px;
+    }
+
+    #wrapper.toggled {
+        padding-left: 0px;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        width: 80%;
+        left: -80%;
+    }
+
+    #sidebar-wrapper {
+        width: 80%;
+        left: 0;
+    }
+
+    .sidebar-nav {
+        width: 100%;
+        padding-top: 75px;
+        padding-bottom: 20px;
+    }
+
+    #wrapper .sidebar-nav li a span {
+        opacity: 1;
+    }
+
+    .sidebar-nav li a {
+        padding: 12px 20px;
+    }
+
+    #wrapper.toggled .header {
+        width: 100%;
+        left: 0px;
+    }
+
+    .header {
+        padding: 15px 20px;
+        border-radius: 0px;
+        width: 100%;
+        left: 0px;
+        top: 0px;
+        z-index: 1000;
+    }
+
+    #wrapper.toggled .hamburger {
+        transform: rotate(180deg);
+    }
+
+    .header .hamburger {
+        position: relative;
+        font-size: 28px;
+        line-height: 28px;
+        top: unset;
+        right: unset;
+        transform: rotate(0deg);
+    }
+
+    .header .header-nav li a {
+        padding-left: 15px;
+        padding-right: 0px;
+        font-size: 12px;
+    }
+
+    .header .header-nav li a i {
+        font-size: 18px;
+    }
+
+    .header .header-nav li.lang a img {
+        width: 20px;
+        height: auto;
+        margin-right: 3px;
+    }
+
+    .header .header-nav li.notification a .badge {
+        width: 15px;
+        height: 15px;
+        line-height: 15px;
+    }
+
+    /*
+    .footer {
+        position: relative;
+        display: block;
+        text-align: center;
+        width: calc(100% + 40px);
+        margin: 20px -20px 0px;
+    }
+*/
+    .footer {
+        display: block;
+        text-align: center;
+        width: calc(100% + 10px);
+    }
+
+    .rightside {
+        padding: 65px 20px 90px;
+    }
+
+    .aboutus-card .page-heading.publication {
+        margin: 0 0 5px;
+    }
+
+    .aboutus-card .card-body {
+        padding: 20px !important;
+    }
+
+    .aboutus-card .aboutus-img-div {
+        height: 200px;
+    }
+
+    .aboutus-card .aboutus-img-div .bg {
+        opacity: 1;
+    }
+
+    .aboutus-card .content {
+        margin: 20px 0px;
+    }
+
+    .aboutus-card .aboutus-inner-card {
+        margin: 20px 0 0;
+        padding: 20px;
+    }
+
+    .aboutus-card .aboutus-inner-card .about-circle {
+        width: 100px;
+        height: 100px;
+        margin: 0px auto;
+    }
+
+    .aboutus-card .aboutus-inner-card .about-circle img {
+        width: 30px;
+        margin-bottom: 5px;
+    }
+
+    .aboutus-card .aboutus-inner-card .about-circle h4 {
+        font-size: 14px;
+    }
+
+    .aboutus-card .aboutus-inner-card .about-circle p {
+        font-size: 10px;
+    }
+
+    .aboutus-card .aboutus-inner-card h6 {
+        font-size: 12px;
+    }
+
+    .aboutus-card .team-slider .slider-div img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-card .user-content-div .upper-content-div .user-details-list {
+        display: block;
+    }
+
+    .profile-card .user-content-div .upper-content-div .user-details-list li {
+        margin-right: 0px;
+        margin-top: 5px;
+    }
+
+    .profile-card .user-content-div .middle-content-div ul {
+        display: block;
+    }
+
+    .profile-card .user-content-div .middle-content-div ul li {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .profile-card .user-img-div i {
+        font-size: 15px;
+    }
+
+    .blog-div h6 {
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 18px;
+    }
+
+    .blog-div p {
+        margin-bottom: 10px;
+    }
+
+    .single-blog-div ul {
+        justify-content: space-between;
+    }
+
+    .single-blog-div ul li {
+        margin-left: 0px;
+        font-size: 10px;
+    }
+
+    .single-blog-div .heading-a-tag h6 {
+        font-size: 14px;
+    }
+
+    .single-blog-div .about-img-div {
+        height: 200px;
+    }
+
+    .single-blog-div .about-img-div .bg {
+        opacity: 1;
+    }
+
+    .single-blog-div .mini-profile-div {
+        padding: 20px;
+        display: block !important;
+        margin: 20px 0px;
+    }
+
+    .single-blog-div .mini-profile-div .mini-content-div {
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .price-card .price-inner-card {
+        margin: 20px 0px 0px;
+        padding: 20px;
+    }
+
+    .price-card .price-inner-card.advance-inner-card {
+        padding: 20px !important;
+    }
+
+    .career-card .career-img .bg {
+        padding: 40px 20px;
+        text-align: center;
+    }
+
+    .contact-card .card-body {
+        padding: 20px !important;
+    }
+
+    .contact-card .contact-box {
+        margin-top: 15px;
+    }
+
+    .contact-card iframe {
+        height: 200px;
+    }
+
+    .team-card .card-body {
+        padding: 20px !important;
+    }
+
+    .team-card .team-img-div {
+        height: 200px;
+    }
+
+    .team-card .team-img-div .bg {
+        opacity: 1;
+    }
+
+    .team-card .team-box {
+        margin-top: 20px;
+    }
+
+    .team-card .team-box h6 {
+        font-size: 14px;
+    }
+
+    .login-page {
+        padding: 20px 0px;
+    }
+
+    .login-page .card .upper-div img {
+        width: 122px;
+    }
+
+    .login-page .card .card-body {
+        padding: 20px;
+    }
+
+    .overview-div .middle-content-div ul li {
+        width: 100% !important;
+        margin-top: 10px;
+    }
+
+    .summary-card .summary-list ul {
+        margin: 0px 0px 20px;
+        display: block;
+    }
+
+    .summary-card .summary-list ul li {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .earning-card ul {
+        flex-wrap: wrap;
+    }
+
+    .earning-card ul li {
+        width: 100%;
+        margin-right: 0px;
+        margin-bottom: 10px;
+    }
+
+    .earning-card .web-btn {
+        width: 100%;
+    }
+
+    .program-card ul {
+        display: block;
+    }
+
+    .program-card ul li {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .program-card ul li:last-child {
+        margin-bottom: 0px;
+    }
+
+    .program-card .warning-div {
+        display: block !important;
+        text-align: center;
+    }
+
+    .program-card .warning-div .d-flex {
+        display: block !important;
+        width: 100%;
+    }
+
+    .program-card .warning-div .sign-div {
+        margin: 0 auto;
+    }
+
+    .program-card .warning-div .content {
+        width: 100%;
+        margin: 15px 0px;
+    }
+
+    .form-control {
+        line-height: 26px;
+    }
+
+    .last-task .task-list {
+        width: 100%;
+        overflow-x: scroll;
+    }
+
+    .sales-summary .card-body ul li .icon {
+        display: none;
+    }
+
+    .sales-summary .card-body ul li .text {
+        width: 100%;
+    }
+
+    .sales-summary .card-body p {
+        font-size: 10px;
+    }
+
+    .user-base #user-base-chart {
+        margin-bottom: -25px;
+    }
+
+    .table-in-box-view.table thead,
+    .table-in-box-view.table th {
+        display: none;
+    }
+
+    .table-in-box-view.table tr {
+        display: block;
+        border: 1px solid #eee !important;
+        border-radius: 15px;
+        overflow: hidden;
+        padding: 0px 15px 15px;
+        margin: 15px 0px;
+    }
+
+    .table-in-box-view.table td {
+        display: inline-block;
+        border: none !important;
+        position: relative;
+        padding: 0px !important;
+        margin-top: 15px;
+        margin-right: 15px;
+        line-height: 14px;
+        min-width: 41%;
+        text-align: left !important;
+    }
+
+    .table-in-box-view.table td:before {
+        content: attr(data-label);
+        position: relative;
+        top: 0;
+        left: 0;
+        font-size: 14px;
+        line-height: 14px;
+        text-align: left;
+        color: var(--websitecolor);
+        padding: 0px 5px 0px 0px;
+        display: block;
+        margin-bottom: 5px;
+        font-family: var(--headingfont);
+        font-weight: bold;
+    }
+}
