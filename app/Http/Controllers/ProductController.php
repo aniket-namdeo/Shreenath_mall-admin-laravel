@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -158,36 +159,115 @@ class ProductController extends Controller
     }
 
 
+    public function bulkAddProduct()
+    {
+        $page_name = 'product/bulkUpload';
+        $current_page = 'add-product';
+        $page_title = 'Add Bulk Product';
+        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title'));
+    }
 
-    public function bulkUploadProducts(Request $request)
+    public function storeBulk(Request $request)
     {
         $request->validate([
-            'csv_file' => 'required|file|mimes:csv,txt',
+            'file' => 'required|mimes:csv,txt',
         ]);
 
-        $csvPath = $request->file('csv_file')->getRealPath();
-        $csvData = array_map('str_getcsv', file($csvPath));
+        $file = $request->file('file');
+        $filePath = $file->getRealPath();
+        $file = fopen($filePath, 'r');
+        $header = fgetcsv($file);
 
-        foreach ($csvData as $row) {
-            // Assuming your CSV columns are in the following order:
-            $productData = [
-                'product_name' => $row[0],
-                'description' => $row[1],
-                'price' => $row[2],
-                'mrp' => $row[3],
-                'discount_percent' => $row[4],
-                'category_id' => $row[5],
-                'sku' => $row[6],
-                'stock' => $row[7],
-                'product_code' => $row[8],
-                'pack_size' => $row[9],
-                // Add other fields as needed
-            ];
+        $columns = [
+            'product_name',
+            'description',
+            'price',
+            'mrp',
+            'discount_percent',
+            'category_id',
+            'sku',
+            'stock',
+            'product_code',
+            'pack_size'
+        ];
 
-
-            Product::updateOrCreate(['sku' => $productData['sku']], $productData);
+        if ($header !== $columns) {
+            return redirect()->back()->with('error', 'CSV file format is incorrect.');
         }
 
-        return redirect()->route('product-list.show')->with('success', 'Products imported successfully');
+        while ($row = fgetcsv($file)) {
+            $data = array_combine($columns, $row);
+
+            $validator = Validator::make($data, [
+                'product_name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'price' => 'required|numeric',
+                'mrp' => 'required|numeric',
+                'discount_percent' => 'required|numeric',
+                'category_id' => 'required|exists:category,id',
+                'sku' => 'required|string|unique:product,sku',
+                'stock' => 'required|integer',
+                'product_code' => 'nullable|string',
+                'pack_size' => 'nullable|integer',
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
+            Product::create($validator->validated());
+        }
+
+        fclose($file);
+
+        return redirect()->route('product-list.show')->with('success', 'Products uploaded successfully');
     }
+
+    public function downloadSampleFile()
+    {
+        $columns = [
+            'product_name',
+            'description',
+            'price',
+            'mrp',
+            'discount_percent',
+            'category_id',
+            'sku',
+            'stock',
+            'product_code',
+            'pack_size'
+        ];
+
+        $sampleData = [
+            [
+                'Sample Product',
+                'This is a sample product description',
+                '100',
+                '120',
+                '20',
+                '1',
+                'sample_sku',
+                '10',
+                'PROD001',
+                '1'
+            ]
+        ];
+
+        $callback = function () use ($columns, $sampleData) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($sampleData as $row) {
+                fputcsv($file, $row);
+            }
+
+            fclose($file);
+        };
+
+        return response()->streamDownload($callback, 'sample_products.csv', [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="sample_products.csv"',
+        ]);
+    }
+
 }

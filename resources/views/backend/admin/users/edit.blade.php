@@ -23,7 +23,7 @@
                        
                         <div class="col-md-4 mb-2">
                             <label class="form-label" for="">Mobile</label>
-                            <input class="form-control" name="mobile" id="mobile" value="{{ $details->mobile }}" ></input>
+                            <input class="form-control" name="contact" id="contact" value="{{ $details->contact }}" ></input>
                         </div>
 
                         {{-- <div class="col-md-4 mb-2">
@@ -31,14 +31,14 @@
                             <input type="text" class="form-control" name="password" required value="{{ $details->password }}" />
                         </div> --}}
 
-                        <div class="col-md-4 mb-2">
+                        {{-- <div class="col-md-4 mb-2">
                             <label class="form-label" for="">User type</label>
                             <select class="form-control js-example-basic-single" name="user_type">
                                 <option value="Admin" {{ (old('user_type') || $details->user_type) == 'Admin' ? 'selected' : '' }}>Admin</option>
                                 <option value="User" {{ (old('user_type')  || $details->user_type) == 'User' ? 'selected' : '' }}>User
                                 </option>
                             </select>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-full mb-2">
                             <label class="form-label" for="">Address</label>

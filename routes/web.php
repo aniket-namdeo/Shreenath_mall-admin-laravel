@@ -60,6 +60,14 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/update-product/{id}', [ProductController::class, 'productUpdate'])->name('update-product.update');
     Route::get('/product-delete/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
 
+    // bulk upload products
+    Route::get('/bulk-upload-product', [ProductController::class, 'bulkAddProduct'])->name('products.bulkAddProduct');
+
+    Route::post('/products/bulk-upload-product', [ProductController::class, 'storeBulk'])->name('products.bulk-upload');
+    Route::get('/products/sample-file', [ProductController::class, 'downloadSampleFile'])->name('products.sample-file');
+
+
+
     // order
     Route::get('/order-list', [App\Http\Controllers\OrderController::class, 'getOrders'])->name('order-list.show');
     Route::get('/edit-order/{id}', [OrderController::class, 'orderEdit'])->name('order-edit.edit');

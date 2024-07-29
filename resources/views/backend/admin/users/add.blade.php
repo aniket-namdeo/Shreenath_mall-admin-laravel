@@ -18,21 +18,21 @@
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label" for="">Mobile</label>
-                            <input type="text" class="form-control" name="mobile" onkeypress="return /[0-9]/i.test(event.key)" minlength="10" maxlength="10" pattern="[6-9]{1}[0-9]{9}" required value="{{ old('mobile') }}" />
+                            <input type="text" class="form-control" name="contact" onkeypress="return /[0-9]/i.test(event.key)" minlength="10" maxlength="10" pattern="[6-9]{1}[0-9]{9}" required value="{{ old('contact') }}" />
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label" for="">Password</label>
                             <input type="text" class="form-control" name="password" required value="{{ old('password') }}" />
                         </div>
 
-                        <div class="col-md-4 mb-2">
+                        {{-- <div class="col-md-4 mb-2">
                             <label class="form-label" for="">User type</label>
                             <select class="form-control js-example-basic-single" name="user_type">
                                 <option value="Admin" {{ old('user_type') == 'Admin' ? 'selected' : '' }}>Admin</option>
                                 <option value="User" {{ old('user_type') == 'User' ? 'selected' : '' }}>User
                                 </option>
                             </select>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-full mb-2">
                             <label class="form-label" for="">Address</label>

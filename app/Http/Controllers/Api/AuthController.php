@@ -19,10 +19,11 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',
-            'contact' => 'required|string',
+            'contact' => 'required|string|unique:users,contact',
             'password' => 'required|string',
         ], [
             'email.unique' => 'A user with this email already exists.',
+            'contact.unique' => 'Mobile number already exists.'
         ]);
 
         $user = User::create([

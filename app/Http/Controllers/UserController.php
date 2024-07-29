@@ -28,7 +28,7 @@ class UserController extends Controller
         $page_name = 'users/list';
         $current_page = 'List';
         $page_title = 'List';
-        $list = User::where(array('status' => 1))->orderBy('id', 'desc')->paginate(20);
+        $list = User::where(array('status' => 1))->where('user_type', '!=', 'Admin')->orderBy('id', 'desc')->paginate(20);
         return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'list'));
     }
 
@@ -46,10 +46,10 @@ class UserController extends Controller
             $result = User::create([
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
-                'mobile' => $request->input('mobile'),
+                'contact' => $request->input('contact'),
                 'password' => Hash::make($request->input('password')),
-                'user_type' => $request->input('user_type'),
-                'address' => $request->input('address')
+                'user_type' => "User",
+                // 'address' => $request->input('address')
             ]);
 
             // Redirect to the user list with a success message
@@ -77,13 +77,12 @@ class UserController extends Controller
         $data = array(
             'name' => $request->input('name'),
             'email' => $request->input('email'),
-            'mobile' => $request->input('mobile'),
-            'user_type' => $request->input('user_type'),
-            'address' => $request->input('address')
+            'contact' => $request->input('contact'),
+            'user_type' => "User",
+            // 'address' => $request->input('address')
         );
 
         $result = User::where(array('id' => $id))->update($data);
-
 
         if ($result > 0) {
             return redirect()->route('users-list.list')->with('success', 'User Updated successfully');

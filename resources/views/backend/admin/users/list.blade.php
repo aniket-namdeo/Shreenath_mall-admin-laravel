@@ -2,6 +2,8 @@
     <div class="col-sm-12">
         @include('backend.layouts.alert')
 
+        
+
         <div class="card member-statistics h-auto billing-table">
             <div class="card-header bg-white">
                 <div class="d-flex align-items-center justify-content-between">
@@ -42,7 +44,7 @@
                             <td>{{ $a++ }}</td>
                             <td>{{ $s['name'] }}</td>
                             <td>{{ $s['email'] }}</td>
-                            <td>{{ $s['mobile'] }}</td>
+                            <td>{{ $s['contact'] }}</td>
                             <td>{{ $s['user_type'] }}</td>
                             <td class="text-end">
                                 <div class="table-action-btns">
