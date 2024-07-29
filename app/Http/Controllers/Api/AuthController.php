@@ -33,29 +33,34 @@ class AuthController extends Controller
             'user_type' => 'User'
         ]);
 
-        return response()->json(['message' => 'User created successfully', 'data' => $user], 201);
+        return response()->json(['message' => 'User created successfully', 'data' => $user, 'status' => true], 201);
     }
 
 
     public function login(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
-
+        
         $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found, Register your account', 'status' => false], 401);
+        }
 
         if ($user && Hash::check($request->password, $user->password)) {
             return response()->json([
-                'message' => 'Login successful',
+                'message' => 'Login successfully',
                 'user' => $user,
                 'status' => true
             ]);
         } else {
-            return response()->json(['message' => 'Invalid credentials', 'status' => false], 401);
+            return response()->json(['message' => 'Please Enter Correct Password', 'status' => false], 401);
         }
     }
+
 
     public function forgetPassword(Request $request)
     {
