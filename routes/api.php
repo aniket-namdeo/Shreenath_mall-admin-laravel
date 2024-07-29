@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\CartController;
+
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
@@ -43,3 +45,12 @@ Route::get('/orders/user/{userId}', [OrderController::class, 'getOrdersByUser'])
 Route::post('/cancel-order/{id}', [OrderController::class, 'cancelOrder']);
 
 Route::post('/cancel-order-item/{id}', [OrderController::class, 'cancelOrdersItems'])->name('order-items.cancel');
+
+// cart
+Route::post('/cart', [CartController::class, 'addToCart']);
+
+Route::get('/cart/{id}', [CartController::class, 'getCartItemsByUser']);
+
+Route::post('/cart/{id}', [CartController::class, 'updateCartItem']);
+
+Route::delete('/cart/{id}', [CartController::class, 'deleteCartItem']);

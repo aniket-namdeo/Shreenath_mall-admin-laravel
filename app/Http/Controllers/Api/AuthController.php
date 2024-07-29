@@ -18,23 +18,24 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'contact' => 'required|string',
             'password' => 'required|string',
+        ], [
+            'email.unique' => 'A user with this email already exists.',
         ]);
 
-        if ($validated) {
-            $user = User::create([
-                'name' => $request->input('name'),
-                'email' => $request->input('email'),
-                'contact' => $request->input('contact'),
-                'password' => Hash::make($request->input('password')),
-                'user_type' => 'User'
-            ]);
+        $user = User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'contact' => $request->input('contact'),
+            'password' => Hash::make($request->input('password')),
+            'user_type' => 'User'
+        ]);
 
-            return response()->json(['message' => 'User created successfully', 'data' => $user], 201);
-        }
+        return response()->json(['message' => 'User created successfully', 'data' => $user], 201);
     }
+
 
     public function login(Request $request)
     {
@@ -49,9 +50,10 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Login successful',
                 'user' => $user,
+                'status' => true
             ]);
         } else {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json(['message' => 'Invalid credentials', 'status' => false], 401);
         }
     }
 
@@ -238,7 +240,7 @@ class AuthController extends Controller
         if ($checkaddresses->isEmpty()) {
             return response()->json(['error' => 'No addresses found with this id'], 404);
         }
-        
+
         $address = User_addresses::findOrFail($id);
 
         if ($request->input('default_address') == 1) {

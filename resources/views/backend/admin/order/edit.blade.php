@@ -117,7 +117,7 @@
                                 <tr>
                                     <th>S.no</th>
                                     <th>Product Name</th>
-                                    <th>Product SKU</th>
+                                    {{-- <th>Product SKU</th> --}}
                                     <th>Quantity</th>
                                     <th>Price</th>
                                     <th>Product Status</th>
@@ -131,7 +131,7 @@
                                     <tr>
                                         <td>{{ $a++ }}</td>
                                         <td>{{ $item->product_name }}</td>
-                                        <td>{{ $item->product_sku }}</td>
+                                        {{-- <td>{{ $item->product_sku }}</td> --}}
                                         <td>{{ $item->quantity }}</td>
                                         <td>{{ $item->price }}</td>
                                         <td>{{ $item->isCancelled == 0 ? "Active" : "Cancelled" }}</td>

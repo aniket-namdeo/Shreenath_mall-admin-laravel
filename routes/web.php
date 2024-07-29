@@ -65,7 +65,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/edit-order/{id}', [OrderController::class, 'orderEdit'])->name('order-edit.edit');
 
     Route::post('/update-order/{id}', [OrderController::class, 'orderUpdate'])->name('update-order.update');
-
+    Route::get('/cancel-order/{id}', [OrderController::class, 'cancelOrder'])->name('order.cancel');
     Route::get("/cancel-order-item/{id}", [OrderController::class, 'cancelOrdersItems'])->name('order-item.cancel');
 
 

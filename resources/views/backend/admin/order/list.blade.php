@@ -51,7 +51,7 @@
                                     <a href="{{ url('/admin/edit-order/' . $value['id']) }}" class="btn btn-primary">
                                         <i class="bx bx-pencil"></i>
                                     </a>
-                                    <a href="javascript:void(0);" url={{ route('product.destroy', $value->id) }} class="btn btn-danger btn-xs text-white btn-delete">
+                                    <a href="javascript:void(0);" url={{ route('order.cancel', $value->id) }} class="btn btn-danger btn-xs text-white btn-cancel">
                                         <i class="bx bx-trash"></i>
                                     </a>
                                 </div>

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Order_items;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -100,6 +101,28 @@ class OrderController extends Controller
         ]);
 
         return redirect()->route('order-list.show')->with('success', 'Order updated successfully');
+    }
+
+    public function cancelOrder($id)
+    {
+        $order = Order::find($id);
+        if ($order) {
+            DB::beginTransaction();
+            try {
+                $order->update([
+                    'status' => 'cancelled'
+                ]);
+                $order->orderItems()->update(['isCancelled' => 1]);
+                DB::commit();
+                return redirect()->back()->with('success', 'Order cancelled');
+            } catch (\Exception $e) {
+                DB::rollback();
+                return redirect()->back()->with('error', 'Failed to cancel order and its items');
+            }
+        } else {
+            return redirect()->back()->with('error', 'No order with this id');
+
+        }
     }
 
     public function cancelOrdersItems($id)
