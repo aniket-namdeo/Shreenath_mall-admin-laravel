@@ -36,7 +36,6 @@
                             <select class="form-control js-example-basic-single" name="user_type">
                                 <option value="Admin" {{ (old('user_type') || $details->user_type) == 'Admin' ? 'selected' : '' }}>Admin</option>
                                 <option value="User" {{ (old('user_type')  || $details->user_type) == 'User' ? 'selected' : '' }}>User
-                                </option>
                             </select>
                         </div> --}}
 
