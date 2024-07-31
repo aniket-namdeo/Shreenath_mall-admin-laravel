@@ -105,48 +105,44 @@ class ProductController extends Controller
             'pack_size' => 'nullable|integer',
         ]);
 
+
         if ($request->hasFile('image_url1')) {
-            $imageName = time() . '_image.' . $request->image_url1->extension();
+            $imageName = time() . '_image1.' . $request->image_url1->extension();
             $request->image_url1->move(public_path('uploads/products'), $imageName);
             $full_path = "uploads/products/" . $imageName;
             $validated['image_url1'] = $full_path;
         }
+
         if ($request->hasFile('image_url2')) {
-            $imageName = time() . '_image.' . $request->image_url2->extension();
+            $imageName = time() . '_image2.' . $request->image_url2->extension();
             $request->image_url2->move(public_path('uploads/products'), $imageName);
             $full_path = "uploads/products/" . $imageName;
             $validated['image_url2'] = $full_path;
         }
         if ($request->hasFile('image_url3')) {
-            $imageName = time() . '_image.' . $request->image_url3->extension();
+            $imageName = time() . '_image3.' . $request->image_url3->extension();
             $request->image_url3->move(public_path('uploads/products'), $imageName);
             $full_path = "uploads/products/" . $imageName;
             $validated['image_url3'] = $full_path;
         }
         if ($request->hasFile('image_url4')) {
-            $imageName = time() . '_image.' . $request->image_url4->extension();
+            $imageName = time() . '_image4.' . $request->image_url4->extension();
             $request->image_url4->move(public_path('uploads/products'), $imageName);
             $full_path = "uploads/products/" . $imageName;
             $validated['image_url4'] = $full_path;
         }
 
-        if ($validated) {
+        $product = Product::find($id);
 
-            $product = Product::find($id);
-
-            if (!$product) {
-                return redirect()->back()->with('error', 'Product not found.');
-            }
-
-            $product->update($request->all());
-
-            if ($product) {
-                return redirect()->route('product-list.show')->with('success', 'Product updated');
-            } else {
-                return redirect()->back()->with('error', 'Something went Wrong');
-            }
+        if (!$product) {
+            return redirect()->back()->with('error', 'Product not found.');
         }
+
+        $product->update($validated);
+
+        return redirect()->route('product-list.show')->with('success', 'Product updated');
     }
+
 
     public function destroy($id)
     {
