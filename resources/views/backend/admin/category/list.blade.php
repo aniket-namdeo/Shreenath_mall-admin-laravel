@@ -42,7 +42,7 @@
                             <td>{{ $a++ }}</td>
                             <td>{{ $category->name }}</td>
                             <td>{{ $category->parentCategoryName ?? 'N/A' }}</td>
-                            <td>{{ $category->image }}</td>
+                            <td><img src={{ "https://shreenathmall.smed.site/".$category->image }}> </img></td>
                             <td>
                                 <div class="table-action-btns">
                                     <a href="{{ url('/admin/edit-category/' . $category['id']) }}" class="btn btn-primary">

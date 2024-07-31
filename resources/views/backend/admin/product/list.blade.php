@@ -57,7 +57,7 @@
                             <td>{{ $value->product_name }}</td>
                             <td>{{ $value->price ?? 'N/A' }}</td>
                             <td>{{ $value->mrp }}</td>
-                            <td><img src={{ "http://127.0.0.1:8000/".$value->image_url1 }}> </img></td>
+                            <td><img src={{ "https://shreenathmall.smed.site/".$value->image_url1 }}> </img></td>
                             <td>
                                 <div class="table-action-btns">
                                     <a href="{{ url('/admin/edit-product/' . $value['id']) }}" class="btn btn-primary">

@@ -57,28 +57,28 @@
                             <label for="image_url1">Product Image1</label>
                             <input type="file" class="form-control" id="image_url1" name="image_url1">
                             @if ($details->image_url1)
-                                <img src="{{ "http://127.0.0.1:8000/".$details->image_url1 }}" alt="{{ $details->image_url1 }}" class="img-thumbnail mt-2" width="100">
+                                <img src="{{ "https://shreenathmall.smed.site/".$details->image_url1 }}" alt="{{ $details->image_url1 }}" class="img-thumbnail mt-2" width="100">
                             @endif
                         </div>
                         <div class="col-md-4 mb-2">
                             <label for="image_url2">Product Image2</label>
                             <input type="file" class="form-control" id="image_url2" name="image_url2">
                             @if ($details->image_url2)
-                                <img src="{{ "http://127.0.0.1:8000/".$details->image_url2 }}" alt="{{ $details->image_url2 }}" class="img-thumbnail mt-2" width="100">
+                                <img src="{{ "https://shreenathmall.smed.site/".$details->image_url2 }}" alt="{{ $details->image_url2 }}" class="img-thumbnail mt-2" width="100">
                             @endif
                         </div>
                         <div class="col-md-4 mb-2">
                             <label for="image_url3">Product Image3</label>
                             <input type="file" class="form-control" id="image_url3" name="image_url3">
                             @if ($details->image_url3)
-                                <img src="{{ "http://127.0.0.1:8000/".$details->image_url3 }}" alt="{{ $details->image_url3 }}" class="img-thumbnail mt-2" width="100">
+                                <img src="{{ "https://shreenathmall.smed.site/".$details->image_url3 }}" alt="{{ $details->image_url3 }}" class="img-thumbnail mt-2" width="100">
                             @endif
                         </div>
                         <div class="col-md-4 mb-2">
                             <label for="image_url4">Product Image4</label>
                             <input type="file" class="form-control" id="image_url4" name="image_url4">
                             @if ($details->image_url4)
-                                <img src="{{ "http://127.0.0.1:8000/".$details->image_url4 }}" alt="{{ $details->image_url4 }}" class="img-thumbnail mt-2" width="100">
+                                <img src="{{ "https://shreenathmall.smed.site/".$details->image_url4 }}" alt="{{ $details->image_url4 }}" class="img-thumbnail mt-2" width="100">
                             @endif
                         </div>
                         <div class="col-md-12 mb-2">
