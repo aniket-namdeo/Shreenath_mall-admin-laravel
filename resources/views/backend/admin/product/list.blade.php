@@ -2,7 +2,8 @@
     <div class="col-sm-12">
         @include('backend.layouts.alert')
 
-        <form action="{{ route('products.bulk-upload') }}" method="POST" enctype="multipart/form-data">
+        {{-- Bulk upload products --}}
+        {{-- <form action="{{ route('products.bulk-upload') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <h6 for="file" class="mb-0">Upload CSV File</h6>
@@ -11,7 +12,7 @@
             <button type="submit" class="btn btn-primary">Upload</button>
         </form>
         
-        <a href="{{ route('products.sample-file') }}" class="btn btn-secondary">Download Sample File</a>
+        <a href="{{ route('products.sample-file') }}" class="btn btn-secondary">Download Sample File</a> --}}
 
         <div class="card member-statistics h-auto billing-table">
             <div class="card-header bg-white">
