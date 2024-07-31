@@ -41,7 +41,7 @@ class ProductController extends Controller
 
     public function getProductById($id)
     {
-        $product = Product::where('id', $id)->where('status', 1)->orderBy('id', 'desc')->get();
+        $product = Product::where('id', $id)->where('status', 1)->orderBy('id', 'desc')->first();
 
         if ($product) {
 

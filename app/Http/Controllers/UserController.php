@@ -119,11 +119,9 @@ class UserController extends Controller
         }
 
         if ($address > 0) {
-            return redirect()->route('users-list.list')->with('success', 'User Updated successfully');
+            return redirect()->route('users-list.list')->with('success', 'User address added successfully');
         } else {
             return redirect()->back()->with('error', 'Something went Wrong');
         }
-
-        // return response()->json(['message' => 'Address created successfully', 'data' => $address], 201);
     }
 }
