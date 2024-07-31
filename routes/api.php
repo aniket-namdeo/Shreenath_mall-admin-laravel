@@ -37,6 +37,8 @@ Route::get('/product', [ProductController::class, 'getProduct']);
 
 Route::get('/products', [ProductController::class, 'getProductByCategory'])->name('products.byCategory');
 
+Route::get('/products/{id}', [ProductController::class, 'getProductById'])->name('products.byId');
+
 // orders
 Route::post('/order', [OrderController::class, 'createOrder'])->name('order.create');
 

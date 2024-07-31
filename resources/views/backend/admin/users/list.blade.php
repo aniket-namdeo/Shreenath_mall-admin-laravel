@@ -31,7 +31,7 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Mobile</th>
-                            <th>User type</th>
+                            {{-- <th>User type</th> --}}
                             <th class="text-end">Action</th>
                         </tr>
                     </thead>
@@ -45,7 +45,7 @@
                             <td>{{ $s['name'] }}</td>
                             <td>{{ $s['email'] }}</td>
                             <td>{{ $s['contact'] }}</td>
-                            <td>{{ $s['user_type'] }}</td>
+                            {{-- <td>{{ $s['user_type'] }}</td> --}}
                             <td class="text-end">
                                 <div class="table-action-btns">
                                     <a href={{ url('/admin/users-edit/' . $s['id']) }} class="btn btn-primary">

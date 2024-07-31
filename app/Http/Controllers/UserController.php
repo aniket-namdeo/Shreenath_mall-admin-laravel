@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\User_addresses;
 
 class UserController extends Controller
 {
@@ -89,5 +90,40 @@ class UserController extends Controller
         } else {
             return redirect()->back()->with('error', 'Something went Wrong');
         }
+    }
+
+    // public function addUserAddress(Request $request, $id){
+
+    // }
+
+    public function addUserAddress(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|integer',
+            'house_address' => 'required|string',
+            'street_address' => 'required|string',
+            'landmark' => 'nullable|string',
+            'city' => 'required|string',
+            'state' => 'required|string',
+            'country' => 'required|string',
+            'pincode' => 'required|string',
+            'default_address' => 'nullable|integer|in:0,1',
+        ]);
+
+        $address = User_addresses::create($validated);
+
+        if ($request->input('default_address') == 1) {
+            User_addresses::where('user_id', $request->input('user_id'))
+                ->where('id', '!=', $address->id)
+                ->update(['default_address' => 0]);
+        }
+
+        if ($address > 0) {
+            return redirect()->route('users-list.list')->with('success', 'User Updated successfully');
+        } else {
+            return redirect()->back()->with('error', 'Something went Wrong');
+        }
+
+        // return response()->json(['message' => 'Address created successfully', 'data' => $address], 201);
     }
 }

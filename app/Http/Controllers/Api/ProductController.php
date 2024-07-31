@@ -39,4 +39,18 @@ class ProductController extends Controller
     }
 
 
+    public function getProductById($id)
+    {
+        $product = Product::where('id', $id)->where('status', 1)->orderBy('id', 'desc')->get();
+
+        if ($product) {
+
+            return response()->json(['message' => "got product", 'data' => $product], 200);
+        } else {
+            return response()->json(['message' => "no product with this id", 'data' => null], 200);
+
+        }
+    }
+
+
 }
