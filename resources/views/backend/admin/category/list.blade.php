@@ -42,7 +42,15 @@
                             <td>{{ $a++ }}</td>
                             <td>{{ $category->name }}</td>
                             <td>{{ $category->parentCategoryName ?? 'N/A' }}</td>
-                            <td><img src={{ "https://shreenathmall.smed.site/".$category->image }}> </img></td>
+                            <td>
+                                @if($category->image)
+                                    <img src="{{ 'https://shreenathmall.smed.site/' . $category->image }}" alt="Category Image">
+                                @else
+                                    "NA"
+                                @endif
+                            </td>
+                            
+                            
                             <td>
                                 <div class="table-action-btns">
                                     <a href="{{ url('/admin/edit-category/' . $category['id']) }}" class="btn btn-primary">
