@@ -21,12 +21,28 @@ class CartController extends Controller
             return response()->json(['error' => 'Either provide user id or guest id'], 400);
         }
 
-        $cartItem = Cart::create($validated);
+        $cartItem = Cart::where('product_id', $validated['product_id'])
+            ->when($validated['user_id'], function ($query, $userId) {
+                return $query->where('user_id', $userId);
+            })
+            ->when($validated['guest_id'], function ($query, $guestId) {
+                return $query->where('guest_id', $guestId);
+            })
+            ->first();
 
         if ($cartItem) {
-            return response()->json(['status' => true, 'message' => 'Item added to cart', 'data' => $cartItem], 201);
+            $cartItem->product_quantity += $validated['product_quantity'];
+            $cartItem->save();
+
+            return response()->json(['status' => true, 'message' => 'Cart item quantity updated', 'data' => $cartItem], 200);
         } else {
-            return response()->json(['status' => false, 'message' => 'Item not added to cart', 'data' => null], 500);
+            $newCartItem = Cart::create($validated);
+
+            if ($newCartItem) {
+                return response()->json(['status' => true, 'message' => 'Item added to cart', 'data' => $newCartItem], 201);
+            } else {
+                return response()->json(['status' => false, 'message' => 'Item not added to cart', 'data' => null], 500);
+            }
         }
     }
 
