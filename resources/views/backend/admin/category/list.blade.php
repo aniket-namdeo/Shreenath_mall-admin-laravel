@@ -46,7 +46,7 @@
                                 @if($category->image)
                                     <img src="{{ 'https://shreenathmall.smed.site/' . $category->image }}" alt="Category Image">
                                 @else
-                                    "NA"
+                                    NA
                                 @endif
                             </td>
                             

@@ -11,7 +11,10 @@ class CategoryController extends Controller
 
     public function getCategory()
     {
-        $categories = Category::select('id', 'name', 'parentCategoryId', 'image')->where('status', 1)->orderBy('id', 'desc')->get();
+        $categories = Category::select('id', 'name', 'parentCategoryId', 'image')
+            ->where('status', 1)
+            ->orderBy('id', 'desc')
+            ->get();
 
         $categoriesArray = $categories->keyBy('id')->toArray();
 
@@ -19,12 +22,12 @@ class CategoryController extends Controller
 
         foreach ($categoriesArray as $id => &$category) {
             if ($category['parentCategoryId']) {
-                if (!isset($categoriesArray[$category['parentCategoryId']]['children'])) {
+                if (!isset($categoriesArray[$category['parentCategoryId']]['subcategory'])) {
                     $categoriesArray[$category['parentCategoryId']]['subcategory'] = [];
                 }
-                $categoriesArray[$category['parentCategoryId']]['subcategory'][] = $category;
+                $categoriesArray[$category['parentCategoryId']]['subcategory'][] = &$category;
             } else {
-                $structuredCategories[] = $category;
+                $structuredCategories[] = &$category;
             }
         }
 
@@ -36,14 +39,10 @@ class CategoryController extends Controller
     {
         $categories = Category::select('id', 'name', 'parentCategoryId', 'image')->where('parentCategoryId', Null)->where('status', 1)->orderBy('id', 'desc')->get();
         if ($categories) {
-
             return response()->json(['success' => true, 'data' => $categories], 200);
         } else {
             return response()->json(['success' => false, 'data' => null], 500);
-
         }
     }
-
-
 
 }

@@ -60,7 +60,7 @@ class CategoryController extends Controller
     public function categoryEdit(Category $id)
     {
         $page_name = "category/edit";
-        $page_title = "manage_category";
+        $page_title = "Manage category";
         $current_page = "category";
         $details = $id;
         $list = Category::where(array('status' => 1))->whereNull('parentCategoryId')->orderBy('id', 'desc')->paginate(20);
@@ -70,6 +70,7 @@ class CategoryController extends Controller
     public function categoryUpdate(Request $request, $id)
     {
         $data['name'] = $request->name;
+        $data['parentCategoryId'] = $request->parentCategoryId;
 
         if ($request->image) {
             if (!empty($request->image)) {

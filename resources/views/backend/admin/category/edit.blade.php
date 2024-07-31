@@ -17,8 +17,8 @@
                             <input type="text" class="form-control" name="name" onkeypress="return /[A-Za-z ]/i.test(event.key)" value="{{ $details->name }}" />
                         </div>
                         <div class="col-md-4 mb-2">
-                            <label for="category">Select Category</label>
-                            <select class="form-control" id="category" name="category">
+                            <label for="parentCategoryId">Select Category</label>
+                            <select class="form-control" id="parentCategoryId" name="parentCategoryId">
                                 <option value="">Select a category</option>
                                 @foreach($list as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
