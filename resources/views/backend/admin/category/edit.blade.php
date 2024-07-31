@@ -27,8 +27,8 @@
                         </div>
                        
                         <div class="col-md-4 form-group mb-3">
-                            <label for="logo"> Image</label>
-                            <input type="file" name="logo" class="form-control" onchange="readURL(this);" />
+                            <label for="image"> Image</label>
+                            <input type="file" name="image" class="form-control" onchange="readURL(this);" />
                         </div>
                         <div class="col-md-8 mb-3">
                             <img alt="Plan Image" src="{{ asset('uploads/default.jpg');  }}" class="img-responsive rounded" width="100" height="auto" id="img_preview" />

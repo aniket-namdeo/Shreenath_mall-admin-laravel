@@ -24,12 +24,48 @@
                             <label class="form-label" for="">Password</label>
                             <input type="text" class="form-control" name="password" required value="{{ old('password') }}" />
                         </div>
-                        <div class="col-md-full mb-2">
+                        {{-- <div class="col-md-full mb-2">
                             <label class="form-label" for="">Address</label>
                             <textarea class="form-control" name="address" required value="{{ old('address') }}">
                             </textarea>
-                        </div>
+                        </div> --}}
 
+                        <div class="col-md-full mb-2">
+                            <label class="form-label" for="house_address">House Address</label>
+                            <input type="text" class="form-control" name="house_address" value="{{ old('house_address') }}" />
+                        </div>
+                        <div class="col-md-full mb-2">
+                            <label class="form-label" for="street_address">Street Address</label>
+                            <input type="text" class="form-control" name="street_address" value="{{ old('street_address') }}" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label" for="landmark">Landmark</label>
+                            <input type="text" class="form-control" name="landmark" value="{{ old('landmark') }}" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label" for="city">City</label>
+                            <input type="text" class="form-control" name="city" value="{{ old('city') }}" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label" for="state">State</label>
+                            <input type="text" class="form-control" name="state" value="{{ old('state') }}" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label" for="country">Country</label>
+                            <input type="text" class="form-control" name="country" value="{{ old('country') }}" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label" for="pincode">Pincode</label>
+                            <input type="text" class="form-control" name="pincode" value="{{ old('pincode') }}" />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label" for="default_address">Default Address</label>
+                            <select class="form-control" name="default_address">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+        
                         <div class="col-md-12">
                             <button type="submit" class="btn web-btn mt-3" id="submit_btn">
                                 Register User

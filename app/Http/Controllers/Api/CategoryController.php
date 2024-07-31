@@ -32,5 +32,18 @@ class CategoryController extends Controller
     }
 
 
+    public function getSubCategory()
+    {
+        $categories = Category::select('id', 'name', 'parentCategoryId', 'image')->where('parentCategoryId', Null)->where('status', 1)->orderBy('id', 'desc')->get();
+        if ($categories) {
+
+            return response()->json(['success' => true, 'data' => $categories], 200);
+        } else {
+            return response()->json(['success' => false, 'data' => null], 500);
+
+        }
+    }
+
+
 
 }

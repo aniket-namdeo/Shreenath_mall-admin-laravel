@@ -1,6 +1,6 @@
 @empty(!$details)
 
-@php $imgUrl = ($details->image != "" && $details->image != null) ? $details->image : "uploads/default.jpg"; @endphp
+{{-- @php $imgUrl = ($details->image != "" && $details->image != null) ? $details->image : "uploads/default.jpg"; @endphp --}}
 
 
 <div class="row">
@@ -31,20 +31,50 @@
                             <input type="text" class="form-control" name="password" required value="{{ $details->password }}" />
                         </div> --}}
 
-                        {{-- <div class="col-md-4 mb-2">
-                            <label class="form-label" for="">User type</label>
-                            <select class="form-control js-example-basic-single" name="user_type">
-                                <option value="Admin" {{ (old('user_type') || $details->user_type) == 'Admin' ? 'selected' : '' }}>Admin</option>
-                                <option value="User" {{ (old('user_type')  || $details->user_type) == 'User' ? 'selected' : '' }}>User
-                            </select>
-                        </div> --}}
 
-                        <div class="col-md-full mb-2">
-                            <label class="form-label" for="">Address</label>
-                            <textarea class="form-control" name="address" required >{{ $details->address }}
-                            </textarea>
+                        <div id="addresses-container">
+                            @foreach($detailAddress as $address)
+                                <div class="address-fields">
+                                    <div class="row">
+                                        <div class="col-md-full mb-2">
+                                            <label class="form-label" for="house_address">House Address</label>
+                                            <input type="text" class="form-control" name="house_address[]" required value="{{ $address->house_address }}" />
+                                        </div>
+                                        <div class="col-md-full mb-2">
+                                            <label class="form-label" for="street_address">Street Address</label>
+                                            <input type="text" class="form-control" name="street_address[]" required value="{{ $address->street_address }}" />
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label" for="landmark">Landmark</label>
+                                            <input type="text" class="form-control" name="landmark[]" value="{{ $address->landmark }}" />
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label" for="city">City</label>
+                                            <input type="text" class="form-control" name="city[]" required value="{{ $address->city }}" />
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label" for="state">State</label>
+                                            <input type="text" class="form-control" name="state[]" required value="{{ $address->state }}" />
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label" for="country">Country</label>
+                                            <input type="text" class="form-control" name="country[]" required value="{{ $address->country }}" />
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label" for="pincode">Pincode</label>
+                                            <input type="text" class="form-control" name="pincode[]" required value="{{ $address->pincode }}" />
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label" for="default_address">Default Address</label>
+                                            <select class="form-control" name="default_address[]">
+                                                <option value="0" {{ $address->default_address == 0 ? 'selected' : '' }}>No</option>
+                                                <option value="1" {{ $address->default_address == 1 ? 'selected' : '' }}>Yes</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
-                       
 
                         <div class="col-md-12">
                             <button type="submit" class="btn web-btn mt-3" id="submit_btn">

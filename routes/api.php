@@ -31,6 +31,7 @@ Route::delete('/user-addresses/{id}', [AuthController::class, 'deleteAddress']);
 
 // category
 Route::get('/category', [CategoryController::class, 'getCategory']);
+Route::get('/sub-category', [CategoryController::class, 'getSubCategory']);
 
 // products
 Route::get('/product', [ProductController::class, 'getProduct']);

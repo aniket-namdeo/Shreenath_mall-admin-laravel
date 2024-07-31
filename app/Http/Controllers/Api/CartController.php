@@ -23,7 +23,11 @@ class CartController extends Controller
 
         $cartItem = Cart::create($validated);
 
-        return response()->json(['message' => 'Item added to cart', 'data' => $cartItem], 201);
+        if ($cartItem) {
+            return response()->json(['status' => true, 'message' => 'Item added to cart', 'data' => $cartItem], 201);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Item not added to cart', 'data' => null], 500);
+        }
     }
 
     public function getCartItemsByUser($id)
@@ -31,14 +35,19 @@ class CartController extends Controller
         $cartItems = Cart::where('user_id', $id)
             ->orWhere('guest_id', $id)
             ->join('product', 'cart.product_id', '=', 'product.id')
-            ->select('cart.*', 'product.product_name as product_name', 'product.price as product_price')
+            ->select('cart.id', 'cart.product_id', 'cart.product_quantity', 'cart.user_id', 'cart.guest_id', 'product.product_name as product_name', 'product.price as product_price')
             ->get();
 
         if ($cartItems->isEmpty()) {
             return response()->json(['error' => 'No cart items found for this user'], 404);
         }
 
-        return response()->json(['message' => 'Cart items retrieved successfully', 'data' => $cartItems], 200);
+        if ($cartItems) {
+            return response()->json(['status' => true, 'message' => 'Cart items retrieved successfully', 'data' => $cartItems], 200);
+        } else {
+            return response()->json(['status' => false, 'message' => 'No cart items added.', 'data' => null], 500);
+
+        }
     }
 
     public function updateCartItem(Request $request, $id)
