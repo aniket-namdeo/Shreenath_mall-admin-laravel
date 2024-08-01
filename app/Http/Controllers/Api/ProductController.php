@@ -26,18 +26,19 @@ class ProductController extends Controller
     public function getProductByCategory(Request $request)
     {
         $categoryId = $request->input('category_id');
-
         $query = Product::where('status', 'active');
-
         if ($categoryId) {
             $query->where('category_id', $categoryId);
         }
-
         $products = $query->orderBy('id', 'desc')->get();
-
+        $products = $products->map(function ($product) {
+            $product->price = (int) $product->price;
+            $product->mrp = (int) $product->mrp;
+            return $product;
+        });
+    
         return response()->json(['data' => $products], 200);
     }
-
 
     public function getProductById($id)
     {
