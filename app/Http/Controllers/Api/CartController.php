@@ -89,27 +89,22 @@ class CartController extends Controller
     public function updateCartItem(Request $request, $id)
     {
         $validated = $request->validate([
-            'quantity_change' => 'required|integer',
+            'product_quantity' => 'required|integer|min:0',
         ]);
-
         $cartItem = Cart::findOrFail($id);
-        $currentQuantity = $cartItem->product_quantity;
-        $quantityChange = $validated['quantity_change'];
-
-        if ($quantityChange !== 1 && $quantityChange !== -1) {
-            return response()->json(['message' => 'Invalid quantity change. Use 1 to increase or -1 to decrease.'], 400);
+        if (!$cartItem) {
+            return response()->json(['message' => 'No items to delete ', 'data' => $cartItem], 200);
         }
-
-        $newQuantity = $currentQuantity + $quantityChange;
-
-        if ($newQuantity <= 0) {
+        
+        if ($validated['product_quantity'] == 0) {
             $cartItem->delete();
             return response()->json(['message' => 'Cart item removed successfully'], 200);
         } else {
-            $cartItem->update(['product_quantity' => $newQuantity]);
+            $cartItem->update($validated);
             return response()->json(['message' => 'Cart item updated successfully', 'data' => $cartItem], 200);
         }
     }
+
 
 
 
