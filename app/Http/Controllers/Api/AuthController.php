@@ -44,7 +44,7 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
-        
+
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
@@ -194,6 +194,9 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'user_id' => 'required|integer',
+            'name' => 'required|string',
+            'contact' => 'required|integer',
+            'address_type' => 'required',
             'house_address' => 'required|string',
             'street_address' => 'required|string',
             'landmark' => 'nullable|string',
@@ -232,6 +235,9 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'user_id' => 'required|integer',
+            'name' => 'required|string',
+            'contact' => 'required|integer',
+            'address_type' => 'required',
             'house_address' => 'required|string',
             'street_address' => 'required|string',
             'landmark' => 'nullable|string',

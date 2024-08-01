@@ -13,6 +13,9 @@ class User_addresses extends Model
 
     protected $fillable = [
         'user_id',
+        'name',
+        'contact',
+        'address_type',
         'house_address',
         'street_address',
         'landmark',

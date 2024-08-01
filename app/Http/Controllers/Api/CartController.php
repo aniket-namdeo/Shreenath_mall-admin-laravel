@@ -95,7 +95,6 @@ class CartController extends Controller
         if (!$cartItem) {
             return response()->json(['message' => 'No items to delete ', 'data' => $cartItem], 200);
         }
-        
         if ($validated['product_quantity'] == 0) {
             $cartItem->delete();
             return response()->json(['message' => 'Cart item removed successfully'], 200);
@@ -104,9 +103,6 @@ class CartController extends Controller
             return response()->json(['message' => 'Cart item updated successfully', 'data' => $cartItem], 200);
         }
     }
-
-
-
 
     public function deleteCartItem($id)
     {
