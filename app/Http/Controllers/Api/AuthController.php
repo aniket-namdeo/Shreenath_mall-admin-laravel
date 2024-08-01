@@ -202,10 +202,12 @@ class AuthController extends Controller
             'landmark' => 'nullable|string',
             'city' => 'required|string',
             'state' => 'required|string',
-            'country' => 'required|string',
+            'country' => 'nullable|string',
             'pincode' => 'required|string',
             'default_address' => 'nullable|integer|in:0,1',
         ]);
+
+        $validated['country'] = 101;
 
         $address = User_addresses::create($validated);
 
@@ -241,9 +243,9 @@ class AuthController extends Controller
             'house_address' => 'required|string',
             'street_address' => 'required|string',
             'landmark' => 'nullable|string',
-            'city' => 'required|string',
-            'state' => 'required|string',
-            'country' => 'required|string',
+            'city' => 'nullable|string',
+            'state' => 'nullable|string',
+            'country' => 'nullable|string',
             'pincode' => 'required|string',
             'default_address' => 'nullable|integer|in:0,1',
         ]);
