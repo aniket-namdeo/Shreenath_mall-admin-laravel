@@ -39,7 +39,7 @@ class CartController extends Controller
             $newCartItem = Cart::create($validated);
 
             if ($newCartItem) {
-                return response()->json(['status' => true, 'message' => 'Item added to cart', 'data' => $newCartItem], 201);
+                return response()->json(['status' => true, 'message' => 'Item added to cart', 'data' => $newCartItem], 200);
             } else {
                 return response()->json(['status' => false, 'message' => 'Item not added to cart', 'data' => null], 500);
             }
@@ -59,7 +59,27 @@ class CartController extends Controller
         }
 
         if ($cartItems) {
-            return response()->json(['status' => true, 'message' => 'Cart items retrieved successfully', 'data' => $cartItems], 200);
+            $cartItems = $cartItems->map(function ($item) {
+                $item->product_price = (int) $item->product_price;
+                $item->product_mrp = (int) $item->product_mrp;
+                return $item;
+            });
+
+            $totalPrice = $cartItems->sum(function ($item) {
+                return $item->product_price * $item->product_quantity;
+            });
+
+            $totalMrp = $cartItems->sum(function ($item) {
+                return $item->product_mrp * $item->product_quantity;
+            });
+            return response()->json([
+                'status' => true,
+                'message' => 'Cart items retrieved successfully',
+                'data' => $cartItems,
+                'total_price' => $totalPrice,
+                'total_mrp' => $totalMrp
+
+            ], 200);
         } else {
             return response()->json(['status' => false, 'message' => 'No cart items added.', 'data' => null], 500);
 
@@ -69,19 +89,28 @@ class CartController extends Controller
     public function updateCartItem(Request $request, $id)
     {
         $validated = $request->validate([
-            'product_quantity' => 'required|integer|min:0',
+            'quantity_change' => 'required|integer',
         ]);
 
         $cartItem = Cart::findOrFail($id);
+        $currentQuantity = $cartItem->product_quantity;
+        $quantityChange = $validated['quantity_change'];
 
-        if ($validated['product_quantity'] == 0) {
+        if ($quantityChange !== 1 && $quantityChange !== -1) {
+            return response()->json(['message' => 'Invalid quantity change. Use 1 to increase or -1 to decrease.'], 400);
+        }
+
+        $newQuantity = $currentQuantity + $quantityChange;
+
+        if ($newQuantity <= 0) {
             $cartItem->delete();
             return response()->json(['message' => 'Cart item removed successfully'], 200);
         } else {
-            $cartItem->update($validated);
+            $cartItem->update(['product_quantity' => $newQuantity]);
             return response()->json(['message' => 'Cart item updated successfully', 'data' => $cartItem], 200);
         }
     }
+
 
 
     public function deleteCartItem($id)
