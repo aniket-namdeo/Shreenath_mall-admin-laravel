@@ -233,6 +233,17 @@ class AuthController extends Controller
 
     }
 
+    public function getParticularAddress($id)
+    {
+        $address = User_addresses::where('id', $id)->first();
+        if (!$address) {
+            return response()->json(['error' => 'No addresses found with this id'], 404);
+        }
+
+        return response()->json(['message' => 'Addresses retrieved successfully', 'data' => $address], 200);
+
+    }
+
     public function addressUpdate(Request $request, $id)
     {
         $validated = $request->validate([
