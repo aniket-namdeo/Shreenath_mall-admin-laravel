@@ -17,10 +17,10 @@ class OrderController extends Controller
         $validated = $request->validate([
             'user_id' => 'required',
             'total_amount' => 'required|numeric',
-            'status' => 'required|string',
-            'delivery_status' => 'required|string',
+            'status' => 'nullable|string',
+            'delivery_status' => 'nullable|string',
             'payment_method' => 'required|string',
-            'payment_status' => 'required|string',
+            'payment_status' => 'nullable|string',
             'order_date' => 'required|date',
             'delivery_date' => 'nullable|date',
             'address_id' => 'required',
@@ -30,23 +30,25 @@ class OrderController extends Controller
             'shipping_fee' => 'nullable|numeric',
             'items' => 'required|array',
             'items.*.product_id' => 'required',
-            'items.*.product_name' => 'required|string',
-            'items.*.product_sku' => 'required|string',
             'items.*.quantity' => 'required|integer',
             'items.*.price' => 'required|numeric',
         ]);
 
 
         try {
+
+            $orderDate = $request->order_date ?: date('Y-m-d');
+            $deliveryDate = $request->delivery_date ?: date('Y-m-d');
+
             $order = Order::create([
                 'user_id' => $request->user_id,
                 'total_amount' => $request->total_amount,
-                'status' => $request->status,
-                'delivery_status' => $request->delivery_status,
+                'status' => "pending",
+                'delivery_status' => "pending",
                 'payment_method' => $request->payment_method,
-                'payment_status' => $request->payment_status,
-                'order_date' => $request->order_date,
-                'delivery_date' => $request->delivery_date,
+                'payment_status' => "pending",
+                'order_date' => $orderDate,
+                'delivery_date' => $deliveryDate,
                 'address_id' => $request->address_id,
                 'coupon_code' => $request->coupon_code,
                 'discount_amount' => $request->discount_amount,
@@ -58,8 +60,6 @@ class OrderController extends Controller
                 Order_items::create([
                     'order_id' => $order->id,
                     'product_id' => $item['product_id'],
-                    'product_name' => $item['product_name'],
-                    'product_sku' => $item['product_sku'],
                     'quantity' => $item['quantity'],
                     'price' => $item['price'],
                 ]);
