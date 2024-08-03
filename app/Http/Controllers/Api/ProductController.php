@@ -17,12 +17,6 @@ class ProductController extends Controller
         return response()->json(['data' => $product], 200);
     }
 
-    // public function getProductByCategory()
-    // {
-    //     $product = product::where('status', 1)->orderBy('id', 'desc')->get();
-    //     return response()->json(['data' => $product], 200);
-    // }
-
     public function getProductByCategory(Request $request)
     {
         $categoryId = $request->input('category_id');
@@ -36,7 +30,7 @@ class ProductController extends Controller
             $product->mrp = (int) $product->mrp;
             return $product;
         });
-    
+
         return response()->json(['data' => $products], 200);
     }
 
@@ -52,6 +46,38 @@ class ProductController extends Controller
 
         }
     }
+
+    public function searchProduct1(Request $request)
+    {
+        $searchValue = $request->searchValue;
+
+        $products = Product::where('product_name', 'like', '%' . $searchValue . '%')->get();
+
+        return response()->json(['message' => "get product", 'data' => $products], 200);
+    }
+
+
+    public function searchProduct(Request $request)
+    {
+        $searchValue = $request->searchValue;
+
+        $products = Product::join('category', 'product.category_id', '=', 'category.id')
+            ->where('product.product_name', 'like', '%' . $searchValue . '%')
+            ->orWhere('category.name', 'like', '%' . $searchValue . '%')
+            ->select('product.*', 'category.name as category_name')
+            ->get();
+
+        if ($products->isEmpty()) {
+            $products = Product::join('category', 'product.category_id', '=', 'category.id')
+                ->where('category.name', 'like', '%' . $searchValue . '%')
+                ->select('product.*', 'category.name as category_name')
+                ->get();
+        }
+
+        return response()->json(['message' => "get product", 'data' => $products], 200);
+    }
+
+
 
 
 }

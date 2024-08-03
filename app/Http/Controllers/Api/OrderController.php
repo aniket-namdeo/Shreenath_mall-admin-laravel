@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Order_items;
 use App\Models\User_addresses;
+use App\Models\Cart;
 use Illuminate\Support\Facades\DB;
 
 
@@ -28,7 +29,6 @@ class OrderController extends Controller
             'items.*.quantity' => 'required|integer',
             'items.*.price' => 'required|numeric',
         ]);
-
 
         try {
 
@@ -60,6 +60,10 @@ class OrderController extends Controller
                 ]);
             }
 
+            foreach ($request->items as $item) {
+                Cart::where('id', $item['cart_id'])->delete();
+            }
+            
             return response()->json(['order' => $order, 'message' => 'Order created successfully'], 201);
 
         } catch (\Exception $e) {

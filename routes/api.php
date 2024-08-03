@@ -21,7 +21,7 @@ Route::post('verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/change-password', [AuthController::class, 'updatePassword']);
 
 // Route::post('/update-password', [AuthController::class, 'changePassword']);
-// Route::post('/update-user/{id}', [AuthController::class, 'updateProfile']);
+Route::post('/update-user/{id}', [AuthController::class, 'updateProfile']);
 // Route::get("/getUser/{id}", [AuthController::class,"getUser"]);
 
 Route::post('/user-addresses', [AuthController::class, 'addAddress']);
@@ -43,6 +43,8 @@ Route::get('/product', [ProductController::class, 'getProduct']);
 Route::get('/products', [ProductController::class, 'getProductByCategory'])->name('products.byCategory');
 
 Route::get('/products/{id}', [ProductController::class, 'getProductById'])->name('products.byId');
+
+Route::post("searchProduct", [ProductController::class, 'searchProduct']);
 
 // orders
 Route::post('/order', [OrderController::class, 'createOrder'])->name('order.create');

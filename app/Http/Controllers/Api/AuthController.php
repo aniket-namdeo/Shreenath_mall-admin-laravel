@@ -159,8 +159,8 @@ class AuthController extends Controller
         if ($request->name) {
             $data['name'] = $request->name;
         }
-        if ($request->mobile) {
-            $data['mobile'] = $request->mobile;
+        if ($request->contact) {
+            $data['contact'] = $request->contact;
         }
         if ($request->dob) {
             $data['dob'] = $request->dob;
@@ -171,12 +171,12 @@ class AuthController extends Controller
         if ($request->gender) {
             $data['gender'] = $request->gender;
         }
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '_image.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/user'), $imageName);
+
+        if ($request->hasFile('profile_image')) {
+            $imageName = time() . '_profile_image.' . $request->profile_image->extension();
+            $request->profile_image->move(public_path('uploads/user'), $imageName);
             $full_path = "uploads/user/" . $imageName;
-            $data['image'] = $full_path;
+            $data['profile_image'] = $full_path;
         }
 
         $result = User::where('id', $id)->update($data);
