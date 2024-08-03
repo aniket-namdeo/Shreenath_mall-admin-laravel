@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PrivacyPolicyController;
+use App\Http\Controllers\AboutUsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +53,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/edit-category/{id}', [CategoryController::class, 'categoryEdit'])->name('category-edit.edit');
     Route::post('/update-category/{id}', [CategoryController::class, 'categoryUpdate'])->name('update-category.update');
 
-
     // product
     Route::get('/add-product', [App\Http\Controllers\ProductController::class, 'show'])->name('add-product.show');
     Route::post('/add-product', [App\Http\Controllers\ProductController::class, 'store'])->name('add-product.store');
@@ -66,8 +67,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/products/bulk-upload-product', [ProductController::class, 'storeBulk'])->name('products.bulk-upload');
     Route::get('/products/sample-file', [ProductController::class, 'downloadSampleFile'])->name('products.sample-file');
 
-
-
     // order
     Route::get('/order-list', [App\Http\Controllers\OrderController::class, 'getOrders'])->name('order-list.show');
     Route::get('/edit-order/{id}', [OrderController::class, 'orderEdit'])->name('order-edit.edit');
@@ -76,6 +75,20 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/cancel-order/{id}', [OrderController::class, 'cancelOrder'])->name('order.cancel');
     Route::get("/cancel-order-item/{id}", [OrderController::class, 'cancelOrdersItems'])->name('order-item.cancel');
 
+
+    // privacypolicy
+    Route::get('/add-privacypolicy', [App\Http\Controllers\PrivacyPolicyController::class, 'show'])->name('privacypolicy.show');
+    Route::post('/add-privacypolicy', [App\Http\Controllers\PrivacyPolicyController::class, 'store'])->name('privacypolicy.store');
+    Route::get('/privacypolicy-list', [App\Http\Controllers\PrivacyPolicyController::class, 'list'])->name('privacypolicy-list.list');
+    Route::get('/edit-privacypolicy/{id}', [App\Http\Controllers\PrivacyPolicyController::class, 'privacypolicyEdit'])->name('privacypolicy.edit');
+    Route::post('/privacypolicy-update/{id}', [App\Http\Controllers\PrivacyPolicyController::class, 'privacypolicyUpdate'])->name('update-privacypolicy.update');
+
+    // aboutus
+    Route::get('/add-aboutus', [App\Http\Controllers\AboutUsController::class, 'show'])->name('aboutus.show');
+    Route::post('/add-aboutus', [App\Http\Controllers\AboutUsController::class, 'store'])->name('aboutus.store');
+    Route::get('/aboutus-list', [App\Http\Controllers\AboutUsController::class, 'list'])->name('aboutus-list.list');
+    Route::get('/edit-aboutus/{id}', [App\Http\Controllers\AboutUsController::class, 'aboutusEdit'])->name('aboutus.edit');
+    Route::post('/aboutus-update/{id}', [App\Http\Controllers\AboutUsController::class, 'aboutusUpdate'])->name('update-aboutus.update');
 
 });
 

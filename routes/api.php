@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\AboutUsController;
+use App\Http\Controllers\Api\PrivacyPolicyController;
 
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -63,3 +65,11 @@ Route::get('/cart/{id}', [CartController::class, 'getCartItemsByUser']);
 Route::post('/cart/{id}', [CartController::class, 'updateCartItem']);
 
 Route::delete('/cart/{id}', [CartController::class, 'deleteCartItem']);
+
+// aboutus
+
+Route::get('/aboutus', [AboutUsController::class, 'getAboutUs']);
+
+// privacy policy
+
+Route::get('/privacypolicy', [PrivacyPolicyController::class, 'getPrivacyPolicy']);

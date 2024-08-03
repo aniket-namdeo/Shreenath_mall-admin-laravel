@@ -55,16 +55,26 @@
                     <li class="{{ $current_page == 'order-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/order-list') }}">List</a></li>
                 </ul>
             </li>
-            {{-- <li class="mb-2 dropdown {{ $current_page == 'add-testimonial' ? 'active' : '' }} {{ $current_page == 'testimonial-list' ? 'active' : '' }}">
+            <li class="mb-2 dropdown {{ $current_page == 'add-privacypolicy' ? 'active' : '' }} {{ $current_page == 'privacypolicy-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <font><i class="bx bxs-user-plus"></i> <span>Manage Testimonial</span></font>
+                    <font><i class="bx bxs-user-plus"></i> <span>Manage Privacypolicy</span></font>
                     <span class="bx bx-chevron-right"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li class="{{ $current_page == 'add-testimonial' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-testimonial') }}">Add </a></li>
-                    <li class="{{ $current_page == 'testimonial-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/testimonial-list') }}">List</a></li>
+                    <li class="{{ $current_page == 'add-privacypolicy' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-privacypolicy') }}">Add </a></li>
+                    <li class="{{ $current_page == 'privacypolicy-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/privacypolicy-list') }}">List</a></li>
                 </ul>
-            </li> --}}
+            </li>
+            <li class="mb-2 dropdown {{ $current_page == 'add-aboutus' ? 'active' : '' }} {{ $current_page == 'aboutus-list' ? 'active' : '' }}">
+                <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <font><i class="bx bxs-user-plus"></i> <span>Manage Aboutus</span></font>
+                    <span class="bx bx-chevron-right"></span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li class="{{ $current_page == 'add-aboutus' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-aboutus') }}">Add </a></li>
+                    <li class="{{ $current_page == 'aboutus-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/aboutus-list') }}">List</a></li>
+                </ul>
+            </li>
             {{-- <li class="mb-2 dropdown {{ $current_page == 'add-home_video' ? 'active' : '' }} {{ $current_page == 'home_video-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                     <font><i class="bx bxs-user-plus"></i> <span>Manage Home Video</span></font>
