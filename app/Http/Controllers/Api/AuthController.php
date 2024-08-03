@@ -181,12 +181,17 @@ class AuthController extends Controller
 
         $result = User::where('id', $id)->update($data);
 
-        return response()->json(['message' => 'User updated successfully'], 200);
+        return response()->json([
+            'message' => 'User updated successfully',
+            'data' => null,
+            'status' => true
+        ], 200);
+
     }
 
     public function getUser($id)
     {
-        $result = User::select('id', 'name', 'email', 'mobile', 'gender', 'dob', 'image', 'address', 'state', 'city')->where('id', $id)->get();
+        $result = User::select('id', 'name', 'email', 'contact', 'gender', 'dob', 'profile_image')->where('id', $id)->first();
         return response()->json(['data' => $result], 200);
     }
 
