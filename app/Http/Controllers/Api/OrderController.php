@@ -76,6 +76,7 @@ class OrderController extends Controller
         $orders = Order::where('orders.user_id', $userId)
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
+            ->join('product', 'order_items.product_id', '=', 'product.id')
             ->select(
                 'orders.id as order_id',
                 'orders.user_id',
@@ -92,10 +93,12 @@ class OrderController extends Controller
                 'orders.tax_amount',
                 'orders.shipping_fee',
                 'order_items.product_id',
-                'order_items.product_name',
-                'order_items.product_sku',
                 'order_items.quantity',
                 'order_items.price',
+                'product.product_name as product_name',
+                'product.mrp as product_mrp',
+                'product.price as product_price',
+                'product.image_url1 as product_image_url',
                 'user_addresses.house_address',
                 'user_addresses.street_address',
                 'user_addresses.landmark',
@@ -117,10 +120,12 @@ class OrderController extends Controller
             $items = $order->map(function ($item) {
                 return [
                     'product_id' => $item->product_id,
-                    'product_name' => $item->product_name,
-                    'product_sku' => $item->product_sku,
                     'quantity' => $item->quantity,
                     'price' => $item->price,
+                    'product_name' => $item->product_name,
+                    'product_mrp' => $item->product_mrp,
+                    'product_price' => $item->product_price,
+                    'product_image_url' => $item->product_image_url,
                 ];
             });
 
