@@ -172,6 +172,10 @@ class AuthController extends Controller
             $data['gender'] = $request->gender;
         }
 
+        if($request->password) {
+            $data['password'] = Hash::make($request->password);
+        }
+
         if ($request->hasFile('profile_image')) {
             $imageName = time() . '_profile_image.' . $request->profile_image->extension();
             $request->profile_image->move(public_path('uploads/user'), $imageName);
