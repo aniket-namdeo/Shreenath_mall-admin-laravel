@@ -250,6 +250,7 @@ class OrderController extends Controller
     {
         $request->validate([
             'transaction_id' => 'required|string',
+            'payment_status' => 'required'
         ]);
     
         $order = Order::find($id);
@@ -260,6 +261,7 @@ class OrderController extends Controller
             $order->update([
                 'transaction_id' => $request->transaction_id,
                 'transaction_time' => $transaction_time,
+                'payment_status' => $request->payment_status
             ]);
     
             return response()->json([
