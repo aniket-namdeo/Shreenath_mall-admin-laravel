@@ -24,7 +24,7 @@ Route::post('/change-password', [AuthController::class, 'updatePassword']);
 
 // Route::post('/update-password', [AuthController::class, 'changePassword']);
 Route::post('/update-user/{id}', [AuthController::class, 'updateProfile']);
-Route::get("/getUser/{id}", [AuthController::class,"getUser"]);
+Route::get("/getUser/{id}", [AuthController::class, "getUser"]);
 
 Route::post('/user-addresses', [AuthController::class, 'addAddress']);
 Route::get('/user-addresses/{id}', [AuthController::class, 'getUserAddress']);
@@ -52,6 +52,10 @@ Route::post("searchProduct", [ProductController::class, 'searchProduct']);
 Route::post('/order', [OrderController::class, 'createOrder'])->name('order.create');
 
 Route::get('/orders/user/{userId}', [OrderController::class, 'getOrdersByUser']);
+
+Route::get('/order/{id}', [OrderController::class, 'getOrderDetail']);
+
+Route::post('/order-payment/{id}', [OrderController::class, 'paymentStatusUpdate']);
 
 Route::post('/cancel-order/{id}', [OrderController::class, 'cancelOrder']);
 
