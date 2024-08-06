@@ -75,6 +75,16 @@
                     <li class="{{ $current_page == 'aboutus-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/aboutus-list') }}">List</a></li>
                 </ul>
             </li>
+            <li class="mb-2 dropdown {{ $current_page == 'add-coupon' ? 'active' : '' }} {{ $current_page == 'coupon-list' ? 'active' : '' }}">
+                <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <font><i class="bx bxs-user-plus"></i> <span>Manage Coupon</span></font>
+                    <span class="bx bx-chevron-right"></span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li class="{{ $current_page == 'add-coupon' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-coupon') }}">Add </a></li>
+                    <li class="{{ $current_page == 'coupon-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/coupon-list') }}">List</a></li>
+                </ul>
+            </li>
             {{-- <li class="mb-2 dropdown {{ $current_page == 'add-home_video' ? 'active' : '' }} {{ $current_page == 'home_video-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                     <font><i class="bx bxs-user-plus"></i> <span>Manage Home Video</span></font>

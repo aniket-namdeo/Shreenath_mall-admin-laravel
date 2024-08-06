@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\CouponController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +90,13 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/aboutus-list', [App\Http\Controllers\AboutUsController::class, 'list'])->name('aboutus-list.list');
     Route::get('/edit-aboutus/{id}', [App\Http\Controllers\AboutUsController::class, 'aboutusEdit'])->name('aboutus.edit');
     Route::post('/aboutus-update/{id}', [App\Http\Controllers\AboutUsController::class, 'aboutusUpdate'])->name('update-aboutus.update');
+
+    // coupon
+    Route::get('/add-coupon', [App\Http\Controllers\CouponController::class, 'show'])->name('coupon.show');
+    Route::post('/add-coupon', [App\Http\Controllers\CouponController::class, 'store'])->name('coupon.store');
+    Route::get('/coupon-list', [App\Http\Controllers\CouponController::class, 'list'])->name('coupon-list.list');
+    Route::get('/edit-coupon/{id}', [App\Http\Controllers\CouponController::class, 'couponEdit'])->name('coupon.edit');
+    Route::post('/coupon-update/{id}', [App\Http\Controllers\CouponController::class, 'couponUpdate'])->name('update-coupon.update');
 
 });
 

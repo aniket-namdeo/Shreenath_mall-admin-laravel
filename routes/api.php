@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\AboutUsController;
 use App\Http\Controllers\Api\PrivacyPolicyController;
-
+use App\Http\Controllers\Api\CouponController;
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
@@ -42,7 +42,7 @@ Route::get('/sub-category', [CategoryController::class, 'getSubCategory']);
 // products
 Route::get('/product', [ProductController::class, 'getProduct']);
 
-Route::get('/products', [ProductController::class, 'getProductByCategory'])->name('products.byCategory');
+Route::post('/products', [ProductController::class, 'getProductByCategory'])->name('products.byCategory');
 
 Route::get('/products/{id}', [ProductController::class, 'getProductById'])->name('products.byId');
 
@@ -77,3 +77,7 @@ Route::get('/aboutus', [AboutUsController::class, 'getAboutUs']);
 // privacy policy
 
 Route::get('/privacypolicy', [PrivacyPolicyController::class, 'getPrivacyPolicy']);
+
+// coupon
+
+Route::get('/coupon', [CouponController::class, 'getCoupon']);

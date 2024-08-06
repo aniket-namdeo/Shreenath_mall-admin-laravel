@@ -17,14 +17,55 @@ class ProductController extends Controller
         return response()->json(['data' => $product], 200);
     }
 
+    // public function getProductByCategory(Request $request)
+    // {
+    //     $categoryId = $request->input('category_id');
+    //     $query = Product::where('status', 'active');
+    //     if ($categoryId) {
+    //         $query->where('category_id', $categoryId);
+    //     }
+    //     $products = $query->orderBy('id', 'desc')->get();
+    //     $products = $products->map(function ($product) {
+    //         $product->price = (int) $product->price;
+    //         $product->mrp = (int) $product->mrp;
+    //         return $product;
+    //     });
+
+    //     return response()->json(['data' => $products], 200);
+    // }
+
+
     public function getProductByCategory(Request $request)
     {
         $categoryId = $request->input('category_id');
+        $filter = $request->input('filter');
+
         $query = Product::where('status', 'active');
+
         if ($categoryId) {
             $query->where('category_id', $categoryId);
         }
-        $products = $query->orderBy('id', 'desc')->get();
+
+        if ($filter) {
+            switch ($filter) {
+                case 'price_asc':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'price_desc':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case 'popular':
+                    $query->orderBy('tag', 'popular');
+                    break;
+                default:
+                    $query->orderBy('id', 'desc');
+                    break;
+            }
+        } else {
+            $query->orderBy('id', 'desc');
+        }
+
+        $products = $query->get();
         $products = $products->map(function ($product) {
             $product->price = (int) $product->price;
             $product->mrp = (int) $product->mrp;
@@ -33,6 +74,7 @@ class ProductController extends Controller
 
         return response()->json(['data' => $products], 200);
     }
+
 
     public function getProductById($id)
     {
