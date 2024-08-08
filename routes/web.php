@@ -8,6 +8,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\DeliveryUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +48,13 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/users-list', [App\Http\Controllers\UserController::class, 'UserList'])->name('users-list.list');
     Route::get('/users-edit/{id}', [App\Http\Controllers\UserController::class, 'userEdit'])->name('userlist.edit');
     Route::post('/users-update/{id}', [App\Http\Controllers\UserController::class, 'userUpdate'])->name('users-update.update');
+
+    Route::get('/add-delivery-user', [App\Http\Controllers\DeliveryUserController::class, 'AddDeliveryUser'])->name('add-deliveryUser.show');
+    Route::post('/add-deliveryUser', [App\Http\Controllers\DeliveryUserController::class, 'AddDeliveryUserPost'])->name('add-deliveryUser.store');
+    Route::get('/delivery-user-list', [App\Http\Controllers\DeliveryUserController::class, 'DeliveryUserList'])->name('deliveryUser-list.list');
+    Route::get('/delivery-user-edit/{id}', [App\Http\Controllers\DeliveryUserController::class, 'deliveryUserEdit'])->name('delivery-user.edit');
+    // Route::post('/deliveryUser-update/{id}', [App\Http\Controllers\DeliveryUserController::class, 'userUpdate'])->name('deliveryUser-update.update');
+
 
     // category
     Route::get('/add-category', [App\Http\Controllers\CategoryController::class, 'show'])->name('add-category.show');
@@ -97,6 +106,14 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/coupon-list', [App\Http\Controllers\CouponController::class, 'list'])->name('coupon-list.list');
     Route::get('/edit-coupon/{id}', [App\Http\Controllers\CouponController::class, 'couponEdit'])->name('coupon.edit');
     Route::post('/coupon-update/{id}', [App\Http\Controllers\CouponController::class, 'couponUpdate'])->name('update-coupon.update');
+
+
+    // brand
+    Route::get('/add-brand', [App\Http\Controllers\BrandController::class, 'show'])->name('add-brand.show');
+    Route::post('/add-brand', [App\Http\Controllers\BrandController::class, 'store'])->name('add-brand.store');
+    Route::get('/brand-list', [App\Http\Controllers\BrandController::class, 'list'])->name('brand-list.list');
+    Route::get('/edit-brand/{id}', [App\Http\Controllers\BrandController::class, 'brandEdit'])->name('brand.edit');
+    Route::post('/brand-update/{id}', [App\Http\Controllers\BrandController::class, 'brandUpdate'])->name('update-brand.update');
 
 });
 

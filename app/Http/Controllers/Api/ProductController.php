@@ -35,37 +35,139 @@ class ProductController extends Controller
     // }
 
 
+    // public function getProductByCategory(Request $request)
+    // {
+    //     $categoryId = $request->input('category_id');
+    //     $filter = $request->input('filter');
+
+    //     $query = Product::where('status', 'active');
+
+    //     if ($categoryId) {
+    //         $query->where('category_id', $categoryId);
+    //     }
+
+    //     if ($filter) {
+    //         switch ($filter) {
+    //             case 'price_asc':
+    //                 $query->orderBy('price', 'asc');
+    //                 break;
+    //             case 'price_desc':
+    //                 $query->orderBy('price', 'desc');
+    //                 break;
+    //             case 'popular':
+    //                 $query->orderBy('tag', 'popular');
+    //                 break;
+    //             default:
+    //                 $query->orderBy('id', 'desc');
+    //                 break;
+    //         }
+    //     } else {
+    //         $query->orderBy('id', 'desc');
+    //     }
+
+    //     $products = $query->get();
+    //     $products = $products->map(function ($product) {
+    //         $product->price = (int) $product->price;
+    //         $product->mrp = (int) $product->mrp;
+    //         return $product;
+    //     });
+
+    //     return response()->json(['data' => $products], 200);
+    // }
+
+
+    // public function getProductByCategory(Request $request)
+    // {
+    //     $categoryId = $request->input('category_id');
+    //     $filter = $request->input('filter');
+    //     $tag = $request->input('tag');
+
+    //     $query = Product::where('products.status', 'active')
+    //         ->join('category', 'products.category_id', '=', 'category.id')
+    //         ->select('products.*');
+
+    //     if ($categoryId) {
+    //         $query->where('products.category_id', $categoryId);
+    //     }
+
+    //     if ($tag) {
+    //         $query->whereRaw('FIND_IN_SET(?, category.tags)', [$tag]);
+    //     }
+
+    //     if ($filter) {
+    //         switch ($filter) {
+    //             case 'price_asc':
+    //                 $query->orderBy('products.price', 'asc');
+    //                 break;
+    //             case 'price_desc':
+    //                 $query->orderBy('products.price', 'desc');
+    //                 break;
+    //             case 'popular':
+    //                 $query->orderBy('products.popularity', 'desc');
+    //                 break;
+    //             default:
+    //                 $query->orderBy('products.id', 'desc');
+    //                 break;
+    //         }
+    //     } else {
+    //         $query->orderBy('products.id', 'desc');
+    //     }
+
+    //     $products = $query->get();
+
+    //     $products = $products->map(function ($product) {
+    //         $product->price = (int) $product->price;
+    //         $product->mrp = (int) $product->mrp;
+    //         return $product;
+    //     });
+
+    //     return response()->json(['data' => $products], 200);
+    // }
+
     public function getProductByCategory(Request $request)
     {
         $categoryId = $request->input('category_id');
         $filter = $request->input('filter');
+        $tag = $request->input('tag');
+        $productTag = $request->input('productTag');
 
-        $query = Product::where('status', 'active');
+        $query = Product::where('product.status', 'active')
+            ->join('category', 'product.category_id', '=', 'category.id')
+            ->select('product.*');
 
         if ($categoryId) {
-            $query->where('category_id', $categoryId);
+            $query->where('product.category_id', $categoryId);
+        }
+
+        if ($productTag) {
+            $query->whereRaw('FIND_IN_SET(?, product.tag)', [$productTag]);
+        }
+    
+        if ($tag) {
+            $query->whereRaw('FIND_IN_SET(?, category.tags)', [$tag]);
         }
 
         if ($filter) {
             switch ($filter) {
                 case 'price_asc':
-                    $query->orderBy('price', 'asc');
+                    $query->orderBy('product.price', 'asc');
                     break;
                 case 'price_desc':
-                    $query->orderBy('price', 'desc');
+                    $query->orderBy('product.price', 'desc');
                     break;
                 case 'popular':
-                    $query->orderBy('tag', 'popular');
+                    $query->orderBy('product.popularity', 'desc');
                     break;
                 default:
-                    $query->orderBy('id', 'desc');
+                    $query->orderBy('product.id', 'desc');
                     break;
             }
         } else {
-            $query->orderBy('id', 'desc');
+            $query->orderBy('product.id', 'desc');
         }
 
         $products = $query->get();
+
         $products = $products->map(function ($product) {
             $product->price = (int) $product->price;
             $product->mrp = (int) $product->mrp;
@@ -118,8 +220,5 @@ class ProductController extends Controller
 
         return response()->json(['message' => "get product", 'data' => $products], 200);
     }
-
-
-
 
 }

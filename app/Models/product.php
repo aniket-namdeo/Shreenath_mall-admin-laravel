@@ -18,6 +18,7 @@ class Product extends Model
         'mrp',
         'discount_percent',
         'category_id',
+        'brand_id',
         'sku',
         'stock',
         'brand',
@@ -28,6 +29,7 @@ class Product extends Model
         'product_code',
         'pack_size',
         'status',
+        'tag'
     ];
 
      public function getFormattedPriceAttribute()

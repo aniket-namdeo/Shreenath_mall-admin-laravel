@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -17,7 +18,8 @@ class ProductController extends Controller
         $current_page = 'add-product';
         $page_title = 'Add Product';
         $categoryList = Category::where(array('status' => 1))->whereNotNull('parentCategoryId')->orderBy('id', 'desc')->paginate(20);
-        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'categoryList'));
+        $brandList = Brand::where(array('status' => 1))->orderBy('id', 'desc')->get();
+        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'categoryList', 'brandList'));
     }
 
     public function store(Request $request)
@@ -29,11 +31,16 @@ class ProductController extends Controller
             'mrp' => 'required|numeric',
             'discount_percent' => 'required|numeric',
             'category_id' => 'required|exists:category,id',
+            'brand_id' => 'required',
             'sku' => 'required|string|unique:product,sku',
             'stock' => 'required|integer',
             'product_code' => 'nullable|string',
             'pack_size' => 'nullable|integer',
         ]);
+
+        if ($request->tag) {
+            $validated['tag'] = $request->tag;
+        }
 
         if ($request->hasFile('image_url1')) {
             $imageName = time() . '_image.' . $request->image_url1->extension();
@@ -82,12 +89,12 @@ class ProductController extends Controller
         $current_page = "product";
         $details = Product::find($id);
         $categoryList = Category::where(array('status' => 1))->whereNotNull('parentCategoryId')->orderBy('id', 'desc')->paginate(20);
+        $brandList = Brand::where(array('status' => 1))->orderBy('id', 'desc')->get();
         if (!$details) {
             return redirect()->route('products.index')->with('error', 'Product not found.');
         }
-        return view('backend/admin/main', compact('page_name', 'page_title', 'current_page', 'details', 'categoryList'));
+        return view('backend/admin/main', compact('page_name', 'page_title', 'current_page', 'details', 'categoryList', 'brandList'));
     }
-
 
     public function productUpdate(Request $request, $id)
     {
@@ -98,6 +105,7 @@ class ProductController extends Controller
             'mrp' => 'required|numeric',
             'discount_percent' => 'required|numeric',
             'category_id' => 'required|exists:category,id',
+            'brand_id' => 'required',
             'sku' => 'required|string|unique:product,sku,' . $id,
             'stock' => 'required|integer',
             'brand' => 'nullable|string',
@@ -105,6 +113,9 @@ class ProductController extends Controller
             'pack_size' => 'nullable|integer',
         ]);
 
+        if ($request->tag) {
+            $validated['tag'] = $request->tag;
+        }
 
         if ($request->hasFile('image_url1')) {
             $imageName = time() . '_image1.' . $request->image_url1->extension();
@@ -143,7 +154,6 @@ class ProductController extends Controller
         return redirect()->route('product-list.show')->with('success', 'Product updated');
     }
 
-
     public function destroy($id)
     {
         $product = Product::find($id);
@@ -153,7 +163,6 @@ class ProductController extends Controller
         $product->delete();
         return redirect()->route('product-list.show')->with('success', 'Product deleted successfully.');
     }
-
 
     public function bulkAddProduct()
     {

@@ -33,6 +33,17 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        <div class="col-md-4 mb-2">
+                            <label for="brand_id">Select Brand</label>
+                            <select class="form-control" id="brand_id" name="brand_id">
+                                <option value="">Select a brand</option>
+                                @foreach ($brandList as $brand)
+                                    <option value="{{ $brand->id }}" {{ $brand->id == old('brand_id', $details->brand_id) ? 'selected' : '' }}>{{ $brand->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="col-md-4 mb-2">
                             <label for="sku">SKU</label>
                             <input type="text" class="form-control" id="sku" name="sku" value="{{ old('sku', $details->sku) }}">
@@ -53,6 +64,11 @@
                             <label for="pack_size">Pack Size</label>
                             <input type="number" class="form-control" id="pack_size" name="pack_size" value="{{ old('pack_size', $details->pack_size) }}">
                         </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="tags">Tags</label>
+                            <input type="text" class="form-control" id="tag" name="tag" value="{{ $details->tag }}">
+                        </div>
+
                         <div class="col-md-4 mb-2">
                             <label for="image_url1">Product Image1</label>
                             <input type="file" class="form-control" id="image_url1" name="image_url1">

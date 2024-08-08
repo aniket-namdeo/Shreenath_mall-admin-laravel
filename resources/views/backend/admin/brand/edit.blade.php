@@ -7,7 +7,7 @@
     <div class="col-lg-12">
         @include('backend.layouts.alert')
 
-        <form action="{{ route('update-category.update', $details->id); }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('update-brand.update', $details->id); }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="card h-auto">
                 <div class="card-body">
@@ -16,27 +16,18 @@
                             <label class="form-label" for="">Name</label>
                             <input type="text" class="form-control" name="name" onkeypress="return /[A-Za-z ]/i.test(event.key)" value="{{ $details->name }}" />
                         </div>
-                        <div class="col-md-4 mb-2">
-                            <label for="parentCategoryId">Select Category</label>
-                            <select class="form-control" id="parentCategoryId" name="parentCategoryId">
-                                <option value="">Select a category</option>
-                                @foreach($list as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
+
+                        <div class="col-md-full mb-2">
+                            <label class="form-label" for="">Description</label>
+                            <textarea class="form-control" name="description">{{ $details->description }}</textarea>
                         </div>
                        
                         <div class="col-md-4 form-group mb-3">
-                            <label for="image"> Image</label>
-                            <input type="file" name="image" class="form-control" onchange="readURL(this);" />
+                            <label for="logo"> Logo </label>
+                            <input type="file" name="logo" class="form-control" onchange="readURL(this);" />
                         </div>
                         <div class="col-md-8 mb-3">
-                            <img alt="Plan Image" src="{{ asset('uploads/default.jpg');  }}" class="img-responsive rounded" width="100" height="auto" id="img_preview" />
-                        </div>
-
-                        <div class="col-md-6 mb-2">
-                            <label for="tags">Tags</label>
-                            <input type="text" class="form-control" id="tags" name="tags" value="{{ $details->tags }}">
+                            <img alt="Plan logo" src="{{ asset('uploads/default.jpg');  }}" class="img-responsive rounded" width="100" height="auto" id="img_preview" />
                         </div>
 
                         <div class="col-md-12">

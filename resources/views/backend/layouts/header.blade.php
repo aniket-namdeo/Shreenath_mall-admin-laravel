@@ -23,7 +23,9 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <li class="{{ $current_page == 'users' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-user') }}">Add User</a></li>
+                    <li class="{{ $current_page == 'delivery-user' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-delivery-user') }}">Add Delivery User</a></li>
                     <li class="{{ $current_page == 'users-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/users-list') }}">Users List</a></li>
+                    <li class="{{ $current_page == 'delivery-user-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/delivery-user-list') }}">Delivery Users List</a></li>
                 </ul>
             </li>
             <li class="mb-2 dropdown {{ $current_page == 'add-plan' ? 'active' : '' }} {{ $current_page == 'plan-list' ? 'active' : '' }}">
@@ -34,6 +36,16 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <li class="{{ $current_page == 'add-category' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-category') }}">Add Category</a></li>
                     <li class="{{ $current_page == 'category-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/category-list') }}">Category List</a></li>
+                </ul>
+            </li>
+            <li class="mb-2 dropdown {{ $current_page == 'add-brand' ? 'active' : '' }} {{ $current_page == 'brand-list' ? 'active' : '' }}">
+                <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <font><i class="bx bxs-user-plus"></i> <span>Manage Brand</span></font>
+                    <span class="bx bx-chevron-right"></span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li class="{{ $current_page == 'add-brand' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-brand') }}">Add Brand</a></li>
+                    <li class="{{ $current_page == 'brand-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/brand-list') }}">Brand List</a></li>
                 </ul>
             </li>
             <li class="mb-2 dropdown {{ $current_page == 'add-product' ? 'active' : '' }} {{ $current_page == 'product-list' ? 'active' : '' }}">

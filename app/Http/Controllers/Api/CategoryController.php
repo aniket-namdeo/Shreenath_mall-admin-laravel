@@ -11,7 +11,7 @@ class CategoryController extends Controller
 
     public function getCategory()
     {
-        $categories = Category::select('id', 'name', 'parentCategoryId', 'image')
+        $categories = Category::select('id', 'name', 'parentCategoryId', 'image', 'tags')
             ->where('status', 1)
             ->orderBy('id', 'desc')
             ->get();
@@ -37,7 +37,7 @@ class CategoryController extends Controller
 
     public function getSubCategory()
     {
-        $categories = Category::select('id', 'name', 'parentCategoryId', 'image')
+        $categories = Category::select('id', 'name', 'parentCategoryId', 'image', 'tags')
                                 ->whereNotNull('parentCategoryId')
                                 ->where('status', 1)
                                 ->orderBy('id', 'desc')

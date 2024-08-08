@@ -81,6 +81,8 @@ class CategoryController extends Controller
             }
         }
 
+        $data['tags'] = $request->tags;
+
         $response = Category::where(array('id' => $id))->update($data);
 
         if ($response > 0) {

@@ -107,6 +107,7 @@ class OrderController extends Controller
                 'user_addresses.country',
                 'user_addresses.pincode'
             )
+            ->orderBy('orders.id', 'desc')
             ->get();
 
         if ($orders->isEmpty()) {
@@ -252,9 +253,9 @@ class OrderController extends Controller
             'transaction_id' => 'required|string',
             'payment_status' => 'required'
         ]);
-    
+
         $order = Order::find($id);
-    
+
         $transaction_time = date('Y-m-d H:m:s');
 
         if ($order) {
@@ -263,7 +264,7 @@ class OrderController extends Controller
                 'transaction_time' => $transaction_time,
                 'payment_status' => $request->payment_status
             ]);
-    
+
             return response()->json([
                 'message' => 'Transaction details updated successfully.',
                 'order' => $order
@@ -309,4 +310,25 @@ class OrderController extends Controller
             return response()->json(['error' => 'No items with this order id'], 500);
         }
     }
+
+    public function orderRating(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'order_rating' => 'required',
+            'order_feedback' => 'nullable'
+        ]);
+
+        $order = Order::find($id);
+
+        if ($order) {
+            $order->update([
+                'order_rating' => $request->order_rating,
+                'order_feedback' => $request->order_feedback
+            ]);
+            return response()->json(['success' => true, 'message' => 'Order rate successfully done'], 200);
+        } else {
+            return response()->json(['success' => false, 'error' => 'No order with this id'], 404);
+        }
+    }
+
 }

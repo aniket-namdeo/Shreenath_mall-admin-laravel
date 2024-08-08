@@ -90,7 +90,6 @@ class CouponController extends Controller
 
     public function couponUpdate(Request $request, $id)
     {
-        // Validate the request data
         $request->validate([
             'title' => 'required|string|max:255',
             'code' => 'required|string|max:255',
@@ -101,13 +100,11 @@ class CouponController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        // Find the coupon by ID
         $coupon = Coupon::find($id);
         if (!$coupon) {
             return redirect()->back()->with('error', 'Coupon not found.');
         }
 
-        // Update the coupon data
         $coupon->title = $request->input('title');
         $coupon->code = $request->input('code');
         $coupon->offtype = $request->input('offtype');
@@ -116,7 +113,6 @@ class CouponController extends Controller
         // $coupon->expiry_date = $request->input('expiry_date');
         $coupon->status = $request->input('status');
 
-        // Handle the image upload
         if ($request->hasFile('image')) {
             $imageName = time() . '_image_img.' . $request->image->extension();
             $request->image->move(public_path('uploads/image'), $imageName);
@@ -124,7 +120,6 @@ class CouponController extends Controller
             $coupon->imageUrl = $full_path;
         }
 
-        // Save the updated coupon
         $coupon->save();
 
         return redirect()->route('coupon-list.list')->with('success', 'Coupon updated successfully.');

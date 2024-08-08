@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\AboutUsController;
 use App\Http\Controllers\Api\PrivacyPolicyController;
 use App\Http\Controllers\Api\CouponController;
+use App\Http\Controllers\Api\DeliveryUserController;
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
@@ -61,6 +62,8 @@ Route::post('/cancel-order/{id}', [OrderController::class, 'cancelOrder']);
 
 Route::post('/cancel-order-item/{id}', [OrderController::class, 'cancelOrdersItems'])->name('order-items.cancel');
 
+Route::post('/orderRate/{id}', [OrderController::class, 'orderRating']);
+
 // cart
 Route::post('/cart', [CartController::class, 'addToCart']);
 
@@ -81,3 +84,8 @@ Route::get('/privacypolicy', [PrivacyPolicyController::class, 'getPrivacyPolicy'
 // coupon
 
 Route::get('/coupon', [CouponController::class, 'getCoupon']);
+
+
+// deliverUser
+
+Route::post('/login', [DeliveryUserController::class, 'login']);

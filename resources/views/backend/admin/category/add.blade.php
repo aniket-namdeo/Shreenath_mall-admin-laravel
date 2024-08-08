@@ -26,6 +26,11 @@
                             <input type="file" class="form-control" id="image" name="image">
                         </div>
 
+                        <div class="col-md-6 mb-2">
+                            <label for="tags">Tags</label>
+                            <input type="text" class="form-control" id="tags" name="tags">
+                        </div>
+
                         <div class="col-md-12">
                             <button type="submit" class="btn web-btn mt-3" id="submit_btn">
                                 Submit

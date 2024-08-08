@@ -9,7 +9,7 @@ class DeliveryUser extends Model
 {
     use HasFactory;
 
-    protected $table = 'deliveryUser';
+    protected $table = 'delivery_user';
    
     protected $primaryKey = "id";
 
@@ -22,6 +22,15 @@ class DeliveryUser extends Model
         'gender',
         'profile_image',
         'is_blocked',
+        'aadhar_card',
+        'pan_no',
+        'address',
+        'vehicle_name',
+        'vehicle_no',
+        'vehicle_type',
+        'vehicle_insurance',
+        'registration_no',
+        'driving_license',
         'status',
     ];
 

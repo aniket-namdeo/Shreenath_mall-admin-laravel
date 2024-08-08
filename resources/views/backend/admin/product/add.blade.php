@@ -14,6 +14,24 @@
                         </div>
 
                         <div class="col-md-4 mb-2">
+                            <label for="category_id">Select Category</label>
+                            <select class="form-control" id="category_id" name="category_id">
+                                <option value="">Select a category</option>
+                                @foreach ($categoryList as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="brand_id">Select Brand</label>
+                            <select class="form-control" id="brand_id" name="brand_id">
+                                <option value="">Select a brand</option>
+                                @foreach ($brandList as $brand)
+                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-2">
                             <label for="price">Selling Price</label>
                             <input type="number" step="0.01" class="form-control" id="price" name="price"
                                 value="{{ old('price') }}">
@@ -28,15 +46,7 @@
                             <input type="number" step="0.01" class="form-control" id="discount_percent"
                                 name="discount_percent" value="{{ old('discount_percent') }}">
                         </div>
-                        <div class="col-md-4 mb-2">
-                            <label for="category_id">Select Category</label>
-                            <select class="form-control" id="category_id" name="category_id">
-                                <option value="">Select a category</option>
-                                @foreach ($categoryList as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                       
                         <div class="col-md-4 mb-2">
                             <label for="sku">SKU</label>
                             <input type="text" class="form-control" id="sku" name="sku"
@@ -61,6 +71,11 @@
                             <input type="number" class="form-control" id="pack_size" name="pack_size"
                                 value="{{ old('pack_size') }}">
                         </div>
+                        <div class="col-md-12 mb-2">
+                            <label for="tag">Tags</label>
+                            <input type="text" class="form-control" id="tag" name="tag">
+                        </div>
+
                         <div class="col-md-4 mb-3 col-8">
                             <label for="image_url1">Product Image1</label>
                             <input type="file" class="form-control" id="image_url1" onchange="readURL(this, '1');"

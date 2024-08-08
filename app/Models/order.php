@@ -25,7 +25,9 @@ class Order extends Model
         'tax_amount',
         'shipping_fee',
         'transaction_id',
-        'transaction_time'
+        'transaction_time',
+        'order_rating',
+        'order_feedback'
     ];
 
     public function orderItems()
