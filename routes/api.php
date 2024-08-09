@@ -49,6 +49,9 @@ Route::get('/products/{id}', [ProductController::class, 'getProductById'])->name
 
 Route::post("searchProduct", [ProductController::class, 'searchProduct']);
 
+
+Route::get("getBrands/{id}", [ProductController::class, 'getBrandsbyCategory']);
+
 // orders
 Route::post('/order', [OrderController::class, 'createOrder'])->name('order.create');
 
@@ -88,4 +91,4 @@ Route::get('/coupon', [CouponController::class, 'getCoupon']);
 
 // deliverUser
 
-Route::post('/login', [DeliveryUserController::class, 'login']);
+Route::post('/delivery-login', [DeliveryUserController::class, 'login']);

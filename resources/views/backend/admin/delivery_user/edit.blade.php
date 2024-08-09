@@ -22,7 +22,7 @@
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label" for="">Password</label>
-                            <input type="text" class="form-control" name="password" value="{{ old('password') }}" placeholder="Leave blank to keep current password" />
+                            <input type="text" class="form-control" name="password" value="{{ old('password') }}" placeholder="" />
                         </div>
 
                         <div class="col-md-full mb-2">

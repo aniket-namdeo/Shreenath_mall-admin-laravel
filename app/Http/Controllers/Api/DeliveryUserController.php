@@ -12,9 +12,6 @@ use Illuminate\Support\Str;
 
 class DeliveryUserController extends Controller
 {
-
-
-
     public function login(Request $request)
     {
         $validated = $request->validate([
@@ -26,6 +23,20 @@ class DeliveryUserController extends Controller
 
         if (!$user) {
             return response()->json(['message' => 'DeliveryUser not found, Register your account', 'status' => false], 401);
+        }
+
+        if ($user->is_blocked == 1) {
+            return response()->json([
+                'message' => 'Your account has been blocked. Please contact the admin.',
+                'status' => false
+            ], 403);
+        }
+
+        if($user->status == "pending"){
+            return response()->json([
+                'message' => 'Your account has not verified yet.',
+                'status' => false
+            ], 403);
         }
 
         if ($user && Hash::check($request->password, $user->password)) {

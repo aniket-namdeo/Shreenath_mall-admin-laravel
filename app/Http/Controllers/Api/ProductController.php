@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Brand;
 
 class ProductController extends Controller
 {
@@ -130,9 +131,11 @@ class ProductController extends Controller
         $filter = $request->input('filter');
         $tag = $request->input('tag');
         $productTag = $request->input('productTag');
+        $brand = $request->input('brand');
 
         $query = Product::where('product.status', 'active')
             ->join('category', 'product.category_id', '=', 'category.id')
+            ->leftJoin('brand', 'product.brand_id', '=', 'brand.id')
             ->select('product.*');
 
         if ($categoryId) {
@@ -142,9 +145,13 @@ class ProductController extends Controller
         if ($productTag) {
             $query->whereRaw('FIND_IN_SET(?, product.tag)', [$productTag]);
         }
-    
+
         if ($tag) {
             $query->whereRaw('FIND_IN_SET(?, category.tags)', [$tag]);
+        }
+
+        if ($brand) {
+            $query->where('brand.slug', $brand);
         }
 
         if ($filter) {
@@ -156,7 +163,7 @@ class ProductController extends Controller
                     $query->orderBy('product.price', 'desc');
                     break;
                 case 'popular':
-                    $query->orderBy('product.popularity', 'desc');
+                    $query->whereRaw('FIND_IN_SET(?, product.tag)', [$filter]);
                     break;
                 default:
                     $query->orderBy('product.id', 'desc');
@@ -219,6 +226,15 @@ class ProductController extends Controller
         }
 
         return response()->json(['message' => "get product", 'data' => $products], 200);
+    }
+
+    public function getBrandsbyCategory(Request $request)
+    {
+        $categoryId = $request->id;
+        $products = Product::where('category_id', $categoryId)->get();
+        $brandIds = $products->pluck('brand_id')->unique();
+        $brands = Brand::whereIn('id', $brandIds)->get();
+        return response()->json(['success' => true, 'data' => $brands], 200);
     }
 
 }
