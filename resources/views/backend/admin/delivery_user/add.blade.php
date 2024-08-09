@@ -25,6 +25,16 @@
                             <input type="text" class="form-control" name="password" required value="{{ old('password') }}" />
                         </div>
 
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label" for="dob">Dob</label>
+                            <input type="date" class="form-control" name="dob" value="{{ old('dob') }}" required />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label" for="gender">Gender</label>
+                            <input type="text" class="form-control" name="gender" value="{{ old('gender') }}" required />
+                        </div>
+
+
                         <div class="col-md-full mb-2">
                             <label class="form-label" for="address">Address</label>
                             <input type="text" class="form-control" name="address" value="{{ old('address') }}" required />
@@ -37,15 +47,9 @@
                             <label class="form-label" for="state">State</label>
                             <input type="text" class="form-control" name="state" value="{{ old('state') }}" required />
                         </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label" for="dob">Dob</label>
-                            <input type="date" class="form-control" name="dob" value="{{ old('dob') }}" required />
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label class="form-label" for="gender">Gender</label>
-                            <input type="text" class="form-control" name="gender" value="{{ old('gender') }}" required />
-                        </div>
 
+                    </form>
+                       
                         <div class="col-md-4 mb-2">
                             <label class="form-label" for="aadhar_card">Aadhar card</label>
                             <input type="text" class="form-control" name="aadhar_card" value="{{ old('aadhar_card') }}" required />
@@ -91,6 +95,6 @@
                     </div>
                 </div>
             </div>
-        </form>
+        
     </div>
 </div>

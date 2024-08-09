@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 
 class DeliveryUserController extends Controller
 {
-    public function login(Request $request)
+    public function Deliverylogin(Request $request)
     {
         $validated = $request->validate([
             'email' => 'required|email',
@@ -140,46 +140,46 @@ class DeliveryUserController extends Controller
     //     return response()->json(['message' => 'Password set successfully'], 200);
     // }
 
-    // public function updateProfile(Request $request, $id)
-    // {
-    //     $data = [];
+    public function updateProfile(Request $request, $id)
+    {
+        $data = [];
 
-    //     if ($request->name) {
-    //         $data['name'] = $request->name;
-    //     }
-    //     if ($request->contact) {
-    //         $data['contact'] = $request->contact;
-    //     }
-    //     if ($request->dob) {
-    //         $data['dob'] = $request->dob;
-    //     }
-    //     if ($request->email) {
-    //         $data['email'] = $request->email;
-    //     }
-    //     if ($request->gender) {
-    //         $data['gender'] = $request->gender;
-    //     }
+        if ($request->name) {
+            $data['name'] = $request->name;
+        }
+        if ($request->contact) {
+            $data['contact'] = $request->contact;
+        }
+        if ($request->dob) {
+            $data['dob'] = $request->dob;
+        }
+        if ($request->email) {
+            $data['email'] = $request->email;
+        }
+        if ($request->gender) {
+            $data['gender'] = $request->gender;
+        }
+        if ($request->address) {
+            $data['address'] = $request->address;
+        }
+        if($request->password) {
+            $data['password'] = Hash::make($request->password);
+        }
+        if ($request->hasFile('profile_image')) {
+            $imageName = time() . '_profile_image.' . $request->profile_image->extension();
+            $request->profile_image->move(public_path('uploads/user'), $imageName);
+            $full_path = "uploads/user/" . $imageName;
+            $data['profile_image'] = $full_path;
+        }
+        $result = DeliveryUser::where('id', $id)->update($data);
 
-    //     if($request->password) {
-    //         $data['password'] = Hash::make($request->password);
-    //     }
+        return response()->json([
+            'message' => 'DeliveryUser updated successfully',
+            'data' => null,
+            'status' => true
+        ], 200);
 
-    //     if ($request->hasFile('profile_image')) {
-    //         $imageName = time() . '_profile_image.' . $request->profile_image->extension();
-    //         $request->profile_image->move(public_path('uploads/user'), $imageName);
-    //         $full_path = "uploads/user/" . $imageName;
-    //         $data['profile_image'] = $full_path;
-    //     }
-
-    //     $result = DeliveryUser::where('id', $id)->update($data);
-
-    //     return response()->json([
-    //         'message' => 'DeliveryUser updated successfully',
-    //         'data' => null,
-    //         'status' => true
-    //     ], 200);
-
-    // }
+    }
 
     // public function getUser($id)
     // {

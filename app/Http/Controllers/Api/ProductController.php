@@ -237,4 +237,20 @@ class ProductController extends Controller
         return response()->json(['success' => true, 'data' => $brands], 200);
     }
 
+    public function getProductTagsByCategory(Request $request)
+    {
+        $categoryId = $request->id;
+        $products = Product::where('category_id', $categoryId)
+            ->whereNotNull('tag')
+            ->pluck('tag')
+            ->toArray();
+        $allTags = [];
+        foreach ($products as $tags) {
+            $tagsArray = array_map('trim', explode(',', $tags));
+            $allTags = array_merge($allTags, $tagsArray);
+        }
+        $uniqueTags = array_unique($allTags);
+        return response()->json(['success' => true, 'tags' => array_values($uniqueTags)], 200);
+    }
+
 }
