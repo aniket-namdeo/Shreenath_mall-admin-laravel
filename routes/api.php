@@ -95,4 +95,4 @@ Route::get('/coupon', [CouponController::class, 'getCoupon']);
 
 Route::post('/delivery-login', [DeliveryUserController::class, 'Deliverylogin']);
 
-Route::post('/delivery-user-update', [DeliveryUserController::class, 'updateProfile']);
+Route::post('/update-delivery-profile/{id}', [DeliveryUserController::class, 'updateProfile']);
