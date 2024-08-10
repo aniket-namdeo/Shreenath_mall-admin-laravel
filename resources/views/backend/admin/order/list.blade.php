@@ -61,7 +61,7 @@
                     </tbody>
                 </table>
                 <div class="pagination-all">
-                    {{-- {{ $list->links(); }} --}}
+                    {{ $orderList->links(); }}
                 </div>
             </div>
         </div>

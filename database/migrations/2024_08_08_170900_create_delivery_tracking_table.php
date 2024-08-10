@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('order_id');
             $table->string('delivery_user_id');
-            $table->enum('status', ['pending', 'shipped', 'out_for_delivery', 'delivered', 'cancelled']);
+            $table->string('pickup_feedback');
+            $table->enum('order_status', ['pending', 'shipped', 'out_for_delivery', 'delivered', 'cancelled']);
+            $table->string('deliver_feedback');
             $table->string('status')->default(1);
             $table->timestamps();
         });

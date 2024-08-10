@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\City;
+use App\Models\State;
 use App\Models\User_addresses;
 
 class UserController extends Controller
@@ -179,6 +181,20 @@ class UserController extends Controller
         } else {
             return redirect()->back()->with('error', 'Something went Wrong');
         }
+    }
+
+    public function state($country_id){
+        
+        $state = State::where(array('country_id'=>$country_id))->get();
+
+        return $state;
+    }
+
+    public function city($state_id){
+        
+        $city = City::where(array('state_id'=>$state_id))->get();
+
+        return $city;
     }
 
 }

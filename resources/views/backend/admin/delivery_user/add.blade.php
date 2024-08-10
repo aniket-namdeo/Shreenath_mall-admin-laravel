@@ -50,7 +50,7 @@
 
                     </form>
                        
-                        <div class="col-md-4 mb-2">
+                        {{-- <div class="col-md-4 mb-2">
                             <label class="form-label" for="aadhar_card">Aadhar card</label>
                             <input type="text" class="form-control" name="aadhar_card" value="{{ old('aadhar_card') }}" required />
                         </div>
@@ -86,7 +86,7 @@
                             <label class="form-label" for="driving_license">Driving license</label>
                             <input type="text" class="form-control" name="driving_license" value="{{ old('driving_license') }}" required />
                         </div>
-                     
+                      --}}
                         <div class="col-md-12">
                             <button type="submit" class="btn web-btn mt-3" id="submit_btn">
                                 Register User

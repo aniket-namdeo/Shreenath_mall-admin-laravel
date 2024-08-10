@@ -10,6 +10,7 @@ use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\DeliveryUserController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,7 +54,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/add-deliveryUser', [App\Http\Controllers\DeliveryUserController::class, 'AddDeliveryUserPost'])->name('add-deliveryUser.store');
     Route::get('/delivery-user-list', [App\Http\Controllers\DeliveryUserController::class, 'DeliveryUserList'])->name('deliveryUser-list.list');
     Route::get('/delivery-user-edit/{id}', [App\Http\Controllers\DeliveryUserController::class, 'deliveryUserEdit'])->name('delivery-user.edit');
-    // Route::post('/deliveryUser-update/{id}', [App\Http\Controllers\DeliveryUserController::class, 'userUpdate'])->name('deliveryUser-update.update');
+    Route::post('/deliveryUser-update/{id}', [App\Http\Controllers\DeliveryUserController::class, 'DeliveryUserUpdate'])->name('deliveryUser-update.update');
+    Route::post('/deliveryUserdoc-update/{id}', [App\Http\Controllers\DeliveryUserController::class, 'DeliveryUserDocupdate'])->name('deliveryUser-doc-update.update');
+    // Route::post('/update-basic/{id}', [DeliveryUserBasicController::class, 'update'])->name('deliveryUser.updateBasic');
+
 
 
     // category
@@ -114,6 +118,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/brand-list', [App\Http\Controllers\BrandController::class, 'list'])->name('brand-list.list');
     Route::get('/edit-brand/{id}', [App\Http\Controllers\BrandController::class, 'brandEdit'])->name('brand.edit');
     Route::post('/brand-update/{id}', [App\Http\Controllers\BrandController::class, 'brandUpdate'])->name('update-brand.update');
+
+
+    // state city
+    Route::get('state/{country_id}', [App\Http\Controllers\UserController::class, 'state']);
+
+    Route::get('city/{state_id}', [App\Http\Controllers\UserController::class, 'city']);
 
 });
 

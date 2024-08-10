@@ -54,6 +54,7 @@ class OrderController extends Controller
 
         $orderItems = Order::where('orders.id', $orderId)
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('product', 'order_items.product_id', '=', 'product.id')
             ->select(
                 'order_items.id',
                 'order_items.product_id',
@@ -62,6 +63,7 @@ class OrderController extends Controller
                 'order_items.quantity',
                 'order_items.price',
                 'order_items.isCancelled',
+                'product.product_name as product_name',
             )
             ->get();
 

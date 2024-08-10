@@ -89,6 +89,7 @@ Route::get('/privacypolicy', [PrivacyPolicyController::class, 'getPrivacyPolicy'
 // coupon
 
 Route::get('/coupon', [CouponController::class, 'getCoupon']);
+Route::post('/applyCoupon', [CouponController::class, 'applyCoupon']);
 
 
 // deliverUser

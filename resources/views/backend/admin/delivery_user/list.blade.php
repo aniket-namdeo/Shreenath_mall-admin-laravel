@@ -31,6 +31,7 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Mobile</th>
+                            <th>Verified</th>
                             {{-- <th>User type</th> --}}
                             <th class="text-end">Action</th>
                         </tr>
@@ -45,6 +46,7 @@
                             <td>{{ $s['name'] }}</td>
                             <td>{{ $s['email'] }}</td>
                             <td>{{ $s['contact'] }}</td>
+                            <td>{{ $s['status'] }}</td>
                             <td class="text-end">
                                 <div class="table-action-btns">
                                     <a href={{ url('/admin/delivery-user-edit/' . $s['id']) }} class="btn btn-primary">
