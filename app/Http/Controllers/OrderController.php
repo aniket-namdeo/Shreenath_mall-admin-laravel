@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Order_items;
+use App\Models\DeliveryTracking;
+use App\Models\DeliveryUser;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -20,7 +22,8 @@ class OrderController extends Controller
             ->where('users.user_type', '!=', 'Admin')
             ->orderBy('orders.id', 'desc')
             ->paginate(20);
-        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'orderList'));
+        $deliveryUsers = DeliveryUser::where('is_blocked', 0)->where('status', 'verified')->get();
+        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'orderList', 'deliveryUsers'));
     }
 
     public function orderEdit($orderId)
@@ -137,5 +140,39 @@ class OrderController extends Controller
             return redirect()->back()->with('error', 'Something went Wrong');
         }
     }
+
+
+    public function assignOrder(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|exists:orders,id',
+            'delivery_user_id' => 'required|exists:delivery_user,id',
+        ]);
+
+        $data = [
+            'order_id' => $request->order_id,
+            'delivery_user_id' => $request->delivery_user_id,
+            'status' => 'assigned',
+            'assigned_at' => now(),
+        ];
+
+        DeliveryTracking::create($data);
+
+        return redirect()->back()->with('success', 'Order assigned successfully!');
+    }
+
+
+    public function checkOrderAssignment(Request $request)
+    {
+        $deliveryTracking = DeliveryTracking::where('order_id', $request->order_id)->first();
+
+        if ($deliveryTracking) {
+            $assignedUserName = DeliveryUser::find($deliveryTracking->delivery_user_id)->name;
+            return response()->json(['assigned' => true, 'delivery_user_name' => $assignedUserName]);
+        } else {
+            return response()->json(['assigned' => false]);
+        }
+    }
+
 
 }

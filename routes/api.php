@@ -69,6 +69,10 @@ Route::post('/cancel-order-item/{id}', [OrderController::class, 'cancelOrdersIte
 
 Route::post('/orderRate/{id}', [OrderController::class, 'orderRating']);
 
+Route::get('/delivery-user/{id}/orders', [OrderController::class, 'getOrdersWithItemsAndDeliveryUser']);
+
+Route::post('/confirm-order-delivery', [OrderController::class, 'confirmDelivery']);
+
 // cart
 Route::post('/cart', [CartController::class, 'addToCart']);
 

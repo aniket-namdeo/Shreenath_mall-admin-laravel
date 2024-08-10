@@ -89,6 +89,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/cancel-order/{id}', [OrderController::class, 'cancelOrder'])->name('order.cancel');
     Route::get("/cancel-order-item/{id}", [OrderController::class, 'cancelOrdersItems'])->name('order-item.cancel');
 
+    // order assigned
+    Route::post('/order/assign', [OrderController::class, 'assignOrder'])->name('order.assign');
+    Route::get('/admin/check-order-assignment', [OrderController::class, 'checkOrderAssignment'])->name('order.checkAssignment');
+
 
     // privacypolicy
     Route::get('/add-privacypolicy', [App\Http\Controllers\PrivacyPolicyController::class, 'show'])->name('privacypolicy.show');

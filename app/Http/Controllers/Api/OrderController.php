@@ -8,6 +8,8 @@ use App\Models\Order;
 use App\Models\Order_items;
 use App\Models\User_addresses;
 use App\Models\Cart;
+use App\Models\DeliveryTracking;
+use App\Models\DeliveryUser;
 use Illuminate\Support\Facades\DB;
 
 
@@ -297,7 +299,6 @@ class OrderController extends Controller
         }
     }
 
-
     public function cancelOrdersItems($id)
     {
         $checkData = Order_items::find($id);
@@ -330,5 +331,70 @@ class OrderController extends Controller
             return response()->json(['success' => false, 'error' => 'No order with this id'], 404);
         }
     }
+
+    public function getOrdersWithItemsAndDeliveryUser($id)
+    {
+        $orders = Order::
+            join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+            ->join('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
+            ->join('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
+            ->where('delivery_tracking.delivery_user_id', $id)
+            ->select(
+                'orders.id as order_id',
+                'orders.user_id',
+                'orders.total_amount',
+                'orders.status',
+                'orders.payment_method',
+                'orders.delivery_status',
+                'orders.payment_status',
+                'orders.order_date',
+                'order_items.id as order_item_id',
+                'order_items.product_id',
+                'order_items.quantity',
+                'order_items.price',
+                'delivery_user.name as delivery_person_name',
+                'delivery_user.contact as delivery_person_contact',
+                'user_addresses.name as delivery_address_name',
+                'user_addresses.contact as delivery_address_contact',
+                'user_addresses.house_address as delivery_address_house',
+                'user_addresses.street_address as delivery_address_street',
+                'user_addresses.landmark as delivery_address_landmark',
+                'user_addresses.city as delivery_address_city',
+                'user_addresses.state as delivery_address_state',
+                'user_addresses.country as delivery_address_country',
+                'user_addresses.pincode as delivery_address_pincode'
+            )
+            ->get();
+        // ->groupBy('order_id');
+
+        return response()->json(['success' => true, 'data' => $orders]);
+    }
+
+
+    public function confirmDelivery(Request $request)
+    {
+        $order = Order::find($request->order_id);
+        // Check if the order is COD
+        if ($order->payment_method === 'cash_on_delivery') {
+            $deliveryTracking = DeliveryTracking::where('order_id', $order->id)->first();
+            $deliveryUserId = $deliveryTracking->delivery_user_id;
+            $amountCollected = $order->total_amount;
+            $deliveryTracking->order_status = $request->status;
+            $deliveryTracking->save();
+
+            $deliveryUser = DeliveryUser::find($deliveryUserId);
+            $deliveryUser->total_cash_collected += $amountCollected;
+            $deliveryUser->save();
+
+            $order->status = 'completed';
+            $order->delivery_status = $request->status;
+            $order->save();
+        }
+        return response()->json(['success' => true, 'data' => null, 'message' => "Order delivered and cash updated successfully!"]);
+
+
+    }
+
 
 }
