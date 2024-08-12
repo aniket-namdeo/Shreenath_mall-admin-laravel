@@ -72,6 +72,8 @@ Route::post('/orderRate/{id}', [OrderController::class, 'orderRating']);
 Route::get('/delivery-user/{id}/orders', [OrderController::class, 'getOrdersWithItemsAndDeliveryUser']);
 Route::get('/delivery-user/{id}/overall-orders', [OrderController::class, 'getOrdersWithItemsAndDeliveryUserTotal']);
 
+Route::get('/delivery-user/{id}/ordercounts', [OrderController::class, 'getCountsDeliveryUserTotal']);
+
 Route::post('/confirm-order-delivery', [OrderController::class, 'confirmDelivery']);
 
 // cart

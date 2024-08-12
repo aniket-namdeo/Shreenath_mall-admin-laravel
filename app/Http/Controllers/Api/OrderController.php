@@ -420,24 +420,17 @@ class OrderController extends Controller
 
     public function getCountsDeliveryUserTotal($id)
     {
-        $pendingOrdersCount = Order::join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
-            ->where('delivery_tracking.delivery_user_id', $id)
-            ->pending()
+        $pendingOrdersCount = DeliveryTracking::where('delivery_user_id', $id)
+            ->where(function ($query) {
+                $query->where('order_status', 'pending')
+                    ->orWhere('order_status', 'shipped')
+                    ->orWhere('order_status', 'out_for_delivery');
+            })
             ->count();
 
-        $cancelledOrdersCount = Order::join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
-            ->where('delivery_tracking.delivery_user_id', $id)
-            ->cancelled()
-            ->count();
-
-        $deliveredOrdersCount = Order::join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
-            ->where('delivery_tracking.delivery_user_id', $id)
-            ->delivered()
-            ->count();
-
-        $totalOrdersCount = Order::join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
-            ->where('delivery_tracking.delivery_user_id', $id)
-            ->count();
+        $deliveredOrdersCount = DeliveryTracking::where('delivery_user_id', $id)->where('order_status', 'delivered')->count();
+        $cancelledOrdersCount = DeliveryTracking::where('delivery_user_id', $id)->where('order_status', 'cancelled')->count();
+        $totalOrdersCount = DeliveryTracking::where('delivery_user_id', $id)->count();
 
         return response()->json([
             'success' => true,
@@ -449,9 +442,6 @@ class OrderController extends Controller
             ],
         ]);
     }
-
-
-
 
     public function confirmDelivery(Request $request)
     {
