@@ -45,7 +45,7 @@
                             <td>{{ $value->status }}</td>
                             <td>{{ $value->delivery_status }}</td>
                             <td>{{ $value->payment_status }}</td>
-                            <td>{{ $value->order_date }}</td>
+                            <td>{{ $value->created_at }}</td>
                             <td>
                                 <div class="table-action-btns">
                                     <a href="javascript:void(0);" data-order-id="{{ $value->id }}" class="btn btn-success btn-xs text-white btn-assign-order">
