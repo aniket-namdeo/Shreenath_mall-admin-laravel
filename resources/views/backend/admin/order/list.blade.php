@@ -71,43 +71,6 @@
     </div>
 </div>
 
-
-{{-- <div class="modal fade" id="assignOrderModal" tabindex="-1" role="dialog" aria-labelledby="assignOrderModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="assignOrderModalLabel">Assign Delivery User</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="assignOrderForm" method="POST" action="{{ route('order.assign') }}">
-                @csrf
-                <div class="modal-body">
-                    <input type="hidden" name="order_id" id="order_id">
-                    <div class="form-group">
-                        <label for="delivery_user_id">Select Delivery User</label>
-                        <select name="delivery_user_id" id="delivery_user_id" class="form-control">
-                            @foreach($deliveryUsers as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Assign</button>
-                </div>
-
-                <div class="form-group mt-3">
-                    <label for="assigned_user">Assigned Delivery User</label>
-                    <input type="text" id="assigned_user" class="form-control" readonly>
-                </div>
-            </form>
-        </div>
-    </div>
-</div> --}}
-
 <div class="modal fade" id="assignOrderModal" tabindex="-1" role="dialog" aria-labelledby="assignOrderModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -169,11 +132,12 @@
                 data: { order_id: orderId },
                 success: function(response) {
                     if (response.assigned) {
-                        $('#assign-section').hide();
-                        $('#assignButton').hide();
+                        $('#assign-section').show();
+                        $('#assignButton').show();
                         $('#assigned-section').show();
                         $('#assigned_user').val(response.delivery_user_name);
-                    } else {
+                    } 
+                    else {
                         $('#assign-section').show();
                         $('#assignButton').show();
                         $('#assigned-section').hide();

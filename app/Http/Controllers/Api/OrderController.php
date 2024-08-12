@@ -160,10 +160,9 @@ class OrderController extends Controller
 
         return response()->json(['orders' => $result->values()], 200);
     }
-
     public function getOrderDetail($id)
     {
-        $orders = $orders = Order::where('orders.id', $id)
+        $orders = Order::where('orders.id', $id)
             ->join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
             ->join('product', 'order_items.product_id', '=', 'product.id')
@@ -219,6 +218,8 @@ class OrderController extends Controller
                 ];
             });
 
+            $totalMrp = number_format($order->sum('product_mrp'), 2, '.', '');
+
             return [
                 'id' => $orderData->order_id,
                 'user_id' => $orderData->user_id,
@@ -241,13 +242,14 @@ class OrderController extends Controller
                 'state' => $orderData->state,
                 'country' => $orderData->country,
                 'pincode' => $orderData->pincode,
-                'items' => $items
+                'total_mrp' => $totalMrp,
+                'items' => $items,
             ];
         });
 
         return response()->json(['orders' => $result->values()], 200);
-
     }
+
 
     public function paymentStatusUpdate(Request $request, $id)
     {
@@ -334,6 +336,48 @@ class OrderController extends Controller
 
     public function getOrdersWithItemsAndDeliveryUser($id)
     {
+
+        $startOfDay = now()->startOfDay();
+        $endOfDay = now()->endOfDay();
+        $orders = Order::
+            join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+            ->join('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
+            ->join('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
+            ->where('delivery_tracking.delivery_user_id', $id)
+            ->whereBetween('delivery_tracking.assigned_at', [$startOfDay, $endOfDay])
+            ->select(
+                'orders.id as order_id',
+                'orders.user_id',
+                'orders.total_amount',
+                'orders.status',
+                'orders.payment_method',
+                'orders.delivery_status',
+                'orders.payment_status',
+                'orders.order_date',
+                'order_items.id as order_item_id',
+                'order_items.product_id',
+                'order_items.quantity',
+                'order_items.price',
+                'delivery_user.name as delivery_person_name',
+                'delivery_user.contact as delivery_person_contact',
+                'user_addresses.name as delivery_address_name',
+                'user_addresses.contact as delivery_address_contact',
+                'user_addresses.house_address as delivery_address_house',
+                'user_addresses.street_address as delivery_address_street',
+                'user_addresses.landmark as delivery_address_landmark',
+                'user_addresses.city as delivery_address_city',
+                'user_addresses.state as delivery_address_state',
+                'user_addresses.country as delivery_address_country',
+                'user_addresses.pincode as delivery_address_pincode'
+            )
+            ->get();
+        // ->groupBy('order_id');
+
+        return response()->json(['success' => true, 'data' => $orders]);
+    }
+    public function getOrdersWithItemsAndDeliveryUserTotal($id)
+    {
         $orders = Order::
             join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
@@ -365,11 +409,48 @@ class OrderController extends Controller
                 'user_addresses.country as delivery_address_country',
                 'user_addresses.pincode as delivery_address_pincode'
             )
+            ->orderBy('delivery_tracking.id', 'desc')
             ->get();
         // ->groupBy('order_id');
 
         return response()->json(['success' => true, 'data' => $orders]);
     }
+
+
+
+    public function getCountsDeliveryUserTotal($id)
+    {
+        $pendingOrdersCount = Order::join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+            ->where('delivery_tracking.delivery_user_id', $id)
+            ->pending()
+            ->count();
+
+        $cancelledOrdersCount = Order::join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+            ->where('delivery_tracking.delivery_user_id', $id)
+            ->cancelled()
+            ->count();
+
+        $deliveredOrdersCount = Order::join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+            ->where('delivery_tracking.delivery_user_id', $id)
+            ->delivered()
+            ->count();
+
+        $totalOrdersCount = Order::join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+            ->where('delivery_tracking.delivery_user_id', $id)
+            ->count();
+
+        return response()->json([
+            'success' => true,
+            'order_counts' => [
+                'pending_orders' => $pendingOrdersCount,
+                'cancelled_orders' => $cancelledOrdersCount,
+                'delivered_orders' => $deliveredOrdersCount,
+                'total_orders' => $totalOrdersCount
+            ],
+        ]);
+    }
+
+
 
 
     public function confirmDelivery(Request $request)
@@ -385,6 +466,7 @@ class OrderController extends Controller
 
             $deliveryUser = DeliveryUser::find($deliveryUserId);
             $deliveryUser->total_cash_collected += $amountCollected;
+            $deliveryUser->delivery_status = 0;
             $deliveryUser->save();
 
             $order->status = 'completed';
@@ -392,8 +474,6 @@ class OrderController extends Controller
             $order->save();
         }
         return response()->json(['success' => true, 'data' => null, 'message' => "Order delivered and cash updated successfully!"]);
-
-
     }
 
 

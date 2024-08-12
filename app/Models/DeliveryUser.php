@@ -39,6 +39,7 @@ class DeliveryUser extends Model
         'insurance_doc',
         'license_doc',
         'status',
+        'delivery_status',
     ];
 
 }

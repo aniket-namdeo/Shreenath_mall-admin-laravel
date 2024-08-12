@@ -155,7 +155,12 @@ class OrderController extends Controller
             'status' => 'assigned',
             'assigned_at' => now(),
         ];
-
+        $check = DeliveryTracking::where('order_id', $request->order_id)->where('delivery_user_id', $request->delivery_user_id)->first();
+        if($check){
+            $check->update([
+                'status' => 'disabled',
+            ]);
+        }
         DeliveryTracking::create($data);
 
         return redirect()->back()->with('success', 'Order assigned successfully!');
