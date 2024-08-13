@@ -25,6 +25,7 @@
                             <th>User Name</th>
                             <th>Total amount</th>
                             <th>Order Status</th>
+                            <th>Delivery Person</th>
                             <th>Delivery status</th>
                             <th>Payment status</th>
                             <th>Date/Time</th>
@@ -40,12 +41,21 @@
                         <tr>
                             <td>{{ $a++ }}</td>
                             <td>{{ $value->id }}</td>
-                            <td>{{ $value->name }}</td>
+                            <td>{{ $value->user_name }}</td>
                             <td>{{ $value->total_amount ?? 'N/A' }}</td>
-                            <td>{{ $value->status }}</td>
+                            <td>{{ $value->status == "completed" ? "Delivered" : $value->status }}</td>
+                            <td>{{ $value->delivery_user_name ?? 'N/A' }}</td>
                             <td>{{ $value->delivery_status }}</td>
                             <td>{{ $value->payment_status }}</td>
-                            <td>{{ $value->created_at }}</td>
+                            <td>
+                                @php
+                                    $dateTime = explode(' ', $value->created_at);
+                                    $date = $dateTime[0];
+                                    $time = $dateTime[1];
+                                @endphp
+                                {{ $date }} <br> {{ $time }}
+                            </td>
+                            
                             <td>
                                 <div class="table-action-btns">
                                     <a href="javascript:void(0);" data-order-id="{{ $value->id }}" class="btn btn-success btn-xs text-white btn-assign-order">

@@ -12,19 +12,24 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-
     public function getOrders()
     {
         $page_name = 'order/list';
         $current_page = 'order-list';
         $page_title = 'Manage Orders';
-        $orderList = Order::select('orders.*', 'users.name')->join('users', 'orders.user_id', '=', 'users.id')
+
+        $orderList = Order::select('orders.*', 'users.name as user_name', 'delivery_user.name as delivery_user_name')
+            ->join('users', 'orders.user_id', '=', 'users.id')
+            ->leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+            ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
             ->where('users.user_type', '!=', 'Admin')
             ->orderBy('orders.id', 'desc')
             ->paginate(20);
         $deliveryUsers = DeliveryUser::where('is_blocked', 0)->where('status', 'verified')->get();
+
         return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'orderList', 'deliveryUsers'));
     }
+
 
     public function orderEdit($orderId)
     {
@@ -156,7 +161,7 @@ class OrderController extends Controller
             'assigned_at' => now(),
         ];
         $check = DeliveryTracking::where('order_id', $request->order_id)->where('delivery_user_id', $request->delivery_user_id)->first();
-        if($check){
+        if ($check) {
             $check->update([
                 'status' => 'disabled',
             ]);

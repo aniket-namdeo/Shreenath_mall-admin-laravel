@@ -40,6 +40,8 @@ class DeliveryUser extends Model
         'license_doc',
         'status',
         'delivery_status',
+        'total_cash_collected',
+        'total_cash_to_send_back'
     ];
 
 }

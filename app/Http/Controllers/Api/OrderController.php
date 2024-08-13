@@ -352,13 +352,15 @@ class OrderController extends Controller
                 'orders.total_amount',
                 'orders.status',
                 'orders.payment_method',
-                'orders.delivery_status',
+                'orders.delivery_status as order_status',
                 'orders.payment_status',
                 'orders.order_date',
                 'order_items.id as order_item_id',
                 'order_items.product_id',
                 'order_items.quantity',
                 'order_items.price',
+                'delivery_tracking.id as delivery_tracking_id',
+                'delivery_tracking.order_status as delivery_status',
                 'delivery_user.name as delivery_person_name',
                 'delivery_user.contact as delivery_person_contact',
                 'user_addresses.name as delivery_address_name',
@@ -390,24 +392,25 @@ class OrderController extends Controller
                 'orders.total_amount',
                 'orders.status',
                 'orders.payment_method',
-                'orders.delivery_status',
+                'orders.delivery_status as order_status',
                 'orders.payment_status',
                 'orders.order_date',
                 'order_items.id as order_item_id',
                 'order_items.product_id',
                 'order_items.quantity',
                 'order_items.price',
+                'delivery_tracking.order_status as delivery_status',
                 'delivery_user.name as delivery_person_name',
                 'delivery_user.contact as delivery_person_contact',
-                'user_addresses.name as delivery_address_name',
-                'user_addresses.contact as delivery_address_contact',
-                'user_addresses.house_address as delivery_address_house',
-                'user_addresses.street_address as delivery_address_street',
-                'user_addresses.landmark as delivery_address_landmark',
-                'user_addresses.city as delivery_address_city',
-                'user_addresses.state as delivery_address_state',
-                'user_addresses.country as delivery_address_country',
-                'user_addresses.pincode as delivery_address_pincode'
+                'user_addresses.name as user_address_name',
+                'user_addresses.contact as user_address_contact',
+                'user_addresses.house_address as user_address_house',
+                'user_addresses.street_address as user_address_street',
+                'user_addresses.landmark as user_address_landmark',
+                'user_addresses.city as user_address_city',
+                'user_addresses.state as user_address_state',
+                'user_addresses.country as user_address_country',
+                'user_addresses.pincode as user_address_pincode'
             )
             ->orderBy('delivery_tracking.id', 'desc')
             ->get();
@@ -416,17 +419,18 @@ class OrderController extends Controller
         return response()->json(['success' => true, 'data' => $orders]);
     }
 
-
-
     public function getCountsDeliveryUserTotal($id)
     {
         $pendingOrdersCount = DeliveryTracking::where('delivery_user_id', $id)
             ->where(function ($query) {
                 $query->where('order_status', 'pending')
                     ->orWhere('order_status', 'shipped')
-                    ->orWhere('order_status', 'out_for_delivery');
+                    ->orWhere('order_status', 'out_for_delivery')
+                    ->orWhere('order_status', 'accepted');
             })
             ->count();
+
+        $pendingCash = DeliveryUser::select('total_cash_collected', 'total_cash_to_send_back')->where('id', $id)->get();
 
         $deliveredOrdersCount = DeliveryTracking::where('delivery_user_id', $id)->where('order_status', 'delivered')->count();
         $cancelledOrdersCount = DeliveryTracking::where('delivery_user_id', $id)->where('order_status', 'cancelled')->count();
@@ -440,6 +444,10 @@ class OrderController extends Controller
                 'delivered_orders' => $deliveredOrdersCount,
                 'total_orders' => $totalOrdersCount
             ],
+            'pending_cash' => [
+                'total_cash_collected' => (float) $pendingCash[0]->total_cash_collected,
+                'total_cash_sent_back' => (float) $pendingCash[0]->total_cash_to_send_back
+            ]
         ]);
     }
 
@@ -448,7 +456,9 @@ class OrderController extends Controller
         $order = Order::find($request->order_id);
         // Check if the order is COD
         if ($order->payment_method === 'cash_on_delivery') {
-            $deliveryTracking = DeliveryTracking::where('order_id', $order->id)->first();
+            $deliveryTracking = DeliveryTracking::where('order_id', $order->id)
+                ->orderBy('created_at', 'desc')
+                ->first();
             $deliveryUserId = $deliveryTracking->delivery_user_id;
             $amountCollected = $order->total_amount;
             $deliveryTracking->order_status = $request->status;
@@ -462,9 +472,43 @@ class OrderController extends Controller
             $order->status = 'completed';
             $order->delivery_status = $request->status;
             $order->save();
+        } else {
+            $deliveryTracking = DeliveryTracking::where('order_id', $order->id)->orderBy('created_at', 'desc')
+                ->first();
+            $deliveryUserId = $deliveryTracking->delivery_user_id;
+            $deliveryTracking->order_status = $request->status;
+            $deliveryTracking->save();
+
+            $deliveryUser = DeliveryUser::find($deliveryUserId);
+            $deliveryUser->delivery_status = 0;
+            $deliveryUser->save();
+
+            $order->status = 'completed';
+            $order->delivery_status = $request->status;
+            $order->save();
         }
+
+
         return response()->json(['success' => true, 'data' => null, 'message' => "Order delivered and cash updated successfully!"]);
     }
 
+    public function acceptOrRejectOrder(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+            'status' => 'required'
+        ]);
+
+        $deliveryTracking = DeliveryTracking::where('id', $request->id)->first();
+
+        if ($deliveryTracking) {
+            $deliveryTracking->order_status = $request->status;
+            $deliveryTracking->save();
+
+            return response()->json(['status' => true, 'message' => 'Order status updated successfully.']);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Order not found.'], 404);
+        }
+    }
 
 }

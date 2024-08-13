@@ -218,6 +218,13 @@ class AuthController extends Controller
 
         $validated['country'] = 101;
 
+        if($request->latitude){
+            $validated['latitude'] = $request->latitude;
+        }
+        if($request->longitude){
+            $validated['longitude'] = $request->longitude;
+        }
+
         $address = User_addresses::create($validated);
 
         if ($request->input('default_address') == 1) {
@@ -270,6 +277,13 @@ class AuthController extends Controller
             'default_address' => 'nullable|integer|in:0,1',
         ]);
         $checkaddresses = User_addresses::where('id', $id)->get();
+
+        if($request->latitude){
+            $validated['latitude'] = $request->latitude;
+        }
+        if($request->longitude){
+            $validated['longitude'] = $request->longitude;
+        }
 
         if ($checkaddresses->isEmpty()) {
             return response()->json(['error' => 'No addresses found with this id'], 404);
