@@ -194,7 +194,9 @@ class OrderController extends Controller
                 'user_addresses.city',
                 'user_addresses.state',
                 'user_addresses.country',
-                'user_addresses.pincode'
+                'user_addresses.pincode',
+                'user_addresses.latitude',
+                'user_addresses.longitude'
             )
             ->get();
 
