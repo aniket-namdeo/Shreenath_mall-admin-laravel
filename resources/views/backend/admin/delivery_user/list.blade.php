@@ -32,6 +32,9 @@
                             <th>Email</th>
                             <th>Mobile</th>
                             <th>Verified</th>
+                            <th>Pending Cash</th>
+                            <th>Cash collected</th>
+                            <th>Cash submitted</th>
                             {{-- <th>User type</th> --}}
                             <th class="text-end">Action</th>
                         </tr>
@@ -47,6 +50,9 @@
                             <td>{{ $s['email'] }}</td>
                             <td>{{ $s['contact'] }}</td>
                             <td>{{ $s['status'] }}</td>
+                            <td> {{ $s['total_cash_collected'] - $s['total_cash_to_sent_back'] ?? 0 }} </td>
+                            <td>{{ $s['total_cash_collected'] }}</td>
+                            <td>{{ $s['total_cash_to_sent_back'] ?? 0 }}</td>
                             <td class="text-end">
                                 <div class="table-action-btns">
                                     <a href={{ url('/admin/delivery-user-edit/' . $s['id']) }} class="btn btn-primary">
