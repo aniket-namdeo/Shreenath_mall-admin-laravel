@@ -24,5 +24,7 @@ class User_addresses extends Model
         'country',
         'pincode',
         'default_address',
+        'latitude',
+        'longitude'
     ];
 }

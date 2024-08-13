@@ -41,7 +41,9 @@ class DeliveryUser extends Model
         'status',
         'delivery_status',
         'total_cash_collected',
-        'total_cash_to_send_back'
+        'total_cash_to_send_back',
+        'latitude',
+        'longitude',
     ];
 
 }
