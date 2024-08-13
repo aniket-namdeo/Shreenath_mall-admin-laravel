@@ -33,7 +33,7 @@ class OrderController extends Controller
         ]);
 
         try {
-
+            $otp = random_int(100000, 999999);
             $orderDate = $request->order_date ?: date('Y-m-d');
             $deliveryDate = $request->delivery_date ?: date('Y-m-d');
 
@@ -51,6 +51,7 @@ class OrderController extends Controller
                 'discount_amount' => $request->discount_amount,
                 'tax_amount' => $request->tax_amount,
                 'shipping_fee' => $request->shipping_fee,
+                'otp' => $otp,
             ]);
 
             foreach ($request->items as $item) {
@@ -72,7 +73,6 @@ class OrderController extends Controller
             return response()->json(['error' => 'Failed to create order', 'message' => $e->getMessage()], 500);
         }
     }
-
     public function getOrdersByUser($userId)
     {
         $orders = Order::where('orders.user_id', $userId)
@@ -249,8 +249,6 @@ class OrderController extends Controller
 
         return response()->json(['orders' => $result->values()], 200);
     }
-
-
     public function paymentStatusUpdate(Request $request, $id)
     {
         $request->validate([
@@ -385,6 +383,50 @@ class OrderController extends Controller
 
         return response()->json(['success' => true, 'data' => $orders]);
     }
+
+    public function getOrdersWithItemsAndDeliveryUserWithId($deliveryTrackingId)
+    {
+        $orders = Order::
+            join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+            ->join('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
+            ->join('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
+            ->where('delivery_tracking.id', $deliveryTrackingId);
+
+        $orders = $orders->select(
+            'orders.id as order_id',
+            'orders.user_id',
+            'orders.total_amount',
+            'orders.status',
+            'orders.payment_method',
+            'orders.delivery_status as order_status',
+            'orders.payment_status',
+            'orders.order_date',
+            'order_items.id as order_item_id',
+            'order_items.product_id',
+            'order_items.quantity',
+            'order_items.price',
+            'delivery_tracking.id as delivery_tracking_id',
+            'delivery_tracking.order_status as delivery_status',
+            'delivery_user.name as delivery_person_name',
+            'delivery_user.contact as delivery_person_contact',
+            'user_addresses.name as user_address_name',
+            'user_addresses.contact as user_address_contact',
+            'user_addresses.house_address as user_address_house',
+            'user_addresses.street_address as user_address_street',
+            'user_addresses.landmark as user_address_landmark',
+            'user_addresses.city as user_address_city',
+            'user_addresses.state as user_address_state',
+            'user_addresses.country as user_address_country',
+            'user_addresses.pincode as user_address_pincode',
+            'user_addresses.latitude as user_latitude',
+            'user_addresses.longitude as user_longitude'
+        )
+            ->get();
+
+        return response()->json(['success' => true, 'data' => $orders]);
+    }
+
 
     public function getOrdersWithItemsAndDeliveryUserTotal(Request $request, $id)
     {

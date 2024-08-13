@@ -74,6 +74,8 @@ Route::get('/delivery-user/{id}/overall-orders', [OrderController::class, 'getOr
 
 Route::get('/delivery-user/{id}/ordercounts', [OrderController::class, 'getCountsDeliveryUserTotal']);
 
+Route::get('/delivery-order/{id}', [OrderController::class, 'getOrdersWithItemsAndDeliveryUserWithId']);
+
 Route::post('/accept-order', [OrderController::class, 'acceptOrRejectOrder']);
 
 Route::post('/confirm-order-delivery', [OrderController::class, 'confirmDelivery']);
