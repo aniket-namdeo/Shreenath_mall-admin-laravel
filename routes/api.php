@@ -108,3 +108,9 @@ Route::post('/applyCoupon', [CouponController::class, 'applyCoupon']);
 Route::post('/delivery-login', [DeliveryUserController::class, 'Deliverylogin']);
 
 Route::post('/update-delivery-profile/{id}', [DeliveryUserController::class, 'updateProfile']);
+
+
+// state country 
+
+Route::get('/state/{country_id}', [AuthController::class, 'state']);
+Route::get('/city/{state_id}', [AuthController::class, 'city']);

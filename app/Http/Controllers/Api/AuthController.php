@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\City;
+use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -309,5 +311,20 @@ class AuthController extends Controller
         $address->delete();
         return response()->json(['message' => 'Address deleted successfully',], 201);
     }
+
+    public function state($country_id){
+        
+        $state = State::where(array('country_id'=>$country_id))->get();
+
+        return response()->json(['message' => 'Data got successfully', 'data' => $state], 200);
+    }
+
+    public function city($state_id){
+        
+        $city = City::where(array('state_id'=>$state_id))->get();
+
+        return response()->json(['message' => 'Data got successfully', 'data' => $city], 200);
+    }
+
 
 }
