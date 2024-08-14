@@ -21,13 +21,18 @@ class CashDepositController extends Controller
             'cash_deposit_otp' => $otp,
         ]);
 
+        $subject = "Verification Otp";
+        $msg = "Confirmation Otp is $otp";
+
+        send_mail('himanshu.devgade@secondmedic.com', $subject, $msg);
+
         return response()->json(['success' => true, 'message' => 'OTP generated and updated successfully.', 'otp' => $otp], 200);
 
     }
     public function verifyOtp(Request $request)
     {
         $request->validate([
-            'otp' => 'required|string',
+            'otp' => 'required',
         ]);
 
         $userCheck = User::where('user_type', 'Admin')->first();
@@ -36,7 +41,7 @@ class CashDepositController extends Controller
             return response()->json(['success' => false, 'data' => 'Admin user not found'], 404);
         }
 
-        if ($userCheck->cashDepositOtp === $request->otp) {
+        if ($userCheck->cash_deposit_otp == $request->otp) {
             return response()->json(['success' => true, 'data' => 'OTP verified successfully'], 200);
         } else {
             return response()->json(['success' => false, 'data' => 'Incorrect OTP'], 400);

@@ -128,6 +128,11 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('state/{country_id}', [App\Http\Controllers\UserController::class, 'state']);
 
     Route::get('city/{state_id}', [App\Http\Controllers\UserController::class, 'city']);
+    
+    // Sales
+    
+    Route::get('/listSales', [App\Http\Controllers\SalesController::class, 'listSales']);
+
 
 });
 

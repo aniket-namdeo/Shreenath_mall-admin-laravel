@@ -319,10 +319,9 @@ class AuthController extends Controller
         return response()->json(['message' => 'Data got successfully', 'data' => $state], 200);
     }
 
-    public function city($state_id){
-        
-        $city = City::where(array('state_id'=>$state_id))->get();
-
+    public function city($name){
+        $state = State::where(array('name'=>$name))->first();
+        $city = City::where(array('state_id'=>$state->state_id))->get();
         return response()->json(['message' => 'Data got successfully', 'data' => $city], 200);
     }
 

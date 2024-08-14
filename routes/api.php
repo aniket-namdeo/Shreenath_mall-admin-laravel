@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\AboutUsController;
+use App\Http\Controllers\Api\CashDepositController;
 use App\Http\Controllers\Api\PrivacyPolicyController;
 use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\DeliveryUserController;
@@ -109,8 +110,11 @@ Route::post('/delivery-login', [DeliveryUserController::class, 'Deliverylogin'])
 
 Route::post('/update-delivery-profile/{id}', [DeliveryUserController::class, 'updateProfile']);
 
+Route::post('/sendDepositOtp', [CashDepositController::class, 'sendOtp']);
+Route::post('/verifyDepositOtp', [CashDepositController::class, 'verifyOtp']);
+Route::post('/storeDeposit', [CashDepositController::class, 'storeDeposit']);
 
 // state country 
 
 Route::get('/state/{country_id}', [AuthController::class, 'state']);
-Route::get('/city/{state_id}', [AuthController::class, 'city']);
+Route::get('/city/{name}', [AuthController::class, 'city']);

@@ -97,6 +97,12 @@
                     <li class="{{ $current_page == 'coupon-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/coupon-list') }}">List</a></li>
                 </ul>
             </li>
+            <li class="mb-2 {{ $current_page == 'sales' ? 'active' : '' }}">
+                <a href="{{ url('admin/listSales') }}">
+                    <font><i class="bx bxs-sales"></i> <span>Sales</span></font>
+                </a>
+            </li>
+
             {{-- <li class="mb-2 dropdown {{ $current_page == 'add-home_video' ? 'active' : '' }} {{ $current_page == 'home_video-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                     <font><i class="bx bxs-user-plus"></i> <span>Manage Home Video</span></font>
