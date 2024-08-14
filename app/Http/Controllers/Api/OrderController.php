@@ -220,7 +220,10 @@ class OrderController extends Controller
                 ];
             });
 
-            $totalMrp = number_format($order->sum('product_mrp'), 2, '.', '');
+            // $totalMrp = number_format($order->sum('product_mrp'), 2, '.', '');
+            $totalMrp = number_format($order->sum(function ($item) {
+                return $item->product_mrp * $item->quantity;
+            }), 2, '.', '');
 
             return [
                 'id' => $orderData->order_id,
@@ -340,8 +343,7 @@ class OrderController extends Controller
 
         $orderStatus = $request->input('order_status');
 
-        $orders = Order::
-            join('order_items', 'orders.id', '=', 'order_items.order_id')
+        $orders = Order::join('order_items', 'orders.id', '=', 'order_items.order_id')
             ->join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
             ->join('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
             ->join('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
@@ -349,7 +351,15 @@ class OrderController extends Controller
             ->whereBetween('delivery_tracking.assigned_at', [$startOfDay, $endOfDay]);
 
         if ($orderStatus) {
-            $orders = $orders->where('orders.status', $orderStatus);
+            $orders = $orders->where(function ($query) use ($orderStatus) {
+                if ($orderStatus === 'cancelled' || $orderStatus === 'rejected') {
+                    $query->whereIn('orders.status', ['cancelled', 'rejected'])
+                        ->orWhereIn('delivery_tracking.order_status', ['cancelled', 'rejected']);
+                } else {
+                    $query->where('orders.status', $orderStatus)
+                        ->where('delivery_tracking.order_status', '<>', 'cancelled');
+                }
+            });
         }
 
         $orders = $orders->select(
@@ -380,8 +390,7 @@ class OrderController extends Controller
             'user_addresses.pincode as user_address_pincode',
             'user_addresses.latitude as user_latitude',
             'user_addresses.longitude as user_longitude'
-        )
-            ->get();
+        )->get();
 
         return response()->json(['success' => true, 'data' => $orders]);
     }
