@@ -6,7 +6,7 @@
             <div class="card-header bg-white">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <h6 class="mb-0">Users List</h6>
+                        <h6 class="mb-0">Sales</h6>
                     </div>
                     {{-- <div class="dropdown  filter-dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -26,35 +26,41 @@
                     <thead>
                         <tr>
                             <th class="table-id">Id</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Mobile</th>
-                            <th class="text-end">Action</th>
+                            <th>Delivery person</th>
+                            <th>Deposit date</th>
+                            {{-- <th>Total Pending Cash</th> --}}
+                            {{-- <th>Total Cash Deposit</th> --}}
+                            <th>Cash Amount</th>
+                            <th>Deposit Amount</th>
+                            {{-- <th class="text-end">Action</th> --}}
                         </tr>
                     </thead>
                     <tbody>
 
                         @php $a = 1; @endphp
 
-                        {{-- @foreach ($list as $s)
+                        @foreach ($data as $s)
                         <tr>
                             <td>{{ $a++ }}</td>
-                            <td>{{ $s['name'] }}</td>
-                            <td>{{ $s['email'] }}</td>
-                            <td>{{ $s['contact'] }}</td>
-                            <td class="text-end">
+                            <td>{{ $s['delivery_user_name'] }}</td>
+                            <td>{{ $s['deposit_date'] }}</td>
+                            {{-- <td>{{ $s['totalCashCollected'] }}</td> --}}
+                            {{-- <td>{{ $s['totalDepositAmount'] }}</td> --}}
+                            <td>{{ $s['cash_amount'] }}</td>
+                            <td>{{ $s['deposit_amount'] }}</td>
+                            {{-- <td class="text-end">
                                 <div class="table-action-btns">
                                     <a href={{ url('/admin/users-edit/' . $s['id']) }} class="btn btn-primary">
                                         <i class="bx bx-pencil"></i>
                                     </a>
                                 </div>
-                            </td>
+                            </td> --}}
                         </tr>
-                        @endforeach --}}
+                        @endforeach
                     </tbody>
                 </table>
                 <div class="pagination-all">
-                    {{-- {{ $list->links(); }} --}}
+                    {{-- {{ $data->links(); }} --}}
                 </div>
             </div>
         </div>

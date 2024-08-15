@@ -19,10 +19,10 @@ class SalesController extends Controller
         $page_title = 'Sales';
     
         $data = CashDeposit::join('delivery_user', 'cash_deposit.delivery_user_id', '=', 'delivery_user.id')
-            ->select('cash_deposit.*', 'delivery_user.name as delivery_user_name', 'delivery_user.email as delivery_user_email')
+            ->select('cash_deposit.*', 'delivery_user.name as delivery_user_name', 'delivery_user.email as delivery_user_email', 'delivery_user.total_cash_collected as totalCashCollected', 'delivery_user.total_cash_to_send_back as totalDepositAmount')
             ->get();
-    
-        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'data'));
+
+            return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'data'));
     }
     
 
