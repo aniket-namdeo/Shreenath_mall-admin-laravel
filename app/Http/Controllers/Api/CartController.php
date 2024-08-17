@@ -51,7 +51,7 @@ class CartController extends Controller
         $cartItems = Cart::where('user_id', $id)
             ->orWhere('guest_id', $id)
             ->join('product', 'cart.product_id', '=', 'product.id')
-            ->select('cart.id', 'cart.product_id', 'cart.product_quantity', 'cart.user_id', 'cart.guest_id', 'product.product_name as product_name', 'product.price as product_price', 'product.mrp as product_mrp', 'product.image_url1 as product_image')
+            ->select('cart.id', 'cart.product_id', 'cart.product_quantity', 'cart.user_id', 'cart.guest_id', 'product.product_name as product_name', 'product.price as product_price', 'product.mrp as product_mrp', 'product.image_url1 as product_image', 'product.pack_size')
             ->get();
 
         if ($cartItems->isEmpty()) {
