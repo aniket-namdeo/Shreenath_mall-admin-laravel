@@ -43,25 +43,25 @@ class ProductController extends Controller
         }
 
         if ($request->hasFile('image_url1')) {
-            $imageName = time() . '_image.' . $request->image_url1->extension();
+            $imageName = time() . '_image1.' . $request->image_url1->extension();
             $request->image_url1->move(public_path('uploads/products'), $imageName);
             $full_path = "uploads/products/" . $imageName;
             $validated['image_url1'] = $full_path;
         }
         if ($request->hasFile('image_url2')) {
-            $imageName = time() . '_image.' . $request->image_url2->extension();
+            $imageName = time() . '_image2.' . $request->image_url2->extension();
             $request->image_url2->move(public_path('uploads/products'), $imageName);
             $full_path = "uploads/products/" . $imageName;
             $validated['image_url2'] = $full_path;
         }
         if ($request->hasFile('image_url3')) {
-            $imageName = time() . '_image.' . $request->image_url3->extension();
+            $imageName = time() . '_image3.' . $request->image_url3->extension();
             $request->image_url3->move(public_path('uploads/products'), $imageName);
             $full_path = "uploads/products/" . $imageName;
             $validated['image_url3'] = $full_path;
         }
         if ($request->hasFile('image_url4')) {
-            $imageName = time() . '_image.' . $request->image_url4->extension();
+            $imageName = time() . '_image4.' . $request->image_url4->extension();
             $request->image_url4->move(public_path('uploads/products'), $imageName);
             $full_path = "uploads/products/" . $imageName;
             $validated['image_url4'] = $full_path;
