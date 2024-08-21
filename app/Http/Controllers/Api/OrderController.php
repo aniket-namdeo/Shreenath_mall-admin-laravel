@@ -343,10 +343,10 @@ class OrderController extends Controller
 
         $orderStatus = $request->input('order_status');
 
-        $orders = Order::join('order_items', 'orders.id', '=', 'order_items.order_id')
-            ->join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
-            ->join('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
-            ->join('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
+        $orders = Order::
+            leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+            ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
+            ->leftJoin('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
             ->where('delivery_tracking.delivery_user_id', $id)
             ->whereBetween('delivery_tracking.assigned_at', [$startOfDay, $endOfDay]);
 
@@ -371,10 +371,6 @@ class OrderController extends Controller
             'orders.delivery_status as order_status',
             'orders.payment_status',
             'orders.order_date',
-            'order_items.id as order_item_id',
-            'order_items.product_id',
-            'order_items.quantity',
-            'order_items.price',
             'delivery_tracking.id as delivery_tracking_id',
             'delivery_tracking.order_status as delivery_status',
             'delivery_user.name as delivery_person_name',
@@ -390,7 +386,8 @@ class OrderController extends Controller
             'user_addresses.pincode as user_address_pincode',
             'user_addresses.latitude as user_latitude',
             'user_addresses.longitude as user_longitude'
-        )->get();
+        )
+            ->get();
 
         return response()->json(['success' => true, 'data' => $orders]);
     }
