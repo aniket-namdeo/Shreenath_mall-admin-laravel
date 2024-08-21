@@ -62,8 +62,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     // category
     Route::get('/add-category', [App\Http\Controllers\CategoryController::class, 'show'])->name('add-category.show');
+    Route::get('/add-subcategory', [App\Http\Controllers\CategoryController::class, 'subCategoryShow'])->name('add-subcategory.show');
     Route::post('/add-category', [App\Http\Controllers\CategoryController::class, 'store'])->name('add-category.store');
     Route::get('/category-list', [App\Http\Controllers\CategoryController::class, 'categorylist'])->name('category-list.show');
+    Route::get('/subcategory-list', [App\Http\Controllers\CategoryController::class, 'subcategorylist'])->name('subcategory-list.show');
     Route::get('/edit-category/{id}', [CategoryController::class, 'categoryEdit'])->name('category-edit.edit');
     Route::post('/update-category/{id}', [CategoryController::class, 'categoryUpdate'])->name('update-category.update');
 

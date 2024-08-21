@@ -20,6 +20,15 @@ class CategoryController extends Controller
         return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'list'));
     }
 
+    public function subCategoryShow()
+    {
+        $page_name = 'category/addSub';
+        $current_page = 'add-subcategory';
+        $page_title = 'Add Category';
+        $list = Category::where(array('status' => 1))->whereNull('parentCategoryId')->orderBy('id', 'desc')->paginate(20);
+        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'list'));
+    }
+
     public function store(Request $request)
     {
         $data['name'] = $request->name;
@@ -38,7 +47,7 @@ class CategoryController extends Controller
             $data['image'] = $full_path;
         }
         $response = Category::create($data);
-        return redirect('/admin/dashboard')->with('success', 'Category created');
+        return redirect('/admin/category-list')->with('success', 'Category created');
     }
 
     public function categorylist()
@@ -50,12 +59,28 @@ class CategoryController extends Controller
             ->leftJoin('category as c2', 'c1.parentCategoryId', '=', 'c2.id')
             ->select('c1.*', 'c2.name as parentCategoryName')
             ->where('c1.status', 1)
+            ->whereNull('c1.parentCategoryId')
             ->orderBy('c1.id', 'desc')
             ->paginate(20);
 
         return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'list'));
     }
 
+    public function subcategorylist()
+    {
+        $page_name = 'category/sublist';
+        $current_page = 'Sub CategoryList';
+        $page_title = 'List';
+        $list = Category::from('category as c1')
+            ->leftJoin('category as c2', 'c1.parentCategoryId', '=', 'c2.id')
+            ->select('c1.*', 'c2.name as parentCategoryName')
+            ->whereNotNull('c1.parentCategoryId')
+            ->where('c1.status', 1)
+            ->orderBy('c1.id', 'desc')
+            ->paginate(20);
+
+        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'list'));
+    }
 
     public function categoryEdit(Category $id)
     {

@@ -35,7 +35,9 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <li class="{{ $current_page == 'add-category' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-category') }}">Add Category</a></li>
+                    <li class="{{ $current_page == 'add-subcategory' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-subcategory') }}">Add SubCategory</a></li>
                     <li class="{{ $current_page == 'category-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/category-list') }}">Category List</a></li>
+                    <li class="{{ $current_page == 'subcategory-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/subcategory-list') }}">Sub Category List</a></li>
                 </ul>
             </li>
             <li class="mb-2 dropdown {{ $current_page == 'add-brand' ? 'active' : '' }} {{ $current_page == 'brand-list' ? 'active' : '' }}">

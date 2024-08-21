@@ -8,10 +8,6 @@
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-md-4 mb-2">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name">
-                        </div>
-                        {{-- <div class="col-md-4 mb-2">
                             <label for="category">Select Category</label>
                             <select class="form-control" id="category" name="category">
                                 <option value="">Select a category</option>
@@ -19,7 +15,12 @@
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
                             </select>
-                        </div> --}}
+                        </div>
+
+                        <div class="col-md-4 mb-2">
+                            <label for="name">Sub Category Name</label>
+                            <input type="text" class="form-control" id="name" name="name">
+                        </div>
 
                         <div class="col-md-4 mb-2">
                             <label for="image">Image</label>

@@ -231,9 +231,14 @@ class ProductController extends Controller
     public function getBrandsbyCategory(Request $request)
     {
         $categoryId = $request->id;
-        $products = Product::where('category_id', $categoryId)->get();
-        $brandIds = $products->pluck('brand_id')->unique();
-        $brands = Brand::whereIn('id', $brandIds)->get();
+
+        if ($categoryId == 0) {
+            $brands = Brand::limit(10)->get();
+        } else {
+            $products = Product::where('category_id', $categoryId)->get();
+            $brandIds = $products->pluck('brand_id')->unique();
+            $brands = Brand::whereIn('id', $brandIds)->get();
+        }
         return response()->json(['success' => true, 'data' => $brands], 200);
     }
 

@@ -574,7 +574,6 @@ class OrderController extends Controller
         if ($deliveryTracking) {
             $deliveryTracking->order_status = $request->status;
             $deliveryTracking->save();
-
             return response()->json(['status' => true, 'message' => 'Order status updated successfully.']);
         } else {
             return response()->json(['status' => false, 'message' => 'Order not found.'], 404);
