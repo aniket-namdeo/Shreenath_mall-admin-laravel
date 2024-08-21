@@ -353,10 +353,10 @@ class OrderController extends Controller
         if ($orderStatus) {
             $orders = $orders->where(function ($query) use ($orderStatus) {
                 if ($orderStatus === 'cancelled' || $orderStatus === 'rejected') {
-                    $query->whereIn('orders.status', ['cancelled', 'rejected'])
+                    $query->whereIn('orders.delivery_status', ['cancelled', 'rejected'])
                         ->orWhereIn('delivery_tracking.order_status', ['cancelled', 'rejected']);
                 } else {
-                    $query->where('orders.status', $orderStatus)
+                    $query->where('orders.delivery_status', $orderStatus)
                         ->where('delivery_tracking.order_status', '<>', 'cancelled');
                 }
             });
@@ -395,8 +395,8 @@ class OrderController extends Controller
     public function getOrdersWithItemsAndDeliveryUserWithId($deliveryTrackingId)
     {
         $orders = Order::
-            join('order_items', 'orders.id', '=', 'order_items.order_id')
-            ->join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+            // join('order_items', 'orders.id', '=', 'order_items.order_id')
+            join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
             ->join('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
             ->join('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
             ->where('delivery_tracking.id', $deliveryTrackingId);
@@ -410,10 +410,10 @@ class OrderController extends Controller
             'orders.delivery_status as order_status',
             'orders.payment_status',
             'orders.order_date',
-            'order_items.id as order_item_id',
-            'order_items.product_id',
-            'order_items.quantity',
-            'order_items.price',
+            // 'order_items.id as order_item_id',
+            // 'order_items.product_id',
+            // 'order_items.quantity',
+            // 'order_items.price',
             'delivery_tracking.id as delivery_tracking_id',
             'delivery_tracking.order_status as delivery_status',
             'delivery_user.name as delivery_person_name',
@@ -442,8 +442,7 @@ class OrderController extends Controller
         $orderStatus = $request->input('order_status');
 
         $orders = Order::
-            join('order_items', 'orders.id', '=', 'order_items.order_id')
-            ->join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+            join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
             ->join('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
             ->join('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
             ->where('delivery_tracking.delivery_user_id', $id);
@@ -460,10 +459,6 @@ class OrderController extends Controller
             'orders.delivery_status as order_status',
             'orders.payment_status',
             'orders.order_date',
-            'order_items.id as order_item_id',
-            'order_items.product_id',
-            'order_items.quantity',
-            'order_items.price',
             'delivery_tracking.order_status as delivery_status',
             'delivery_user.name as delivery_person_name',
             'delivery_user.contact as delivery_person_contact',
@@ -538,6 +533,7 @@ class OrderController extends Controller
 
             $order->status = 'completed';
             $order->delivery_status = $request->status;
+            $order->payment_status = 'paid';
             $order->save();
         } else {
             $deliveryTracking = DeliveryTracking::where('order_id', $order->id)->orderBy('created_at', 'desc')
@@ -552,6 +548,7 @@ class OrderController extends Controller
 
             $order->status = 'completed';
             $order->delivery_status = $request->status;
+            $order->payment_status = 'paid';
             $order->save();
         }
 
