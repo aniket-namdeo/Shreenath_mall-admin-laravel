@@ -12,6 +12,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\DeliveryUserController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OfferSliderController;
+use App\Http\Controllers\TagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -133,12 +134,21 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     // state city
     Route::get('state/{country_id}', [App\Http\Controllers\UserController::class, 'state']);
-
     Route::get('city/{state_id}', [App\Http\Controllers\UserController::class, 'city']);
     
     // Sales
-    
     Route::get('/listSales', [App\Http\Controllers\SalesController::class, 'listSales']);
+
+    // tags
+    Route::get('/add-tag', [App\Http\Controllers\TagController::class, 'show'])->name('add-tag.show');
+    Route::post('/add-tag', [App\Http\Controllers\TagController::class, 'store'])->name('add-tag.store');
+    Route::get('/tag-list', [App\Http\Controllers\TagController::class, 'list'])->name('tag-list.list');
+    Route::get('/edit-tag/{id}', [App\Http\Controllers\TagController::class, 'tagEdit'])->name('tag.edit');
+    Route::post('/tag-update/{id}', [App\Http\Controllers\TagController::class, 'tagUpdate'])->name('update-tag.update');
+    
+    Route::get('/productTagAssign-list/{id}', [App\Http\Controllers\TagController::class, 'productTagAssign'])->name('productTagAssign.list');
+
+    Route::post('/productTagAssign', [App\Http\Controllers\TagController::class, 'AssignProductTags'])->name('productTagAssign.store');
 
 
 });

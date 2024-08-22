@@ -116,6 +116,16 @@
                     <li class="{{ $current_page == 'offer-slider-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/offer-slider-list') }}">List</a></li>
                 </ul>
             </li>
+            <li class="mb-2 dropdown {{ $current_page == 'add-tag' ? 'active' : '' }} {{ $current_page == 'tag-list' ? 'active' : '' }}">
+                <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <font><i class="bx bxs-user-plus"></i> <span>Manage Tags</span></font>
+                    <span class="bx bx-chevron-right"></span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li class="{{ $current_page == 'add-tag' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-tag') }}">Add </a></li>
+                    <li class="{{ $current_page == 'tag-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/tag-list') }}">List</a></li>
+                </ul>
+            </li>
 
             <li class="mb-2 {{ $current_page == 'sales' ? 'active' : '' }}">
                 <a href="{{ url('admin/listSales') }}">

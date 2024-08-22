@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\PrivacyPolicyController;
 use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\DeliveryUserController;
 use App\Http\Controllers\Api\OfferSliderController;
+use App\Http\Controllers\Api\AssignProductTagController;
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
@@ -125,3 +126,7 @@ Route::get('/city/{name}', [AuthController::class, 'city']);
 // offer slider 
 
 Route::get('/offerSlider', [OfferSliderController::class, 'getOfferSlider']);
+
+// assigned tag products
+
+Route::get('/assignedTagProducts/{tagId}', [AssignProductTagController::class, 'getAssignedTagProducts']);

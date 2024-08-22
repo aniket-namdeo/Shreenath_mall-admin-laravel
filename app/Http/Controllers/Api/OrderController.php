@@ -347,7 +347,11 @@ class OrderController extends Controller
             leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
             ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
             ->leftJoin('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
-            ->where('delivery_tracking.delivery_user_id', $id)
+            // ->where('delivery_tracking.delivery_user_id', $id)
+            ->where(function ($query) use ($id) {
+                $query->whereNull('delivery_tracking.delivery_user_id')
+                    ->orWhere('delivery_tracking.delivery_user_id', $id);
+            })
             ->whereBetween('delivery_tracking.assigned_at', [$startOfDay, $endOfDay]);
 
         if ($orderStatus) {
