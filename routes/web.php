@@ -11,6 +11,7 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\DeliveryUserController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\OfferSliderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,8 +58,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/deliveryUser-update/{id}', [App\Http\Controllers\DeliveryUserController::class, 'DeliveryUserUpdate'])->name('deliveryUser-update.update');
     Route::post('/deliveryUserdoc-update/{id}', [App\Http\Controllers\DeliveryUserController::class, 'DeliveryUserDocupdate'])->name('deliveryUser-doc-update.update');
     // Route::post('/update-basic/{id}', [DeliveryUserBasicController::class, 'update'])->name('deliveryUser.updateBasic');
-
-
 
     // category
     Route::get('/add-category', [App\Http\Controllers\CategoryController::class, 'show'])->name('add-category.show');
@@ -125,6 +124,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/edit-brand/{id}', [App\Http\Controllers\BrandController::class, 'brandEdit'])->name('brand.edit');
     Route::post('/brand-update/{id}', [App\Http\Controllers\BrandController::class, 'brandUpdate'])->name('update-brand.update');
 
+    // offer Slider
+    Route::get('/offer-slider', [App\Http\Controllers\OfferSliderController::class, 'show'])->name('add-offer-slider.show');
+    Route::post('/offer-slider', [App\Http\Controllers\OfferSliderController::class, 'store'])->name('add-offer-slider.store');
+    Route::get('/offer-slider-list', [App\Http\Controllers\OfferSliderController::class, 'list'])->name('offer-slider-list.list');
+    Route::get('/edit-offer-slider/{id}', [App\Http\Controllers\OfferSliderController::class, 'offerSliderEdit'])->name('offer-slider.edit');
+    Route::post('/offer-slider-update/{id}', [App\Http\Controllers\OfferSliderController::class, 'offerSliderUpdate'])->name('update-offer-slider.update');
 
     // state city
     Route::get('state/{country_id}', [App\Http\Controllers\UserController::class, 'state']);

@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\CashDepositController;
 use App\Http\Controllers\Api\PrivacyPolicyController;
 use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\DeliveryUserController;
+use App\Http\Controllers\Api\OfferSliderController;
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
@@ -120,3 +121,7 @@ Route::post('/storeDeposit', [CashDepositController::class, 'storeDeposit']);
 
 Route::get('/state/{country_id}', [AuthController::class, 'state']);
 Route::get('/city/{name}', [AuthController::class, 'city']);
+
+// offer slider 
+
+Route::get('/offerSlider', [OfferSliderController::class, 'getOfferSlider']);

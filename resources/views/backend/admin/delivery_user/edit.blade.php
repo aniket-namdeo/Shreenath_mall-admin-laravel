@@ -55,7 +55,7 @@
                         </div>
                         <div class="col-md-4 mb-2">
                             <label class="form-label" for="">City</label>
-                            <select class="form-control js-example-basic-single" name="city" id="city" >
+                            <select class="form-control js-example-basic-single" multiple name="city" id="city" >
                                 <option value="" selected disabled> </option>
                             </select>
                         </div> --}}
