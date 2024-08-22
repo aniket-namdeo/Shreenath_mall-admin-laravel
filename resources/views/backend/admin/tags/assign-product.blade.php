@@ -20,6 +20,10 @@
                             </select>
                         </div>
 
+                        @foreach($detail as $item)
+                            <p>Product Name: {{ $item->product_name }}</p>
+                        @endforeach
+
                         <div class="col-md-12">
                             <button type="submit" class="btn web-btn mt-3" id="submit_btn">
                                 Submit

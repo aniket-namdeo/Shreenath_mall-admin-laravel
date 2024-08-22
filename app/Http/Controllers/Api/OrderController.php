@@ -336,22 +336,62 @@ class OrderController extends Controller
             return response()->json(['success' => false, 'error' => 'No order with this id'], 404);
         }
     }
+
+    public function getPendingOrdersWithItemsAndDeliveryUser(Request $request, $id)
+    {
+        
+        $orders = Order::
+            leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+            ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
+            ->leftJoin('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
+            ->where('orders.delivery_status', 'pending')
+            // ->where('delivery_tracking.delivery_user_id', $id);
+            ->where(function ($query) use ($id) {
+                $query->where('delivery_tracking.delivery_user_id', $id)
+                      ->orWhereNull('delivery_tracking.delivery_user_id');
+            });
+
+        $orders = $orders->select(
+            'orders.id as order_id',
+            'orders.user_id',
+            'orders.total_amount',
+            'orders.status',
+            'orders.payment_method',
+            'orders.delivery_status as order_status',
+            'orders.payment_status',
+            'orders.order_date',
+            'delivery_tracking.id as delivery_tracking_id',
+            'delivery_tracking.order_status as delivery_status',
+            'delivery_user.name as delivery_person_name',
+            'delivery_user.contact as delivery_person_contact',
+            'user_addresses.name as user_address_name',
+            'user_addresses.contact as user_address_contact',
+            'user_addresses.house_address as user_address_house',
+            'user_addresses.street_address as user_address_street',
+            'user_addresses.landmark as user_address_landmark',
+            'user_addresses.city as user_address_city',
+            'user_addresses.state as user_address_state',
+            'user_addresses.country as user_address_country',
+            'user_addresses.pincode as user_address_pincode',
+            'user_addresses.latitude as user_latitude',
+            'user_addresses.longitude as user_longitude'
+        )
+            ->get();
+
+        return response()->json(['success' => true, 'data' => $orders]);
+    }
     public function getOrdersWithItemsAndDeliveryUser(Request $request, $id)
     {
         $startOfDay = now()->startOfDay();
         $endOfDay = now()->endOfDay();
 
-        $orderStatus = $request->input('order_status');
-
+        $orderStatus = $request->input('order_status');   
+        
         $orders = Order::
             leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
             ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
             ->leftJoin('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
-            // ->where('delivery_tracking.delivery_user_id', $id)
-            ->where(function ($query) use ($id) {
-                $query->whereNull('delivery_tracking.delivery_user_id')
-                    ->orWhere('delivery_tracking.delivery_user_id', $id);
-            })
+            ->where('delivery_tracking.delivery_user_id', $id)
             ->whereBetween('delivery_tracking.assigned_at', [$startOfDay, $endOfDay]);
 
         if ($orderStatus) {
@@ -359,7 +399,11 @@ class OrderController extends Controller
                 if ($orderStatus === 'cancelled' || $orderStatus === 'rejected') {
                     $query->whereIn('orders.delivery_status', ['cancelled', 'rejected'])
                         ->orWhereIn('delivery_tracking.order_status', ['cancelled', 'rejected']);
-                } else {
+                }
+                else if($orderStatus == 'pending'){
+                    $query->where('orders.delivery_status', $orderStatus);
+                }
+                 else {
                     $query->where('orders.delivery_status', $orderStatus)
                         ->where('delivery_tracking.order_status', '<>', 'cancelled');
                 }
@@ -562,19 +606,41 @@ class OrderController extends Controller
 
     public function acceptOrRejectOrder(Request $request)
     {
-        $request->validate([
-            'id' => 'required|integer',
-            'status' => 'required'
-        ]);
+        // $request->validate([
+        //     'id' => 'required|integer',
+        //     'status' => 'required'
+        // ]);
 
-        $deliveryTracking = DeliveryTracking::where('id', $request->id)->first();
+        // $deliveryTracking = DeliveryTracking::where('id', $request->id)->first();
 
-        if ($deliveryTracking) {
-            $deliveryTracking->order_status = $request->status;
-            $deliveryTracking->save();
-            return response()->json(['status' => true, 'message' => 'Order status updated successfully.']);
+        // if ($deliveryTracking) {
+        //     $deliveryTracking->order_status = $request->status;
+        //     $deliveryTracking->save();
+        //     return response()->json(['status' => true, 'message' => 'Order status updated successfully.']);
+        // } else {
+        //     return response()->json(['status' => false, 'message' => 'Order not found.'], 404);
+        // }
+
+        if ($request->id > 0) {
+            $deliveryTracking = DeliveryTracking::find($request->id);
+    
+            if ($deliveryTracking) {
+                $deliveryTracking->order_status = $request->status;
+                $deliveryTracking->save();
+                return response()->json(['status' => true, 'message' => 'Order status updated successfully.']);
+            } else {
+                return response()->json(['status' => false, 'message' => 'Order not found.'], 404);
+            }
         } else {
-            return response()->json(['status' => false, 'message' => 'Order not found.'], 404);
+            $deliveryTracking = new DeliveryTracking();
+            $deliveryTracking->order_id = $request->order_id;
+            $deliveryTracking->delivery_user_id = $request->delivery_user_id;
+            $deliveryTracking->order_status = $request->status;
+            $deliveryTracking->status = 'assigned';
+            $deliveryTracking->assigned_at = now();
+            $deliveryTracking->save();
+    
+            return response()->json(['status' => true, 'message' => 'New delivery tracking created successfully.']);
         }
     }
 

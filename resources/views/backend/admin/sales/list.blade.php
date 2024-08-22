@@ -28,10 +28,10 @@
                             <th class="table-id">Id</th>
                             <th>Delivery person</th>
                             <th>Deposit date</th>
-                            {{-- <th>Total Pending Cash</th> --}}
                             {{-- <th>Total Cash Deposit</th> --}}
                             <th>Cash Amount</th>
                             <th>Deposit Amount</th>
+                            <th>Total Pending Cash</th>
                             {{-- <th class="text-end">Action</th> --}}
                         </tr>
                     </thead>
@@ -48,6 +48,7 @@
                             {{-- <td>{{ $s['totalDepositAmount'] }}</td> --}}
                             <td>{{ $s['cash_amount'] }}</td>
                             <td>{{ $s['deposit_amount'] }}</td>
+                            <td>{{ $s['cash_amount'] - $s['deposit_amount'] }}</td>
                             {{-- <td class="text-end">
                                 <div class="table-action-btns">
                                     <a href={{ url('/admin/users-edit/' . $s['id']) }} class="btn btn-primary">

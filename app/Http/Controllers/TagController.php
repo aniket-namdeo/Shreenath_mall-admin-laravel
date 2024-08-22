@@ -65,7 +65,12 @@ class TagController extends Controller
         $page_title = "Manage assign product";
         $current_page = "tag assign product";
         $productData = Product::where('status', 1)->limit(10)->get();
-        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'productData', 'id'));
+        $detail = Tag_Product_Assign::join('product', 'product.id', '=', 'tag_product_assign.productId')
+            ->where('tag_product_assign.status', 1)
+            ->where('tag_product_assign.tagId', $id)
+            ->select('product.*', 'tag_product_assign.*')
+            ->get();
+        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'productData', 'id', 'detail'));
     }
 
     public function AssignProductTags(Request $request)
@@ -80,7 +85,7 @@ class TagController extends Controller
             ]);
         }
 
-        return redirect(url('/admin/productTagAssign-list/'.$tagId))->with('success', 'Tags assigned to products successfully.');
+        return redirect(url('/admin/productTagAssign-list/' . $tagId))->with('success', 'Tags assigned to products successfully.');
     }
 
 

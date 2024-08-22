@@ -72,6 +72,8 @@ Route::post('/cancel-order-item/{id}', [OrderController::class, 'cancelOrdersIte
 
 Route::post('/orderRate/{id}', [OrderController::class, 'orderRating']);
 
+Route::get('/delivery-user/{id}/pendingorders', [OrderController::class, 'getPendingOrdersWithItemsAndDeliveryUser']);
+
 Route::get('/delivery-user/{id}/orders', [OrderController::class, 'getOrdersWithItemsAndDeliveryUser']);
 Route::get('/delivery-user/{id}/overall-orders', [OrderController::class, 'getOrdersWithItemsAndDeliveryUserTotal']);
 
