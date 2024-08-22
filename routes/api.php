@@ -108,6 +108,8 @@ Route::post('/applyCoupon', [CouponController::class, 'applyCoupon']);
 
 Route::post('/delivery-login', [DeliveryUserController::class, 'Deliverylogin']);
 
+Route::get("/getDeliveryUser/{id}", [DeliveryUserController::class, "getUser"]);
+
 Route::post('/update-delivery-profile/{id}', [DeliveryUserController::class, 'updateProfile']);
 
 Route::post('/sendDepositOtp', [CashDepositController::class, 'sendOtp']);

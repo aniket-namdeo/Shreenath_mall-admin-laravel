@@ -99,6 +99,13 @@
                     <li class="{{ $current_page == 'coupon-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/coupon-list') }}">List</a></li>
                 </ul>
             </li>
+
+            <li class="mb-2 {{ $current_page == 'sales' ? 'active' : '' }}">
+                <a href="{{ url('admin/offer-slider') }}">
+                    <font><i class="bx bxs-sales"></i> <span>Offer Slider</span></font>
+                </a>
+            </li>
+
             <li class="mb-2 {{ $current_page == 'sales' ? 'active' : '' }}">
                 <a href="{{ url('admin/listSales') }}">
                     <font><i class="bx bxs-sales"></i> <span>Sales</span></font>

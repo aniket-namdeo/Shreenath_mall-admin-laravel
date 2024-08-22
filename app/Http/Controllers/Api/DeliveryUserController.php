@@ -181,11 +181,11 @@ class DeliveryUserController extends Controller
 
     }
 
-    // public function getUser($id)
-    // {
-    //     $result = DeliveryUser::select('id', 'name', 'email', 'contact', 'gender', 'dob', 'profile_image')->where('id', $id)->first();
-    //     return response()->json(['data' => $result], 200);
-    // }
+    public function getUser($id)
+    {
+        $result = DeliveryUser::select('id', 'name', 'email', 'contact', 'gender', 'dob', 'profile_image', 'aadhar_card', 'pan_no', 'address', 'state', 'city', 'vehicle_name', 'vehicle_no', 'driving_license')->where('id', $id)->first();
+        return response()->json(['data' => $result], 200);
+    }
 
 
 }
