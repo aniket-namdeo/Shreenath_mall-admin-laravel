@@ -63,7 +63,7 @@ class AssignProductTagController extends Controller
     {
         $tags = Tag::leftJoin('tag_product_assign', 'tag.id', '=', 'tag_product_assign.tagId')
             ->leftJoin('product', 'tag_product_assign.productId', '=', 'product.id')
-            ->select('tag.id as tagId', 'tag.name as tagName', 'product.id as productId', 'product.product_name as productName', 'product.price as productPrice', 'product.mrp as productMrp', 'product.image_url1 as productImage')
+            ->select('tag.id as tagId', 'tag.name as tagName', 'product.id as productId', 'product.product_name as productName', 'product.price as productPrice', 'product.mrp as productMrp', 'product.discount_percent as productOffPercent', 'product.image_url1 as productImage')
             ->get();
 
         $taggedProducts = [];
@@ -80,15 +80,14 @@ class AssignProductTagController extends Controller
                 $tagIndex = count($taggedProducts) - 1; 
             }
 
-            // Add product if exists
             if ($tag->productId) {
                 $taggedProducts[$tagIndex]['products'][] = [
                     'productId' => $tag->productId,
                     'productName' => $tag->productName,
                     'productPrice' => $tag->productPrice,
                     'productMrp' => $tag->productMrp,
+                    'productOffPercent' => $tag->productOffPercent,
                     'productImage' => $tag->productImage,
-
                 ];
             }
         }
