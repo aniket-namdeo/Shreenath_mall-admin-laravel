@@ -132,3 +132,4 @@ Route::get('/offerSlider', [OfferSliderController::class, 'getOfferSlider']);
 // assigned tag products
 
 Route::get('/assignedTagProducts/{tagId}', [AssignProductTagController::class, 'getAssignedTagProducts']);
+Route::get('/getTagsProduct', [AssignProductTagController::class, 'getTagsProduct']);

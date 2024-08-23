@@ -31,4 +31,70 @@ class AssignProductTagController extends Controller
 
         }
     }
+
+    // public function getTagsProduct()
+    // {
+    //     $tags = Tag::leftJoin('tag_product_assign', 'tag.id', '=', 'tag_product_assign.tagId')
+    //         ->leftJoin('product', 'tag_product_assign.productId', '=', 'product.id')
+    //         ->select('tag.id as tagId', 'tag.name as tagName', 'product.id as productId', 'product.product_name as productName')
+    //         ->get();
+
+    //     $taggedProducts = [];
+    //     foreach ($tags as $tag) {
+    //         if (!isset($taggedProducts[$tag->tagId])) {
+    //             $taggedProducts[$tag->tagId] = [
+    //                 'tagName' => $tag->tagName,
+    //                 'products' => []
+    //             ];
+    //         }
+
+    //         if ($tag->productId) {
+    //             $taggedProducts[$tag->tagId]['products'][] = [
+    //                 'productId' => $tag->productId,
+    //                 'productName' => $tag->productName
+    //             ];
+    //         }
+    //     }
+
+    //     return $taggedProducts;
+    // }
+
+    public function getTagsProduct()
+    {
+        $tags = Tag::leftJoin('tag_product_assign', 'tag.id', '=', 'tag_product_assign.tagId')
+            ->leftJoin('product', 'tag_product_assign.productId', '=', 'product.id')
+            ->select('tag.id as tagId', 'tag.name as tagName', 'product.id as productId', 'product.product_name as productName', 'product.price as productPrice', 'product.mrp as productMrp', 'product.image_url1 as productImage')
+            ->get();
+
+        $taggedProducts = [];
+
+        foreach ($tags as $tag) {
+            $tagIndex = array_search($tag->tagId, array_column($taggedProducts, 'tagId'));
+
+            if ($tagIndex === false) {
+                $taggedProducts[] = [
+                    'tagId' => $tag->tagId,
+                    'tagName' => $tag->tagName,
+                    'products' => []
+                ];
+                $tagIndex = count($taggedProducts) - 1; 
+            }
+
+            // Add product if exists
+            if ($tag->productId) {
+                $taggedProducts[$tagIndex]['products'][] = [
+                    'productId' => $tag->productId,
+                    'productName' => $tag->productName,
+                    'productPrice' => $tag->productPrice,
+                    'productMrp' => $tag->productMrp,
+                    'productImage' => $tag->productImage,
+
+                ];
+            }
+        }
+
+        return $taggedProducts;
+    }
+
+
 }
