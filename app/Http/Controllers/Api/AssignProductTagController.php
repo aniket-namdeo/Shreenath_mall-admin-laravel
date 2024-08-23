@@ -56,13 +56,13 @@ class AssignProductTagController extends Controller
             if ($tag->productId) {
                 $taggedProducts[$tagIndex]['products'][] = [
                     'productId' => $tag->productId,
-                    'productName' => $tag->productName,
-                    'productDescription' => $tag->productDescription,
-                    'productPrice' => $tag->productPrice,
-                    'productMrp' => $tag->productMrp,
-                    'productOffPercent' => $tag->productOffPercent,
-                    'productCategoryId' => $tag->productCategoryId,
-                    'productImage' => $tag->productImage,
+                    'product_name' => $tag->productName,
+                    'description' => $tag->productDescription,
+                    'price' => $tag->productPrice,
+                    'mrp' => $tag->productMrp,
+                    'discount_percent' => $tag->productOffPercent,
+                    'category_id' => $tag->productCategoryId,
+                    'image_url1' => $tag->productImage,
                 ];
             }
         }
