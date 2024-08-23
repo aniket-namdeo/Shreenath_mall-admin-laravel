@@ -32,38 +32,11 @@ class AssignProductTagController extends Controller
         }
     }
 
-    // public function getTagsProduct()
-    // {
-    //     $tags = Tag::leftJoin('tag_product_assign', 'tag.id', '=', 'tag_product_assign.tagId')
-    //         ->leftJoin('product', 'tag_product_assign.productId', '=', 'product.id')
-    //         ->select('tag.id as tagId', 'tag.name as tagName', 'product.id as productId', 'product.product_name as productName')
-    //         ->get();
-
-    //     $taggedProducts = [];
-    //     foreach ($tags as $tag) {
-    //         if (!isset($taggedProducts[$tag->tagId])) {
-    //             $taggedProducts[$tag->tagId] = [
-    //                 'tagName' => $tag->tagName,
-    //                 'products' => []
-    //             ];
-    //         }
-
-    //         if ($tag->productId) {
-    //             $taggedProducts[$tag->tagId]['products'][] = [
-    //                 'productId' => $tag->productId,
-    //                 'productName' => $tag->productName
-    //             ];
-    //         }
-    //     }
-
-    //     return $taggedProducts;
-    // }
-
     public function getTagsProduct()
     {
         $tags = Tag::leftJoin('tag_product_assign', 'tag.id', '=', 'tag_product_assign.tagId')
             ->leftJoin('product', 'tag_product_assign.productId', '=', 'product.id')
-            ->select('tag.id as tagId', 'tag.name as tagName', 'product.id as productId', 'product.product_name as productName', 'product.description as productDescription', 'product.price as productPrice', 'product.mrp as productMrp', 'product.discount_percent as productOffPercent', 'product.image_url1 as productImage')
+            ->select('tag.id as tagId', 'tag.name as tagName', 'product.id as productId', 'product.product_name as productName', 'product.description as productDescription', 'product.price as productPrice', 'product.mrp as productMrp', 'product.discount_percent as productOffPercent','product.category_id as productCategoryId', 'product.image_url1 as productImage')
             ->get();
 
         $taggedProducts = [];
@@ -88,6 +61,7 @@ class AssignProductTagController extends Controller
                     'productPrice' => $tag->productPrice,
                     'productMrp' => $tag->productMrp,
                     'productOffPercent' => $tag->productOffPercent,
+                    'productCategoryId' => $tag->productCategoryId,
                     'productImage' => $tag->productImage,
                 ];
             }
