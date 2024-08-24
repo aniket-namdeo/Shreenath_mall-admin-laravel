@@ -100,15 +100,15 @@ class AuthController extends Controller
             if ($userotp_status == 0) {
                 if ($request->otp == $userotp) {
                     $result = User::where(array('email' => $request->email))->update(['otp_status' => '1']);
-                    return response()->json(['message' => 'Otp Verified']);
+                    return response()->json(['status' => true, 'message' => 'Otp Verified']);
                 } else {
-                    return response()->json(['message' => 'Otp Incorrect']);
+                    return response()->json(['status' => false, 'message' => 'Otp Incorrect']);
                 }
             } else {
-                return response()->json(['message' => 'Otp already verified, send otp again']);
+                return response()->json(['status' => false, 'message' => 'Otp already verified, send otp again']);
             }
         } else {
-            return response()->json(['message' => 'User not found']);
+            return response()->json(['status' => false, 'message' => 'User not found']);
         }
     }
 
@@ -122,13 +122,13 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
+            return response()->json(['status' => false, 'message' => 'User not found'], 404);
         }
 
         $user->password = Hash::make($request->new_password);
         $user->save();
 
-        return response()->json(['message' => 'Password set successfully'], 200);
+        return response()->json(['status' => true, 'message' => 'Password set successfully'], 200);
     }
 
 
@@ -149,10 +149,10 @@ class AuthController extends Controller
             $user->password = Hash::make($request->new_password);
             $user->save();
         } else {
-            return response()->json(['message' => 'Old password is incorrect'], 400);
+            return response()->json(['status' => false, 'message' => 'Old password is incorrect'], 400);
         }
 
-        return response()->json(['message' => 'Password set successfully'], 200);
+        return response()->json(['status' => true, 'message' => 'Password set successfully'], 200);
     }
 
     public function updateProfile(Request $request, $id)
@@ -175,7 +175,7 @@ class AuthController extends Controller
             $data['gender'] = $request->gender;
         }
 
-        if($request->password) {
+        if ($request->password) {
             $data['password'] = Hash::make($request->password);
         }
 
@@ -199,7 +199,12 @@ class AuthController extends Controller
     public function getUser($id)
     {
         $result = User::select('id', 'name', 'email', 'contact', 'gender', 'dob', 'profile_image')->where('id', $id)->first();
-        return response()->json(['data' => $result], 200);
+        if ($result) {
+
+            return response()->json(['status' => true, 'data' => $result], 200);
+        } else {
+            return response()->json(['status' => false, 'message' => 'User not found'], 404);
+        }
     }
 
     public function addAddress(Request $request)
@@ -221,10 +226,10 @@ class AuthController extends Controller
 
         $validated['country'] = 101;
 
-        if($request->latitude){
+        if ($request->latitude) {
             $validated['latitude'] = $request->latitude;
         }
-        if($request->longitude){
+        if ($request->longitude) {
             $validated['longitude'] = $request->longitude;
         }
 
@@ -281,10 +286,10 @@ class AuthController extends Controller
         ]);
         $checkaddresses = User_addresses::where('id', $id)->get();
 
-        if($request->latitude){
+        if ($request->latitude) {
             $validated['latitude'] = $request->latitude;
         }
-        if($request->longitude){
+        if ($request->longitude) {
             $validated['longitude'] = $request->longitude;
         }
 
@@ -313,16 +318,18 @@ class AuthController extends Controller
         return response()->json(['message' => 'Address deleted successfully',], 201);
     }
 
-    public function state($country_id){
-        
-        $state = State::where(array('country_id'=>$country_id))->get();
+    public function state($country_id)
+    {
+
+        $state = State::where(array('country_id' => $country_id))->get();
 
         return response()->json(['message' => 'Data got successfully', 'data' => $state], 200);
     }
 
-    public function city($name){
-        $state = State::where(array('name'=>$name))->first();
-        $city = City::where(array('state_id'=>$state->state_id))->get();
+    public function city($name)
+    {
+        $state = State::where(array('name' => $name))->first();
+        $city = City::where(array('state_id' => $state->state_id))->get();
         return response()->json(['message' => 'Data got successfully', 'data' => $city], 200);
     }
 
