@@ -26,7 +26,7 @@ Route::post('/forget-password', [AuthController::class, 'forgetPassword']);
 Route::post('verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/change-password', [AuthController::class, 'updatePassword']);
 
-// Route::post('/update-password', [AuthController::class, 'changePassword']);
+Route::post('/update-password', [AuthController::class, 'changePassword']);
 Route::post('/update-user/{id}', [AuthController::class, 'updateProfile']);
 Route::get("/getUser/{id}", [AuthController::class, "getUser"]);
 
