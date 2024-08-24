@@ -27,7 +27,9 @@ class User extends Authenticatable
         'is_blocked',
         'status',
         'user_type',
-        'cash_deposit_otp'
+        'cash_deposit_otp',
+        'otp',
+        'otp_status',
     ];
 
     /**

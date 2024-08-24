@@ -116,7 +116,7 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'new_password' => 'required|string|min:6|confirmed',
+            'new_password' => 'required|string|min:6',
         ]);
 
         $user = User::where('email', $request->email)->first();
