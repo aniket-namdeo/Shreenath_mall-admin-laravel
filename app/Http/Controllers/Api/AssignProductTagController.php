@@ -17,7 +17,7 @@ class AssignProductTagController extends Controller
 
         $data = Tag_Product_Assign::join('product', 'tag_product_assign.productId', '=', 'product.id')
             ->where('tag_product_assign.tagId', $tagId)
-            ->select('product.id', 'product.product_name', 'product.description', 'product.price', 'product.created_at')
+            ->select('product.id', 'product.product_name', 'product.description', 'product.price', 'product.discount_percent', 'product.category_id', 'product.image_url1')
             ->get();
 
         if ($data) {
