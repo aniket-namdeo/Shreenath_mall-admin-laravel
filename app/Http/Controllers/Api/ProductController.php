@@ -258,4 +258,53 @@ class ProductController extends Controller
         return response()->json(['success' => true, 'tags' => array_values($uniqueTags)], 200);
     }
 
+
+    public function getProductsByTagBestSeller()
+    {
+        $data = Category::
+            join('product', 'category.id', '=', 'product.category_id')
+            ->join('tag_product_assign', 'product.id', '=', 'tag_product_assign.productId')
+            ->join('tag', 'tag.id', '=', 'tag_product_assign.tagId')
+            ->select(
+                'category.id as categoryId',
+                'category.name as categoryName',
+                'product.id as productId',
+                'product.product_name',
+                'product.description', 
+                'product.price', 
+                'product.discount_percent', 
+                'product.category_id', 
+                'product.image_url1'
+            )
+            ->where('tag.name', 'Best Seller')
+            ->orderBy('category.id')
+            ->get();
+
+        // Group product by category
+        $groupedData = $data->groupBy('categoryId');
+
+        // Prepare response
+        $result = [];
+        foreach ($groupedData as $categoryId => $products) {
+            $result[] = [
+                'categoryId' => $categoryId,
+                'categoryName' => $products->first()->categoryName,
+                'products' => $products->map(function ($product) {
+                    return [
+                        'productId' => $product->productId,
+                        'productName' => $product->product_name,
+                        'description' => $product->description,
+                        'price' => $product->price,
+                        'discount_percent' => $product->discount_percent,
+                        'category_id' => $product->category_id,
+                        'image_url1' => $product->image_url1,
+                    ];
+                })->values()->all(),
+            ];
+        }
+
+        return response()->json($result);
+    }
+
+
 }
