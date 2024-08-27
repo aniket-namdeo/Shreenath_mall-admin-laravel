@@ -34,8 +34,8 @@ class OrderController extends Controller
 
         try {
             $otp = random_int(100000, 999999);
-            $orderDate = $request->order_date ?: date('Y-m-d');
-            $deliveryDate = $request->delivery_date ?: date('Y-m-d');
+            $orderDate = $request->order_date ?: date('Y-m-d H:i:s');
+            $deliveryDate = $request->delivery_date ?: date('Y-m-d H:i:s');
 
             $order = Order::create([
                 'user_id' => $request->user_id,
@@ -70,7 +70,10 @@ class OrderController extends Controller
             $title = 'New Order';
             $body = 'You got a new order.';
             $deviceIds = DeliveryUser::pluck('deviceId')->values();
-            // $deviceTokens = ['f1rmJhPxRISdv4rczzb2-u:APA91bHehiZ-gwrQOROC3N6HuKQkl3zz3m9kFJW3r-LvBbISAya7ozxnF9OGKOCT_9ZWL9tsdh14EOJa61GTab4h-y-DhY6QYufGxkxDEX9jMNz17FsOWOXqCEKyTx-nKb7F0T5FNq0I'];
+            // $deviceIds = ['f1rmJhPxRISdv4rczzb2-u:APA91bHehiZ-gwrQOROC3N6HuKQkl3zz3m9kFJW3r-LvBbISAya7ozxnF9OGKOCT_9ZWL9tsdh14EOJa61GTab4h-y-DhY6QYufGxkxDEX9jMNz17FsOWOXqCEKyTx-nKb7F0T5FNq0I',
+            // 'eWm_ALF_Sh-jpWG5nRIVd2:APA91bEO_SOV9YnguSUGmq85b3W9Mk_hM4Ka6HyeKJO4W63FyQB-dIPbOn9vA9o_rEbRXqD0Q3dibW_KtyhpwuYkEF48BqftnYTVjvbNCwtXyZcynrcSmT3CvShK_YpwLrhDhHGjFuhd'
+            // ];
+            // $deviceIds = ['f6a4B_HiSk-zhjGJslzXWq:APA91bFQ3U1EKOiuvFPzg2Mt97N1fpESnyD23A6zbGfIMDZOBw0YlOd5j3rjTflECLj5Q9wN5U42crdSyBwCHgpvxVlCrCQC0JN2Dlgdp4OEHyN4ndhH7ovOyI7TTihJl8J4AnZiZ0f7'];
             $image = null;
 
             $response = sendFirebaseNotification($title, $body, $deviceIds, $image);
@@ -262,6 +265,225 @@ class OrderController extends Controller
 
         return response()->json(['orders' => $result->values()], 200);
     }
+    // public function getOrderDetailDeliveryUser($id)
+    // {
+    //     $orders = Order::where('orders.id', $id)
+    //         ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+    //         ->join('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
+    //         ->join('product', 'order_items.product_id', '=', 'product.id')
+    //         // ->join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+    //         ->leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+    //         ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
+    //         ->select(
+    //             'orders.id as order_id',
+    //             'orders.user_id',
+    //             'orders.total_amount',
+    //             'orders.status',
+    //             'orders.delivery_status',
+    //             'orders.payment_method',
+    //             'orders.payment_status',
+    //             'orders.order_date',
+    //             'orders.delivery_date',
+    //             'orders.address_id',
+    //             'orders.coupon_code',
+    //             'orders.discount_amount',
+    //             'orders.tax_amount',
+    //             'orders.shipping_fee',
+    //             'order_items.product_id',
+    //             'order_items.quantity',
+    //             'order_items.price',
+    //             'product.product_name as product_name',
+    //             'product.mrp as product_mrp',
+    //             'product.price as product_price',
+    //             'product.image_url1 as product_image_url',
+    //             'user_addresses.house_address',
+    //             'user_addresses.street_address',
+    //             'user_addresses.landmark',
+    //             'user_addresses.city',
+    //             'user_addresses.state',
+    //             'user_addresses.country',
+    //             'user_addresses.pincode',
+    //             'user_addresses.latitude',
+    //             'user_addresses.longitude',
+    //             'delivery_user.id as delivery_user_id',
+    //             'delivery_user.name as delivery_user_name',
+    //             'delivery_user.contact as delivery_user_contact',
+    //             'delivery_user.email as delivery_user_email',
+    //             'delivery_user.vehicle_name as delivery_user_vehicle_name',
+    //             'delivery_user.vehicle_no as delivery_user_vehicle_no',
+    //             'delivery_user.vehicle_type as delivery_user_vehicle_type'
+    //         )
+    //         ->get();
+
+    //     if ($orders->isEmpty()) {
+    //         return response()->json(['message' => 'No orders with this id'], 404);
+    //     }
+
+    //     $groupedOrders = $orders->groupBy('order_id');
+
+    //     $result = $groupedOrders->map(function ($order) {
+    //         $orderData = $order->first();
+    //         $items = $order->map(function ($item) {
+    //             return [
+    //                 'product_id' => $item->product_id,
+    //                 'quantity' => $item->quantity,
+    //                 'price' => $item->price,
+    //                 'product_name' => $item->product_name,
+    //                 'product_mrp' => $item->product_mrp,
+    //                 'product_price' => $item->product_price,
+    //                 'product_image_url' => $item->product_image_url,
+    //             ];
+    //         });
+
+    //         $totalMrp = number_format($order->sum(function ($item) {
+    //             return $item->product_mrp * $item->quantity;
+    //         }), 2, '.', '');
+
+    //         return [
+    //             'id' => $orderData->order_id,
+    //             'user_id' => $orderData->user_id,
+    //             'total_amount' => $orderData->total_amount,
+    //             'status' => $orderData->status,
+    //             'delivery_status' => $orderData->delivery_status,
+    //             'payment_method' => $orderData->payment_method,
+    //             'payment_status' => $orderData->payment_status,
+    //             'order_date' => $orderData->order_date,
+    //             'delivery_date' => $orderData->delivery_date,
+    //             'address_id' => $orderData->address_id,
+    //             'coupon_code' => $orderData->coupon_code,
+    //             'discount_amount' => $orderData->discount_amount,
+    //             'tax_amount' => $orderData->tax_amount,
+    //             'shipping_fee' => $orderData->shipping_fee,
+    //             'house_address' => $orderData->house_address,
+    //             'street_address' => $orderData->street_address,
+    //             'landmark' => $orderData->landmark,
+    //             'city' => $orderData->city,
+    //             'state' => $orderData->state,
+    //             'country' => $orderData->country,
+    //             'pincode' => $orderData->pincode,
+    //             'total_mrp' => $totalMrp,
+    //             'items' => $items,
+    //         ];
+    //     });
+
+    //     return response()->json(['orders' => $result->values()], 200);
+    // }
+
+    public function getOrderDetailDeliveryUser($id)
+    {
+        $orders = Order::where('orders.id', $id)
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
+            ->join('product', 'order_items.product_id', '=', 'product.id')
+            ->leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+            ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
+            ->select(
+                'orders.id as order_id',
+                'orders.user_id',
+                'orders.total_amount',
+                'orders.status',
+                'orders.delivery_status',
+                'orders.payment_method',
+                'orders.payment_status',
+                'orders.order_date',
+                'orders.delivery_date',
+                'orders.address_id',
+                'orders.coupon_code',
+                'orders.discount_amount',
+                'orders.tax_amount',
+                'orders.shipping_fee',
+                'order_items.product_id',
+                'order_items.quantity',
+                'order_items.price',
+                'product.product_name as product_name',
+                'product.mrp as product_mrp',
+                'product.price as product_price',
+                'product.image_url1 as product_image_url',
+                'user_addresses.house_address',
+                'user_addresses.street_address',
+                'user_addresses.landmark',
+                'user_addresses.city',
+                'user_addresses.state',
+                'user_addresses.country',
+                'user_addresses.pincode',
+                'user_addresses.latitude',
+                'user_addresses.longitude',
+                'delivery_user.id as delivery_user_id',
+                'delivery_user.name as delivery_user_name',
+                'delivery_user.contact as delivery_user_contact',
+                'delivery_user.email as delivery_user_email',
+                'delivery_user.vehicle_name as delivery_user_vehicle_name',
+                'delivery_user.vehicle_no as delivery_user_vehicle_no',
+                'delivery_user.vehicle_type as delivery_user_vehicle_type'
+            )
+            ->get();
+
+        if ($orders->isEmpty()) {
+            return response()->json(['message' => 'No orders with this id'], 404);
+        }
+
+        $groupedOrders = $orders->groupBy('order_id');
+
+        $result = $groupedOrders->map(function ($order) {
+            $orderData = $order->first();
+            $items = $order->map(function ($item) {
+                return [
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'price' => $item->price,
+                    'product_name' => $item->product_name,
+                    'product_mrp' => $item->product_mrp,
+                    'product_price' => $item->product_price,
+                    'product_image_url' => $item->product_image_url,
+                ];
+            });
+
+            $totalMrp = number_format($order->sum(function ($item) {
+                return $item->product_mrp * $item->quantity;
+            }), 2, '.', '');
+
+            $deliveryUser = [
+                'id' => $orderData->delivery_user_id,
+                'name' => $orderData->delivery_user_name,
+                'contact' => $orderData->delivery_user_contact,
+                'email' => $orderData->delivery_user_email,
+                'vehicle_name' => $orderData->delivery_user_vehicle_name,
+                'vehicle_no' => $orderData->delivery_user_vehicle_no,
+                'vehicle_type' => $orderData->delivery_user_vehicle_type
+            ];
+
+            return [
+                'id' => $orderData->order_id,
+                'user_id' => $orderData->user_id,
+                'total_amount' => $orderData->total_amount,
+                'status' => $orderData->status,
+                'delivery_status' => $orderData->delivery_status,
+                'payment_method' => $orderData->payment_method,
+                'payment_status' => $orderData->payment_status,
+                'order_date' => $orderData->order_date,
+                'delivery_date' => $orderData->delivery_date,
+                'address_id' => $orderData->address_id,
+                'coupon_code' => $orderData->coupon_code,
+                'discount_amount' => $orderData->discount_amount,
+                'tax_amount' => $orderData->tax_amount,
+                'shipping_fee' => $orderData->shipping_fee,
+                'house_address' => $orderData->house_address,
+                'street_address' => $orderData->street_address,
+                'landmark' => $orderData->landmark,
+                'city' => $orderData->city,
+                'state' => $orderData->state,
+                'country' => $orderData->country,
+                'pincode' => $orderData->pincode,
+                'total_mrp' => $totalMrp,
+                'items' => $items,
+                'delivery_user' => $deliveryUser
+            ];
+        });
+
+        return response()->json(['orders' => $result->values()], 200);
+    }
+
+
     public function paymentStatusUpdate(Request $request, $id)
     {
         $request->validate([

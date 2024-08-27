@@ -77,7 +77,9 @@ class CartController extends Controller
                 'message' => 'Cart items retrieved successfully',
                 'data' => $cartItems,
                 'total_price' => $totalPrice,
-                'total_mrp' => $totalMrp
+                'total_mrp' => $totalMrp,
+                'handling_charge' => "5",
+                'deliveery_charge' => "30"
 
             ], 200);
         } else {

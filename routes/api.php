@@ -64,6 +64,8 @@ Route::get('/orders/user/{userId}', [OrderController::class, 'getOrdersByUser'])
 
 Route::get('/order/{id}', [OrderController::class, 'getOrderDetail']);
 
+Route::get('/orderTrack/{id}', [OrderController::class, 'getOrderDetailDeliveryUser']);
+
 Route::post('/order-payment/{id}', [OrderController::class, 'paymentStatusUpdate']);
 
 Route::post('/cancel-order/{id}', [OrderController::class, 'cancelOrder']);
