@@ -64,6 +64,8 @@ Route::get('/orders/user/{userId}', [OrderController::class, 'getOrdersByUser'])
 
 Route::get('/order/{id}', [OrderController::class, 'getOrderDetail']);
 
+Route::post('/save-remark', [OrderController::class, 'saveRemark']);
+
 Route::get('/orderTrack/{id}', [OrderController::class, 'getOrderDetailDeliveryUser']);
 
 Route::post('/order-payment/{id}', [OrderController::class, 'paymentStatusUpdate']);
