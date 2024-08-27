@@ -25,6 +25,11 @@ class DeliveryUserController extends Controller
             return response()->json(['message' => 'DeliveryUser not found, Register your account', 'status' => false], 401);
         }
 
+        if ($request->deviceId) {
+            $user->deviceId = $request->deviceId;
+            $user->save();
+        }
+
         if ($user->is_blocked == 1) {
             return response()->json([
                 'message' => 'Your account has been blocked. Please contact the admin.',
@@ -32,7 +37,7 @@ class DeliveryUserController extends Controller
             ], 403);
         }
 
-        if($user->status == "pending"){
+        if ($user->status == "pending") {
             return response()->json([
                 'message' => 'Your account has not verified yet.',
                 'status' => false
@@ -162,7 +167,7 @@ class DeliveryUserController extends Controller
         if ($request->address) {
             $data['address'] = $request->address;
         }
-        if($request->password) {
+        if ($request->password) {
             $data['password'] = Hash::make($request->password);
         }
         if ($request->hasFile('profile_image')) {

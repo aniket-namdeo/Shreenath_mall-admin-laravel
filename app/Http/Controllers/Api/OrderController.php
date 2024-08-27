@@ -67,6 +67,14 @@ class OrderController extends Controller
                 Cart::where('id', $item['cart_id'])->delete();
             }
 
+            $title = 'New Order';
+            $body = 'You got a new order.';
+            $deviceIds = DeliveryUser::pluck('deviceId')->values();
+            // $deviceTokens = ['f1rmJhPxRISdv4rczzb2-u:APA91bHehiZ-gwrQOROC3N6HuKQkl3zz3m9kFJW3r-LvBbISAya7ozxnF9OGKOCT_9ZWL9tsdh14EOJa61GTab4h-y-DhY6QYufGxkxDEX9jMNz17FsOWOXqCEKyTx-nKb7F0T5FNq0I'];
+            $image = null;
+
+            $response = sendFirebaseNotification($title, $body, $deviceIds, $image);
+
             return response()->json(['order' => $order, 'message' => 'Order created successfully'], 201);
 
         } catch (\Exception $e) {
@@ -339,7 +347,7 @@ class OrderController extends Controller
 
     public function getPendingOrdersWithItemsAndDeliveryUser(Request $request, $id)
     {
-        
+
         $orders = Order::
             leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
             ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
@@ -348,7 +356,7 @@ class OrderController extends Controller
             // ->where('delivery_tracking.delivery_user_id', $id);
             ->where(function ($query) use ($id) {
                 $query->where('delivery_tracking.delivery_user_id', $id)
-                      ->orWhereNull('delivery_tracking.delivery_user_id');
+                    ->orWhereNull('delivery_tracking.delivery_user_id');
             });
 
         $orders = $orders->select(
@@ -385,8 +393,8 @@ class OrderController extends Controller
         $startOfDay = now()->startOfDay();
         $endOfDay = now()->endOfDay();
 
-        $orderStatus = $request->input('order_status');   
-        
+        $orderStatus = $request->input('order_status');
+
         $orders = Order::
             leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
             ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
@@ -399,11 +407,9 @@ class OrderController extends Controller
                 if ($orderStatus === 'cancelled' || $orderStatus === 'rejected') {
                     $query->whereIn('orders.delivery_status', ['cancelled', 'rejected'])
                         ->orWhereIn('delivery_tracking.order_status', ['cancelled', 'rejected']);
-                }
-                else if($orderStatus == 'pending'){
+                } else if ($orderStatus == 'pending') {
                     $query->where('orders.delivery_status', $orderStatus);
-                }
-                 else {
+                } else {
                     $query->where('orders.delivery_status', $orderStatus)
                         ->where('delivery_tracking.order_status', '<>', 'cancelled');
                 }
@@ -623,7 +629,7 @@ class OrderController extends Controller
 
         if ($request->id > 0) {
             $deliveryTracking = DeliveryTracking::find($request->id);
-    
+
             if ($deliveryTracking) {
                 $deliveryTracking->order_status = $request->status;
                 $deliveryTracking->save();
@@ -639,7 +645,7 @@ class OrderController extends Controller
             $deliveryTracking->status = 'assigned';
             $deliveryTracking->assigned_at = now();
             $deliveryTracking->save();
-    
+
             return response()->json(['status' => true, 'message' => 'New delivery tracking created successfully.']);
         }
     }

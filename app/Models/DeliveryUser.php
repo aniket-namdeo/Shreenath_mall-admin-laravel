@@ -44,6 +44,7 @@ class DeliveryUser extends Model
         'total_cash_to_send_back',
         'latitude',
         'longitude',
+        'deviceId'
     ];
 
 }
