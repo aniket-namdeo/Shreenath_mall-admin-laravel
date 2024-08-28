@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\DeliveryUserController;
 use App\Http\Controllers\Api\OfferSliderController;
 use App\Http\Controllers\Api\AssignProductTagController;
+use App\Http\Controllers\Api\DeliveryTrackingOrderController;
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
@@ -57,6 +58,8 @@ Route::get("getBrands/{id}", [ProductController::class, 'getBrandsbyCategory']);
 
 Route::get("getProductTags/{id}", [ProductController::class, 'getProductTagsByCategory']);
 
+Route::get('/getProductsByTagBestSeller', [ProductController::class, 'getProductsByTagBestSeller']);
+
 // orders
 Route::post('/order', [OrderController::class, 'createOrder'])->name('order.create');
 
@@ -79,6 +82,7 @@ Route::post('/orderRate/{id}', [OrderController::class, 'orderRating']);
 Route::get('/delivery-user/{id}/pendingorders', [OrderController::class, 'getPendingOrdersWithItemsAndDeliveryUser']);
 
 Route::get('/delivery-user/{id}/orders', [OrderController::class, 'getOrdersWithItemsAndDeliveryUser']);
+
 Route::get('/delivery-user/{id}/overall-orders', [OrderController::class, 'getOrdersWithItemsAndDeliveryUserTotal']);
 
 Route::get('/delivery-user/{id}/ordercounts', [OrderController::class, 'getCountsDeliveryUserTotal']);
@@ -88,6 +92,8 @@ Route::get('/delivery-order/{id}', [OrderController::class, 'getOrdersWithItemsA
 Route::post('/accept-order', [OrderController::class, 'acceptOrRejectOrder']);
 
 Route::post('/confirm-order-delivery', [OrderController::class, 'confirmDelivery']);
+
+Route::get('/getDeviceId', [OrderController::class, 'getDeviceId']);
 
 // cart
 Route::post('/cart', [CartController::class, 'addToCart']);
@@ -109,6 +115,7 @@ Route::get('/privacypolicy', [PrivacyPolicyController::class, 'getPrivacyPolicy'
 // coupon
 
 Route::get('/coupon', [CouponController::class, 'getCoupon']);
+
 Route::post('/applyCoupon', [CouponController::class, 'applyCoupon']);
 
 
@@ -121,12 +128,15 @@ Route::get("/getDeliveryUser/{id}", [DeliveryUserController::class, "getUser"]);
 Route::post('/update-delivery-profile/{id}', [DeliveryUserController::class, 'updateProfile']);
 
 Route::post('/sendDepositOtp', [CashDepositController::class, 'sendOtp']);
+
 Route::post('/verifyDepositOtp', [CashDepositController::class, 'verifyOtp']);
+
 Route::post('/storeDeposit', [CashDepositController::class, 'storeDeposit']);
 
 // state country 
 
 Route::get('/state/{country_id}', [AuthController::class, 'state']);
+
 Route::get('/city/{name}', [AuthController::class, 'city']);
 
 // offer slider 
@@ -136,10 +146,12 @@ Route::get('/offerSlider', [OfferSliderController::class, 'getOfferSlider']);
 // assigned tag products
 
 Route::get('/assignedTagProducts/{tagId}', [AssignProductTagController::class, 'getAssignedTagProducts']);
+
 Route::get('/getTagsProduct', [AssignProductTagController::class, 'getTagsProduct']);
 
 
-Route::get('/getProductsByTagBestSeller', [ProductController::class, 'getProductsByTagBestSeller']);
+// Delivery Tracking Order
 
+Route::post('/createTrackingOrder', [DeliveryTrackingOrderController::class, 'createTrackingOrder']);
 
-Route::get('/getDeviceId', [OrderController::class, 'getDeviceId']);
+Route::get('/getOrderTracking/{orderId}', [DeliveryTrackingOrderController::class, 'getOrderTracking']);

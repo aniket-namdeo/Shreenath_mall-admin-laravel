@@ -71,6 +71,7 @@ class OrderController extends Controller
                 'tax_amount' => $request->tax_amount,
                 'shipping_fee' => $request->shipping_fee,
                 'otp' => $otp,
+                'handling_charge' => $request->handling_charge
             ]);
 
             foreach ($request->items as $item) {
@@ -336,6 +337,7 @@ class OrderController extends Controller
                 'users.id as user_id',
                 'users.name as user_name',
                 'users.contact as user_contact',
+                'delivery_tracking.id as deliveryTrackingId'
             )
             ->get();
 
@@ -406,7 +408,8 @@ class OrderController extends Controller
                 'total_mrp' => $totalMrp,
                 'items' => $items,
                 'delivery_user' => $deliveryUser,
-                'user_detail' => $userDetail
+                'user_detail' => $userDetail,
+                'deliveryTrackingId' => $orderData->deliveryTrackingId
             ];
         });
 

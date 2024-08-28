@@ -28,7 +28,8 @@ class Order extends Model
         'transaction_time',
         'order_rating',
         'order_feedback',
-        'otp'
+        'otp',
+        'handling_charge'
     ];
 
     public function orderItems()
