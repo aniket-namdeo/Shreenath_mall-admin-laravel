@@ -213,6 +213,7 @@ class OrderController extends Controller
                 'orders.discount_amount',
                 'orders.tax_amount',
                 'orders.shipping_fee',
+                'orders.handling_charge',
                 'order_items.product_id',
                 'order_items.quantity',
                 'order_items.price',
@@ -272,6 +273,7 @@ class OrderController extends Controller
                 'discount_amount' => $orderData->discount_amount,
                 'tax_amount' => $orderData->tax_amount,
                 'shipping_fee' => $orderData->shipping_fee,
+                'handling_charge' => $orderData->handling_charge,
                 'house_address' => $orderData->house_address,
                 'street_address' => $orderData->street_address,
                 'landmark' => $orderData->landmark,
@@ -525,6 +527,8 @@ class OrderController extends Controller
         }
     }
 
+
+
     public function getPendingOrdersWithItemsAndDeliveryUser(Request $request, $id)
     {
 
@@ -726,8 +730,7 @@ class OrderController extends Controller
                     ->orWhere('order_status', 'shipped')
                     ->orWhere('order_status', 'out_for_delivery')
                     ->orWhere('order_status', 'accepted');
-                })
-                ->whereBetween('delivery_tracking.assigned_at', [$startOfDay, $endOfDay])
+            })
             ->count();
 
         $pendingCash = DeliveryUser::select('total_cash_collected', 'total_cash_to_send_back')->where('id', $id)->get();
@@ -834,4 +837,23 @@ class OrderController extends Controller
         }
     }
 
+    public function deliveredOrderByDeliveryUser($id)
+    {
+        $deliveredOrder = DeliveryTracking::
+            select(
+                'delivery_tracking.id as delivery_tracking_id',
+                'delivery_tracking.order_id as order_id',
+                'delivery_tracking.delivery_user_id as delivery_user_id',
+                'delivery_tracking.order_status as order_status',
+                'delivery_tracking.assigned_at as assigned_at',
+                'users.name as user_name',
+                'users.id as user_id'
+            )
+            ->join('orders', 'delivery_tracking.order_id', '=', 'orders.id')
+            ->join('users', 'orders.user_id', '=', 'users.id')
+            ->where('delivery_tracking.order_status', 'delivered')
+            ->where('delivery_tracking.delivery_user_id', $id)->get();
+
+        return response()->json(['status' => true, 'message' => 'Delivered Orders.', 'data' => $deliveredOrder]);
+    }
 }

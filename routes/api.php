@@ -95,6 +95,8 @@ Route::post('/confirm-order-delivery', [OrderController::class, 'confirmDelivery
 
 Route::get('/getDeviceId', [OrderController::class, 'getDeviceId']);
 
+Route::get('/deliveredOrderByDeliveryUser/{id}', [OrderController::class, 'deliveredOrderByDeliveryUser']);
+
 // cart
 Route::post('/cart', [CartController::class, 'addToCart']);
 
