@@ -15,6 +15,25 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
+
+    public function getDeviceId()
+    {
+        // $deviceIds = DeliveryUser::pluck('deviceId')->values();
+        $deviceIds = DeliveryUser::pluck('deviceId')->filter()->all();
+        $title = 'New Order';
+        $body = 'You got a new order.';
+        // $deviceIds = DeliveryUser::pluck('deviceId')->values();
+        // $deviceIds = ['f1rmJhPxRISdv4rczzb2-u:APA91bHehiZ-gwrQOROC3N6HuKQkl3zz3m9kFJW3r-LvBbISAya7ozxnF9OGKOCT_9ZWL9tsdh14EOJa61GTab4h-y-DhY6QYufGxkxDEX9jMNz17FsOWOXqCEKyTx-nKb7F0T5FNq0I',
+        // 'eWm_ALF_Sh-jpWG5nRIVd2:APA91bEO_SOV9YnguSUGmq85b3W9Mk_hM4Ka6HyeKJO4W63FyQB-dIPbOn9vA9o_rEbRXqD0Q3dibW_KtyhpwuYkEF48BqftnYTVjvbNCwtXyZcynrcSmT3CvShK_YpwLrhDhHGjFuhd',
+        // 'f6a4B_HiSk-zhjGJslzXWq:APA91bFQ3U1EKOiuvFPzg2Mt97N1fpESnyD23A6zbGfIMDZOBw0YlOd5j3rjTflECLj5Q9wN5U42crdSyBwCHgpvxVlCrCQC0JN2Dlgdp4OEHyN4ndhH7ovOyI7TTihJl8J4AnZiZ0f7'
+        // ];
+        // $deviceIds = ['eWm_ALF_Sh-jpWG5nRIVd2:APA91bEO_SOV9YnguSUGmq85b3W9Mk_hM4Ka6HyeKJO4W63FyQB-dIPbOn9vA9o_rEbRXqD0Q3dibW_KtyhpwuYkEF48BqftnYTVjvbNCwtXyZcynrcSmT3CvShK_YpwLrhDhHGjFuhd'];
+        $image = null;
+
+        $response = sendFirebaseNotification($title, $body, $deviceIds, $image);
+        return response()->json(['deviceIds' => $deviceIds]);
+    }
+
     public function createOrder(Request $request)
     {
         $validated = $request->validate([
@@ -71,7 +90,8 @@ class OrderController extends Controller
             $body = 'You got a new order.';
             $deviceIds = DeliveryUser::pluck('deviceId')->values();
             // $deviceIds = ['f1rmJhPxRISdv4rczzb2-u:APA91bHehiZ-gwrQOROC3N6HuKQkl3zz3m9kFJW3r-LvBbISAya7ozxnF9OGKOCT_9ZWL9tsdh14EOJa61GTab4h-y-DhY6QYufGxkxDEX9jMNz17FsOWOXqCEKyTx-nKb7F0T5FNq0I',
-            // 'eWm_ALF_Sh-jpWG5nRIVd2:APA91bEO_SOV9YnguSUGmq85b3W9Mk_hM4Ka6HyeKJO4W63FyQB-dIPbOn9vA9o_rEbRXqD0Q3dibW_KtyhpwuYkEF48BqftnYTVjvbNCwtXyZcynrcSmT3CvShK_YpwLrhDhHGjFuhd'
+            // 'eWm_ALF_Sh-jpWG5nRIVd2:APA91bEO_SOV9YnguSUGmq85b3W9Mk_hM4Ka6HyeKJO4W63FyQB-dIPbOn9vA9o_rEbRXqD0Q3dibW_KtyhpwuYkEF48BqftnYTVjvbNCwtXyZcynrcSmT3CvShK_YpwLrhDhHGjFuhd',
+            // 'f6a4B_HiSk-zhjGJslzXWq:APA91bFQ3U1EKOiuvFPzg2Mt97N1fpESnyD23A6zbGfIMDZOBw0YlOd5j3rjTflECLj5Q9wN5U42crdSyBwCHgpvxVlCrCQC0JN2Dlgdp4OEHyN4ndhH7ovOyI7TTihJl8J4AnZiZ0f7'
             // ];
             // $deviceIds = ['f6a4B_HiSk-zhjGJslzXWq:APA91bFQ3U1EKOiuvFPzg2Mt97N1fpESnyD23A6zbGfIMDZOBw0YlOd5j3rjTflECLj5Q9wN5U42crdSyBwCHgpvxVlCrCQC0JN2Dlgdp4OEHyN4ndhH7ovOyI7TTihJl8J4AnZiZ0f7'];
             $image = null;
@@ -357,6 +377,8 @@ class OrderController extends Controller
                 'id' => $orderData->user_id,
                 'name' => $orderData->user_name,
                 'contact' => $orderData->user_contact,
+                'latitide' => $orderData->latitude,
+                'longitude' => $orderData->longitude
             ];
 
             return [
@@ -398,7 +420,7 @@ class OrderController extends Controller
             'deliver_feedback' => 'required',
         ]);
 
-        $data = DeliveryTracking::where('order_id',$request->order_id)->first();
+        $data = DeliveryTracking::where('order_id', $request->order_id)->first();
 
         if ($data) {
 
@@ -692,20 +714,24 @@ class OrderController extends Controller
 
     public function getCountsDeliveryUserTotal($id)
     {
+        $startOfDay = now()->startOfDay();
+        $endOfDay = now()->endOfDay();
+
         $pendingOrdersCount = DeliveryTracking::where('delivery_user_id', $id)
             ->where(function ($query) {
                 $query->where('order_status', 'pending')
                     ->orWhere('order_status', 'shipped')
                     ->orWhere('order_status', 'out_for_delivery')
                     ->orWhere('order_status', 'accepted');
-            })
+                })
+                ->whereBetween('delivery_tracking.assigned_at', [$startOfDay, $endOfDay])
             ->count();
 
         $pendingCash = DeliveryUser::select('total_cash_collected', 'total_cash_to_send_back')->where('id', $id)->get();
 
-        $deliveredOrdersCount = DeliveryTracking::where('delivery_user_id', $id)->where('order_status', 'delivered')->count();
-        $cancelledOrdersCount = DeliveryTracking::where('delivery_user_id', $id)->where('order_status', 'cancelled')->count();
-        $totalOrdersCount = DeliveryTracking::where('delivery_user_id', $id)->count();
+        $deliveredOrdersCount = DeliveryTracking::where('delivery_user_id', $id)->where('order_status', 'delivered')->whereBetween('delivery_tracking.assigned_at', [$startOfDay, $endOfDay])->count();
+        $cancelledOrdersCount = DeliveryTracking::where('delivery_user_id', $id)->where('order_status', 'cancelled')->whereBetween('delivery_tracking.assigned_at', [$startOfDay, $endOfDay])->count();
+        $totalOrdersCount = DeliveryTracking::where('delivery_user_id', $id)->whereBetween('delivery_tracking.assigned_at', [$startOfDay, $endOfDay])->count();
 
         return response()->json([
             'success' => true,

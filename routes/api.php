@@ -140,3 +140,6 @@ Route::get('/getTagsProduct', [AssignProductTagController::class, 'getTagsProduc
 
 
 Route::get('/getProductsByTagBestSeller', [ProductController::class, 'getProductsByTagBestSeller']);
+
+
+Route::get('/getDeviceId', [OrderController::class, 'getDeviceId']);
