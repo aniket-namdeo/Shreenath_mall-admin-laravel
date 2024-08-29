@@ -52,6 +52,7 @@ class CashDepositController extends Controller
     public function storeDeposit(Request $request)
     {
         $request->validate([
+            'order_id' => 'required',
             'delivery_user_id' => 'required|exists:delivery_user,id',
             'deposit_amount' => 'required|numeric|min:0',
             'deposit_date' => 'required|date',

@@ -11,6 +11,7 @@ class CashDeposit extends Model
     protected $table = 'cash_deposit';
     protected $fillable = [
         'delivery_user_id',
+        'order_id',
         'cash_amount',
         'deposit_amount',
         'deposit_date',

@@ -87,14 +87,14 @@ class OrderController extends Controller
                 Cart::where('id', $item['cart_id'])->delete();
             }
 
+            // $title = 'New Order';
+            // $body = 'You got a new order.';
+            // $deviceIds = DeliveryUser::pluck('deviceId')->values();
+            // $image = null;
+
+            $deviceIds = DeliveryUser::pluck('deviceId')->filter()->all();
             $title = 'New Order';
             $body = 'You got a new order.';
-            $deviceIds = DeliveryUser::pluck('deviceId')->values();
-            // $deviceIds = ['f1rmJhPxRISdv4rczzb2-u:APA91bHehiZ-gwrQOROC3N6HuKQkl3zz3m9kFJW3r-LvBbISAya7ozxnF9OGKOCT_9ZWL9tsdh14EOJa61GTab4h-y-DhY6QYufGxkxDEX9jMNz17FsOWOXqCEKyTx-nKb7F0T5FNq0I',
-            // 'eWm_ALF_Sh-jpWG5nRIVd2:APA91bEO_SOV9YnguSUGmq85b3W9Mk_hM4Ka6HyeKJO4W63FyQB-dIPbOn9vA9o_rEbRXqD0Q3dibW_KtyhpwuYkEF48BqftnYTVjvbNCwtXyZcynrcSmT3CvShK_YpwLrhDhHGjFuhd',
-            // 'f6a4B_HiSk-zhjGJslzXWq:APA91bFQ3U1EKOiuvFPzg2Mt97N1fpESnyD23A6zbGfIMDZOBw0YlOd5j3rjTflECLj5Q9wN5U42crdSyBwCHgpvxVlCrCQC0JN2Dlgdp4OEHyN4ndhH7ovOyI7TTihJl8J4AnZiZ0f7'
-            // ];
-            // $deviceIds = ['f6a4B_HiSk-zhjGJslzXWq:APA91bFQ3U1EKOiuvFPzg2Mt97N1fpESnyD23A6zbGfIMDZOBw0YlOd5j3rjTflECLj5Q9wN5U42crdSyBwCHgpvxVlCrCQC0JN2Dlgdp4OEHyN4ndhH7ovOyI7TTihJl8J4AnZiZ0f7'];
             $image = null;
 
             $response = sendFirebaseNotification($title, $body, $deviceIds, $image);
@@ -527,8 +527,6 @@ class OrderController extends Controller
         }
     }
 
-
-
     public function getPendingOrdersWithItemsAndDeliveryUser(Request $request, $id)
     {
 
@@ -541,6 +539,17 @@ class OrderController extends Controller
             ->where(function ($query) use ($id) {
                 $query->where('delivery_tracking.delivery_user_id', $id)
                     ->orWhereNull('delivery_tracking.delivery_user_id');
+            })
+            ->where(function ($query) use ($id) {
+                // Get the total_cash_collected for the given delivery user
+                $totalCashCollected = DeliveryUser::
+                    where('id', $id)
+                    ->value('total_cash_collected');
+                
+                // If total_cash_collected is 1000 or more, do not include orders without an assigned delivery user
+                if ($totalCashCollected >= 1000) {
+                    $query->whereNotNull('delivery_tracking.delivery_user_id');
+                }
             });
 
         $orders = $orders->select(
@@ -847,7 +856,8 @@ class OrderController extends Controller
                 'delivery_tracking.order_status as order_status',
                 'delivery_tracking.assigned_at as assigned_at',
                 'users.name as user_name',
-                'users.id as user_id'
+                'users.id as user_id',
+                'orders.total_amount as order_total_amount'
             )
             ->join('orders', 'delivery_tracking.order_id', '=', 'orders.id')
             ->join('users', 'orders.user_id', '=', 'users.id')
