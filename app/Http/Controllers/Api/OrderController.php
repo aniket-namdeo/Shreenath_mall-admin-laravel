@@ -18,20 +18,13 @@ class OrderController extends Controller
 
     public function getDeviceId()
     {
-        // $deviceIds = DeliveryUser::pluck('deviceId')->values();
         $deviceIds = DeliveryUser::pluck('deviceId')->filter()->all();
         $title = 'New Order';
         $body = 'You got a new order.';
-        // $deviceIds = DeliveryUser::pluck('deviceId')->values();
-        // $deviceIds = ['f1rmJhPxRISdv4rczzb2-u:APA91bHehiZ-gwrQOROC3N6HuKQkl3zz3m9kFJW3r-LvBbISAya7ozxnF9OGKOCT_9ZWL9tsdh14EOJa61GTab4h-y-DhY6QYufGxkxDEX9jMNz17FsOWOXqCEKyTx-nKb7F0T5FNq0I',
-        // 'eWm_ALF_Sh-jpWG5nRIVd2:APA91bEO_SOV9YnguSUGmq85b3W9Mk_hM4Ka6HyeKJO4W63FyQB-dIPbOn9vA9o_rEbRXqD0Q3dibW_KtyhpwuYkEF48BqftnYTVjvbNCwtXyZcynrcSmT3CvShK_YpwLrhDhHGjFuhd',
-        // 'f6a4B_HiSk-zhjGJslzXWq:APA91bFQ3U1EKOiuvFPzg2Mt97N1fpESnyD23A6zbGfIMDZOBw0YlOd5j3rjTflECLj5Q9wN5U42crdSyBwCHgpvxVlCrCQC0JN2Dlgdp4OEHyN4ndhH7ovOyI7TTihJl8J4AnZiZ0f7'
-        // ];
-        // $deviceIds = ['eWm_ALF_Sh-jpWG5nRIVd2:APA91bEO_SOV9YnguSUGmq85b3W9Mk_hM4Ka6HyeKJO4W63FyQB-dIPbOn9vA9o_rEbRXqD0Q3dibW_KtyhpwuYkEF48BqftnYTVjvbNCwtXyZcynrcSmT3CvShK_YpwLrhDhHGjFuhd'];
         $image = null;
 
         $response = sendFirebaseNotification($title, $body, $deviceIds, $image);
-        return response()->json(['deviceIds' => $deviceIds]);
+        return response()->json(['deviceIds' => $deviceIds, 'response' => $response]);
     }
 
     public function createOrder(Request $request)
@@ -530,27 +523,49 @@ class OrderController extends Controller
     public function getPendingOrdersWithItemsAndDeliveryUser(Request $request, $id)
     {
 
+        $deliveryUser = DeliveryUser::find($id);
+        if (!$deliveryUser) {
+            return response()->json(['success' => false, 'message' => 'Delivery user not found'], 404);
+        }
+
+        $totalCashCollected = $deliveryUser->total_cash_collected;
+        $totalCashDeposited = $deliveryUser->total_cash_deposited;
+
+        // Calculate the difference
+        $cashDifference = $totalCashCollected - $totalCashDeposited;
+
+        // $orders = Order::
+        //     leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+        //     ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
+        //     ->leftJoin('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
+        //     ->where('orders.delivery_status', 'pending')
+        //     ->where(function ($query) use ($id) {
+        //         $query->where('delivery_tracking.delivery_user_id', $id)
+        //             ->orWhereNull('delivery_tracking.delivery_user_id');
+        //     })
+        //     ->where(function ($query) use ($id) {
+        //         $totalCashCollected = DeliveryUser::
+        //             where('id', $id)
+        //             ->value('total_cash_collected');
+
+        //         if ($totalCashCollected >= 1000) {
+        //             $query->whereNotNull('delivery_tracking.delivery_user_id');
+        //         }
+        //     });
+
         $orders = Order::
-            leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
-            ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
-            ->leftJoin('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
-            ->where('orders.delivery_status', 'pending')
-            // ->where('delivery_tracking.delivery_user_id', $id);
-            ->where(function ($query) use ($id) {
-                $query->where('delivery_tracking.delivery_user_id', $id)
-                    ->orWhereNull('delivery_tracking.delivery_user_id');
-            })
-            ->where(function ($query) use ($id) {
-                // Get the total_cash_collected for the given delivery user
-                $totalCashCollected = DeliveryUser::
-                    where('id', $id)
-                    ->value('total_cash_collected');
-                
-                // If total_cash_collected is 1000 or more, do not include orders without an assigned delivery user
-                if ($totalCashCollected >= 1000) {
-                    $query->whereNotNull('delivery_tracking.delivery_user_id');
-                }
-            });
+        leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+        ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
+        ->leftJoin('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
+        ->where('orders.delivery_status', 'pending')
+        ->where(function ($query) use ($id, $cashDifference) {
+            $query->where('delivery_tracking.delivery_user_id', $id)
+                ->orWhereNull('delivery_tracking.delivery_user_id');
+
+            if ($cashDifference >= 1000) {
+                $query->whereNotNull('delivery_tracking.delivery_user_id');
+            }
+        });
 
         $orders = $orders->select(
             'orders.id as order_id',
@@ -742,7 +757,7 @@ class OrderController extends Controller
             })
             ->count();
 
-        $pendingCash = DeliveryUser::select('total_cash_collected', 'total_cash_to_send_back')->where('id', $id)->get();
+        $pendingCash = DeliveryUser::select('total_cash_collected', 'total_cash_deposited')->where('id', $id)->get();
 
         $deliveredOrdersCount = DeliveryTracking::where('delivery_user_id', $id)->where('order_status', 'delivered')->whereBetween('delivery_tracking.assigned_at', [$startOfDay, $endOfDay])->count();
         $cancelledOrdersCount = DeliveryTracking::where('delivery_user_id', $id)->where('order_status', 'cancelled')->whereBetween('delivery_tracking.assigned_at', [$startOfDay, $endOfDay])->count();
@@ -758,7 +773,8 @@ class OrderController extends Controller
             ],
             'pending_cash' => [
                 'total_cash_collected' => (float) $pendingCash[0]->total_cash_collected,
-                'total_cash_sent_back' => (float) $pendingCash[0]->total_cash_to_send_back
+                'total_cash_deposited' => (float) $pendingCash[0]->total_cash_deposited,
+                // 'total_cash_sent_back' => (float) $pendingCash[0]->total_cash_to_send_back
             ]
         ]);
     }

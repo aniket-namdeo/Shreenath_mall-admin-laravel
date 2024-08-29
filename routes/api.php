@@ -156,4 +156,6 @@ Route::get('/getTagsProduct', [AssignProductTagController::class, 'getTagsProduc
 
 Route::post('/createTrackingOrder', [DeliveryTrackingOrderController::class, 'createTrackingOrder']);
 
+Route::post('/updateTrackingOrder', [DeliveryTrackingOrderController::class, 'updateTrackingOrder']);
+
 Route::get('/getOrderTracking/{orderId}', [DeliveryTrackingOrderController::class, 'getOrderTracking']);

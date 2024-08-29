@@ -17,6 +17,7 @@ class DeliveryTrackingOrder extends Model
         'delivery_user_id',
         'latitude',
         'longitude',
-        'status'
+        'status',
+        'delivery_status'
     ];
 }

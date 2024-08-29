@@ -52,7 +52,6 @@ class CashDepositController extends Controller
     public function storeDeposit(Request $request)
     {
         $request->validate([
-            'order_id' => 'required',
             'delivery_user_id' => 'required|exists:delivery_user,id',
             'deposit_amount' => 'required|numeric|min:0',
             'deposit_date' => 'required|date',
@@ -64,8 +63,11 @@ class CashDepositController extends Controller
             return response()->json(['success' => false, 'message' => 'Delivery user not found.'], 404);
         }
 
-        $newTotalCashCollected = $deliveryUser->total_cash_collected - $request->deposit_amount;
-        $newTotalCashToSendBack = $deliveryUser->total_cash_to_send_back + $request->deposit_amount;
+        // $newTotalCashCollected = $deliveryUser->total_cash_collected - $request->deposit_amount;
+        // $newTotalCashToSendBack = $deliveryUser->total_cash_to_send_back + $request->deposit_amount;
+        $newTotalCashDeposit = $deliveryUser->total_cash_deposited +  $request->deposit_amount;
+
+        $newTotalPending = $deliveryUser->total_cash_collected - $deliveryUser->total_cash_deposited;
 
         $cashDeposit = CashDeposit::create([
             'delivery_user_id' => $request->delivery_user_id,
@@ -76,8 +78,9 @@ class CashDepositController extends Controller
         ]);
 
         $deliveryUser->update([
-            'total_cash_collected' => $newTotalCashCollected,
-            'total_cash_to_send_back' => $newTotalCashToSendBack,
+            'total_cash_deposited' => $newTotalCashDeposit,
+            'total_cash_pending' => $newTotalPending
+            // 'total_cash_to_send_back' => $newTotalCashToSendBack,
         ]);
 
         return response()->json(['success' => true, 'data' => $cashDeposit], 201);
