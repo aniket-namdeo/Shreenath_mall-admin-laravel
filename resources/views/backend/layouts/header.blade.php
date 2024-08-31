@@ -127,9 +127,14 @@
                 </ul>
             </li>
 
-            <li class="mb-2 {{ $current_page == 'sales' ? 'active' : '' }}">
+            {{-- <li class="mb-2 {{ $current_page == 'sales' ? 'active' : '' }}">
                 <a href="{{ url('admin/listSales') }}">
                     <font><i class="bx bxs-sales"></i> <span>Sales</span></font>
+                </a>
+            </li> --}}
+            <li class="mb-2 {{ $current_page == 'deposit-request' ? 'active' : '' }}">
+                <a href="{{ url('admin/deposit-request') }}">
+                    <font><i class="bx bxs-sales"></i> <span>Deposit Request</span></font>
                 </a>
             </li>
 

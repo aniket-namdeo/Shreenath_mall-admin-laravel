@@ -11,15 +11,30 @@ use Illuminate\Http\Request;
 class CashDepositController extends Controller
 {
 
-    public function sendOtp()
+    public function sendOtp(Request $request)
     {
         $userCheck = User::where('user_type', 'Admin')->first();
+
+        $request->validate([
+            'delivery_user_id' => 'required|exists:delivery_user,id',
+            'cash_amount' => 'required|numeric|min:0',
+            'deposit_date' => 'required|date',
+        ]);
 
         $otp = rand(100000, 999999);
 
         $userCheck->update([
             'cash_deposit_otp' => $otp,
         ]);
+
+        $data = [
+            'delivery_user_id' => $request->delivery_user_id,
+            'cash_amount' => $request->cash_amount,
+            'deposit_date' => $request->deposit_date,
+            'otp' => $otp,
+        ];
+
+        $depositRequest = CashDeposit::create($data);
 
         $subject = "Verification Otp";
         $msg = "Confirmation Otp is $otp";
@@ -65,7 +80,7 @@ class CashDepositController extends Controller
 
         // $newTotalCashCollected = $deliveryUser->total_cash_collected - $request->deposit_amount;
         // $newTotalCashToSendBack = $deliveryUser->total_cash_to_send_back + $request->deposit_amount;
-        $newTotalCashDeposit = $deliveryUser->total_cash_deposited +  $request->deposit_amount;
+        $newTotalCashDeposit = $deliveryUser->total_cash_deposited + $request->deposit_amount;
 
         $newTotalPending = $deliveryUser->total_cash_collected - $deliveryUser->total_cash_deposited;
 
@@ -85,4 +100,52 @@ class CashDepositController extends Controller
 
         return response()->json(['success' => true, 'data' => $cashDeposit], 201);
     }
+
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'delivery_user_id' => 'required|exists:delivery_user,id',
+            'cash_amount' => 'required|numeric|min:0',
+            'deposit_date' => 'required|date',
+        ]);
+
+        $depositRequest = CashDeposit::create($request->all());
+
+        return response()->json(['message' => 'Deposit request created successfully', 'data' => $depositRequest], 201);
+    }
+
+    public function getCashDeposit(Request $request)
+    {
+        $data = CashDeposit::where('delivery_user_id', $request->id)->where('status', 'approved')->orderBy('id', 'desc')->first();
+
+        // if ($data) {
+            return response()->json(['message' => 'Deposit request get successfully', 'data' => $data], 201);
+        // } else {
+        //     return response()->json(['message' => 'Request not approved', 'data' => $data], 201);
+        // }
+    }
+
+    public function updateCashDeposit(Request $request)
+    {
+        $deliveryUser = DeliveryUser::where('id', $request->delivery_user_id)->first();
+        $data = CashDeposit::where('delivery_user_id', $request->delivery_user_id)->where('status', 'approved')->orderBy('id', 'desc')->first();
+
+        $newTotalCashDeposit = $deliveryUser->total_cash_deposited + $data->deposit_amount;
+
+        $newTotalPending = $deliveryUser->total_cash_collected - $data->deposit_amount;
+
+        $data->update([
+            'deposit_status' => 'delivered'
+        ]);
+
+        $deliveryUser->update([
+            'total_cash_deposited' => $newTotalCashDeposit,
+            'total_cash_pending' => $newTotalPending
+        ]);
+
+        return response()->json(['success'=> true,'message' => 'Depositconfirmed', 'data' => $data], 201);
+
+    }
+
 }

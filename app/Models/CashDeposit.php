@@ -15,6 +15,7 @@ class CashDeposit extends Model
         'cash_amount',
         'deposit_amount',
         'deposit_date',
+        'otp',
         'isVerified',
         'status',
     ];

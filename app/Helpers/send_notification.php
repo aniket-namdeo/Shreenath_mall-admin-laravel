@@ -5,7 +5,7 @@ use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 
 if (!function_exists('sendFirebaseNotification')) {
-    function sendFirebaseNotification($title, $body, $deviceTokens = [], $image = null)
+    function sendFirebaseNotification($title, $body, $deviceTokens = [], $image = null, $data = [])
     {
         try {
 
@@ -31,6 +31,10 @@ if (!function_exists('sendFirebaseNotification')) {
             $notification = Notification::create($title, $body);
 
             $message = CloudMessage::new()->withNotification($notification);
+
+            if (!empty($data)) {
+                $message = $message->withData($data);
+            }
 
             if ($image) {
                 $message = $message->withData(['image' => $image]);

@@ -138,6 +138,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     
     // Sales
     Route::get('/listSales', [App\Http\Controllers\SalesController::class, 'listSales']);
+    Route::get('/deposit-request', [App\Http\Controllers\SalesController::class, 'listRequest'])->name('deposit-request.list');
+    Route::get('/deposit-requests/{id}/edit', [App\Http\Controllers\SalesController::class, 'editRequest'])->name('deposit_requests.edit');
+    Route::post('/deposit-requests/{id}', [App\Http\Controllers\SalesController::class, 'updateRequest'])->name('deposit_requests.update');
 
     // tags
     Route::get('/add-tag', [App\Http\Controllers\TagController::class, 'show'])->name('add-tag.show');

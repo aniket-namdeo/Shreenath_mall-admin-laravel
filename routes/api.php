@@ -67,6 +67,8 @@ Route::get('/orders/user/{userId}', [OrderController::class, 'getOrdersByUser'])
 
 Route::get('/order/{id}', [OrderController::class, 'getOrderDetail']);
 
+Route::get('/latest-order/{userId}', [OrderController::class, 'getLastOrderDetail']);
+
 Route::post('/save-remark', [OrderController::class, 'saveRemark']);
 
 Route::get('/orderTrack/{id}', [OrderController::class, 'getOrderDetailDeliveryUser']);
@@ -134,6 +136,13 @@ Route::post('/sendDepositOtp', [CashDepositController::class, 'sendOtp']);
 Route::post('/verifyDepositOtp', [CashDepositController::class, 'verifyOtp']);
 
 Route::post('/storeDeposit', [CashDepositController::class, 'storeDeposit']);
+// new request for storeDepost
+Route::post('/deposit-request', [CashDepositController::class, 'store']);
+
+// get cash deposit
+Route::get('/getCashDeposit/{id}', [CashDepositController::class, 'getCashDeposit']);
+
+Route::post('/deposit-confirm', [CashDepositController::class, 'updateCashDeposit']);
 
 // state country 
 

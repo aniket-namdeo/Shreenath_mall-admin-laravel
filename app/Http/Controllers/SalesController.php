@@ -32,6 +32,75 @@ class SalesController extends Controller
 
             return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'data'));
     }
+
+
+    public function listRequest()
+    {
+        $page_name = 'sales/list_request';
+        $current_page = 'deposit-request';
+        $page_title = 'Deposit request';
+        $data = CashDeposit::
+            join('delivery_user', 'cash_deposit.delivery_user_id', '=', 'delivery_user.id')
+            // ->join('orders', 'cash_deposit.order_id', '=', 'orders.id')
+            // ->whereIn('cash_deposit.status', ['pending', 'verified'])
+            ->select(
+                'cash_deposit.*', 
+                'delivery_user.name as delivery_user_name', 
+                // 'orders.id as order_id'
+            )
+            ->get();
+
+        // return view('admin.cash_deposit.index', compact('depositRequests'));
+
+        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'data'));
+
+    }
+
+    public function editRequest($id)
+    {
+        // Fetch the specific deposit request using join
+        $page_name = 'sales/edit_request';
+        $current_page = 'edit-deposit-request';
+        $page_title = 'Edit Deposit request';
+        $depositRequest = CashDeposit::
+            join('delivery_user', 'cash_deposit.delivery_user_id', '=', 'delivery_user.id')
+            ->where('cash_deposit.id', $id)
+            ->select(
+                'cash_deposit.*', 
+                'delivery_user.name as delivery_user_name', 
+                )
+            ->first();
+
+        // if (!$depositRequest) {
+        //     return redirect()->route('admin.cash_deposit.index')->with('error', 'Deposit request not found.');
+        // }
+
+        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'depositRequest'));
+    }
+
+    public function updateRequest(Request $request, $id)
+    {
+        $page_name = 'sales/list_request';
+        $current_page = 'deposit-request';
+        $page_title = 'Deposit request';
+        
+        $request->validate([
+            'deposit_amount' => 'required|numeric|min:0',
+            'status' => 'required|in:approved,rejected'
+        ]);
+
+        // Update the deposit request
+        CashDeposit::
+            where('id', $id)
+            ->update([
+                'deposit_amount' => $request->deposit_amount,
+                'status' => $request->status,
+                'updated_at' => now()
+            ]);
+
+        return redirect()->route('deposit-request.list')->with('success', 'Deposit request updated successfully.');
+
+    }
     
 
 }
