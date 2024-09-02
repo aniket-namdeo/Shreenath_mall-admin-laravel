@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\DeliveryUserController;
 use App\Http\Controllers\Api\OfferSliderController;
 use App\Http\Controllers\Api\AssignProductTagController;
+use App\Http\Controllers\Api\CustomerSupportController;
 use App\Http\Controllers\Api\DeliveryTrackingOrderController;
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -168,3 +169,10 @@ Route::post('/createTrackingOrder', [DeliveryTrackingOrderController::class, 'cr
 Route::post('/updateTrackingOrder', [DeliveryTrackingOrderController::class, 'updateTrackingOrder']);
 
 Route::get('/getOrderTracking/{orderId}', [DeliveryTrackingOrderController::class, 'getOrderTracking']);
+
+// Customer Support
+Route::post('/customer-support', [CustomerSupportController::class, 'store']);
+
+// calculate Distance
+
+Route::post('/getDistanceTime', [OrderController::class, 'getDistanceTime']);

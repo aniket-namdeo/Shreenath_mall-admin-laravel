@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DeliveryTracking;
 use App\Models\DeliveryUser;
+use App\Models\Order;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class DeliveryUserController extends Controller
 {
@@ -28,8 +31,33 @@ class DeliveryUserController extends Controller
         $current_page = 'List';
         $page_title = 'List';
         $list = DeliveryUser::orderBy('id', 'desc')->paginate(20);
-        // dd($list);
-        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'list'));
+
+        $paidIncentives = DeliveryTracking::join('orders', 'delivery_tracking.order_id', '=', 'orders.id')
+            ->select('delivery_tracking.delivery_user_id')
+            ->selectRaw('SUM(CASE WHEN orders.incentive_status = "paid" THEN orders.incentive_amount ELSE 0 END) AS total_incentive_paid')
+            ->groupBy('delivery_tracking.delivery_user_id');
+
+        $unpaidIncentives = DeliveryTracking::join('orders', 'delivery_tracking.order_id', '=', 'orders.id')
+            ->select('delivery_tracking.delivery_user_id')
+            ->selectRaw('SUM(CASE WHEN orders.incentive_status = "unpaid" THEN orders.incentive_amount ELSE 0 END) AS total_incentive_unpaid')
+            ->groupBy('delivery_tracking.delivery_user_id');
+
+        $incentives = DeliveryUser::leftJoinSub($paidIncentives, 'paid_incentives', function ($join) {
+            $join->on('delivery_user.id', '=', 'paid_incentives.delivery_user_id');
+        })
+            ->leftJoinSub($unpaidIncentives, 'unpaid_incentives', function ($join) {
+                $join->on('delivery_user.id', '=', 'unpaid_incentives.delivery_user_id');
+            })
+            ->select(
+                'delivery_user.id as delivery_user_id',
+                'delivery_user.name as delivery_user_name',
+                'paid_incentives.total_incentive_paid',
+                'unpaid_incentives.total_incentive_unpaid'
+            )
+            ->get()
+            ->keyBy('delivery_user_id');
+
+        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'list', 'incentives'));
     }
 
     public function AddDeliveryUserPost(Request $request)
@@ -103,6 +131,8 @@ class DeliveryUserController extends Controller
             'vehicle_name' => 'required|string|max:255',
             'vehicle_no' => 'required|string|max:255',
             'vehicle_type' => 'required|string|max:255',
+            'incentive_type' => 'required',
+            'incentive' => 'required',
         ]);
 
         $deliveryUser = DeliveryUser::findOrFail($id);
@@ -119,6 +149,8 @@ class DeliveryUserController extends Controller
             'vehicle_name' => $request->vehicle_name,
             'vehicle_no' => $request->vehicle_no,
             'vehicle_type' => $request->vehicle_type,
+            'incentive_type' => $request->incentive_type,
+            'incentive' => $request->incentive,
         ]);
         if ($request->password) {
             $deliveryUser->update([

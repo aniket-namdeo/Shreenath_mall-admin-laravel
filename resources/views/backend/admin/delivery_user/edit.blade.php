@@ -74,6 +74,16 @@
                             <label class="form-label" for="vehicle_type">Vehicle Type</label>
                             <input type="text" class="form-control" name="vehicle_type" value="{{ old('vehicle_type', $deliveryUser->vehicle_type) }}" required />
                         </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label" for="incentive_type">Incentive Type</label>
+                            <input type="text" class="form-control" name="incentive_type" value="{{ old('incentive_type', $deliveryUser->incentive_type) }}" required />
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label" for="incentive">Incentive</label>
+                            <input type="text" class="form-control" name="incentive" value="{{ old('incentive', $deliveryUser->incentive) }}" required />
+                        </div>
+
+
                      
                         <div class="col-md-12">
                             <button type="submit" class="btn web-btn mt-3" id="submit_btn">

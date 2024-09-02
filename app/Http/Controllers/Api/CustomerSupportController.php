@@ -9,37 +9,22 @@ use Illuminate\Support\Facades\Validator;
 
 class CustomerSupportController extends Controller
 {
-   protected $rules;
-
-   public function __construct(){
-        $this->rules = [
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
             'name' => 'required|min:3',
             'email' => 'required|email',
-            'contact' => 'required|integer|min:10|max:10',
+            'contact' => 'required|integer',
             'subject' => 'required',
             'message' => 'required',
-        ];
-    }
+        ]);
 
-    public function index(){ }
+        $data = CustomerSupport::create($validated);
 
-   public function store(Request $request){
-        
-        $validator = Validator::make($request->all(), $this->rules);
-
-        if ($validator->fails()) {
-
-            return redirect()->back()->withErrors($validator)->withInput();
-
-        } else{
-
-            $data = CustomerSupport::create($validator);
-
-            if($data->id > 0){
-                return response()->json(['status' => true, 'message' => 'Customer Support Request Submitted Successfully'], 200);
-            }else{
-                return response()->json(['status' => false, 'message' => "Something Went Wrong", "data" => []], 403);
-            }
+        if ($data->id > 0) {
+            return response()->json(['status' => true, 'message' => 'Customer Support Request Submitted Successfully'], 200);
+        } else {
+            return response()->json(['status' => false, 'message' => "Something Went Wrong", "data" => []], 403);
         }
-   }
+    }
 }

@@ -7,11 +7,17 @@ use App\Models\User;
 
 class DashboardController extends Controller
 {
-    public function index () {
+    public function index()
+    {
         $page_name = 'dashboard/dashboard';
         $current_page = 'dashboard';
         $page_title = 'Dashboard';
         $cash_deposit = User::where('user_type', "Admin")->first();
+
+        function unique_code($limit)
+        {
+            return substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, $limit);
+        }
         return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'cash_deposit'));
     }
 }

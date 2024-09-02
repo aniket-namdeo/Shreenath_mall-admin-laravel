@@ -18,8 +18,8 @@ class DeliveryTrackingOrderController extends Controller
             'delivery_tracking_id' => 'required|integer',
             'order_id' => 'required|integer',
             'delivery_user_id' => 'required|integer',
-            'latitude' => 'required|string',
-            'longitude' => 'required|string',
+            'latitude' => 'required',
+            'longitude' => 'required',
         ]);
 
         $trackingOrder = DeliveryTrackingOrder::create([

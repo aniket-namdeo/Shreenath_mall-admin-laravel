@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use App\Models\Order;
 use App\Models\Order_items;
 use App\Models\User_addresses;
@@ -37,7 +38,7 @@ class OrderController extends Controller
 
     private function calculateDistance($lat1, $lon1, $lat2, $lon2)
     {
-        $earthRadius = 6371; // Radius of the earth in km
+        $earthRadius = 6371;
 
         $latDistance = deg2rad($lat2 - $lat1);
         $lonDistance = deg2rad($lon2 - $lon1);
@@ -48,10 +49,63 @@ class OrderController extends Controller
 
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
 
-        $distance = $earthRadius * $c; // Distance in km
+        $distance = $earthRadius * $c;
 
         return $distance;
     }
+
+    // public function getDistanceTime(Request $request)
+    // {
+    //     $userLat = $request->userlat;
+    //     $userLong = $request->userlong;
+    //     $deliveryUserLat = $request->deliveryUserLat;
+    //     $deliveryUserLong = $request->deliveryUserLong;
+
+    //     $totalDistance = $this->calculateDistance($userLat, $userLong, $deliveryUserLat, $deliveryUserLong);
+
+    //     $estimatedTime = $this->calculateTime($totalDistance);
+
+    //     return response()->json([
+    //         'distance' => round($totalDistance, 2),
+    //         'estimated_time' => $estimatedTime
+    //     ]);
+    // }
+
+    public function getDistanceTime(Request $request)
+    {
+        $userLat = $request->input('userlat');
+        $userLong = $request->input('userlong');
+        $deliveryUserLat = $request->input('deliveryUserLat');
+        $deliveryUserLong = $request->input('deliveryUserLong');
+        $apiKey = 'AIzaSyDs7nLUXJhjNgWBr6kkz-5-PyvG15FU3aQ';
+        $url = 'https://maps.googleapis.com/maps/api/distancematrix/json';
+
+        $params = [
+            'origins' => "$userLat,$userLong",
+            'destinations' => "$deliveryUserLat,$deliveryUserLong",
+            'key' => $apiKey,
+            'mode' => 'driving'
+        ];
+
+        $response = Http::get($url, $params);
+
+        if ($response->successful()) {
+            $data = $response->json();
+
+            $distance = $data['rows'][0]['elements'][0]['distance']['value'] / 1000; // distance in kilometers
+            $duration = $data['rows'][0]['elements'][0]['duration']['value'] / 60;   // duration in minutes
+
+            return response()->json([
+                'distance' => round($distance, 2),
+                'estimated_time' => round($duration, 0)
+            ]);
+        }
+
+        return response()->json(['error' => 'Unable to fetch distance and time'], 500);
+    }
+
+
+
     public function getDeviceId()
     {
         $deviceIds = DeliveryUser::pluck('deviceId')->filter()->all();
@@ -333,6 +387,9 @@ class OrderController extends Controller
     public function getLastOrderDetail($userId)
     {
 
+        $apiKey = 'AIzaSyDs7nLUXJhjNgWBr6kkz-5-PyvG15FU3aQ';
+        $url = 'https://maps.googleapis.com/maps/api/distancematrix/json';
+
         $lastOrder = Order::select(
             'orders.id',
             'orders.user_id',
@@ -357,7 +414,9 @@ class OrderController extends Controller
 
         $deliveryUserDetails = null;
         $deliveryTrackingDetails = null;
-        $calculateDistancetime = null;
+        // $calculateDistancetime = null;
+        $distance = null;
+        $estimatedTime = null;
 
         if ($deliveryTracking) {
             $deliveryUserDetails = DeliveryUser::select(
@@ -376,22 +435,53 @@ class OrderController extends Controller
                 ->first();
         }
 
-        $calculateDistancetime = $this->calculateDistance(
-            $lastOrder->user_latitude,
-            $lastOrder->user_longitude,
-            $deliveryTrackingDetails->delivery_latitude,
-            $deliveryTrackingDetails->delivery_longitude
-        );
+        if ($deliveryTrackingDetails) {
 
-        if($calculateDistancetime == 0){
-            $calculateDistancetime = 10;
+            $params = [
+                'origins' => "$lastOrder->user_latitude,$lastOrder->user_longitude",
+                'destinations' => "$deliveryTrackingDetails->delivery_latitude,$deliveryTrackingDetails->delivery_longitude",
+                'key' => $apiKey,
+                'mode' => 'driving'
+            ];
+
+            $response = Http::get($url, $params);
+            if ($response->successful()) {
+                $data = $response->json();
+
+                // $distance = $data['rows'][0]['elements'][0]['distance']['value'] / 1000; // distance in kilometers
+                // $duration = $data['rows'][0]['elements'][0]['duration']['value'] / 60;   // duration in minutes
+
+                if (isset($data['rows'][0]['elements'][0]['distance']['value'])) {
+                    $distance = $data['rows'][0]['elements'][0]['distance']['value'] / 1000; // Convert meters to kilometers
+                }
+    
+                if (isset($data['rows'][0]['elements'][0]['duration']['value'])) {
+                    $estimatedTime = $data['rows'][0]['elements'][0]['duration']['value'] / 60; // Convert seconds to minutes
+                }
+            }
+
+            // $calculateDistancetime = $this->calculateDistance(
+            //     $lastOrder->user_latitude,
+            //     $lastOrder->user_longitude,
+            //     $deliveryTrackingDetails->delivery_latitude,
+            //     $deliveryTrackingDetails->delivery_longitude
+            // );
+
+            // if ($calculateDistancetime == 0) {
+            //     $calculateDistancetime = 10;
+            // } else if ($calculateDistancetime < 10) {
+            //     $calculateDistancetime = 10;
+            // } else {
+            //     $calculateDistancetime;
+            // }
         }
 
         $response = [
             'order' => $lastOrder,
             'delivery_user' => $deliveryUserDetails,
             'delivery_tracking' => $deliveryTrackingDetails,
-            'calculateDistance' => $calculateDistancetime
+            'distance' => $distance ? round($distance, 2) : null,
+            'estimated_time' => $estimatedTime ? round($estimatedTime, 0) : null,
         ];
         return response()->json($response);
     }
@@ -634,9 +724,68 @@ class OrderController extends Controller
         }
     }
 
+    // public function getPendingOrdersWithItemsAndDeliveryUser(Request $request, $id)
+    // {
+
+    //     $deliveryUser = DeliveryUser::find($id);
+    //     if (!$deliveryUser) {
+    //         return response()->json(['success' => false, 'message' => 'Delivery user not found'], 404);
+    //     }
+
+    //     $totalCashCollected = $deliveryUser->total_cash_collected;
+    //     $totalCashDeposited = $deliveryUser->total_cash_deposited;
+
+    //     // Calculate the difference
+    //     $cashDifference = $totalCashCollected - $totalCashDeposited;
+
+    //     $orders = Order::
+    //         leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+    //         ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
+    //         ->leftJoin('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
+    //         ->where('orders.delivery_status', 'pending')
+    //         ->where(function ($query) use ($id, $cashDifference) {
+    //             $query->where('delivery_tracking.delivery_user_id', $id)
+    //                 ->orWhereNull('delivery_tracking.delivery_user_id');
+
+    //             if ($cashDifference >= 1000) {
+    //                 $query->whereNotNull('delivery_tracking.delivery_user_id');
+    //             }
+    //         })
+    //         ->orderBy('orders.id', 'desc')
+    //     ;
+
+    //     $orders = $orders->select(
+    //         'orders.id as order_id',
+    //         'orders.user_id',
+    //         'orders.total_amount',
+    //         'orders.status',
+    //         'orders.payment_method',
+    //         'orders.delivery_status as order_status',
+    //         'orders.payment_status',
+    //         'orders.order_date',
+    //         'delivery_tracking.id as delivery_tracking_id',
+    //         'delivery_tracking.order_status as delivery_status',
+    //         'delivery_user.name as delivery_person_name',
+    //         'delivery_user.contact as delivery_person_contact',
+    //         'user_addresses.name as user_address_name',
+    //         'user_addresses.contact as user_address_contact',
+    //         'user_addresses.house_address as user_address_house',
+    //         'user_addresses.street_address as user_address_street',
+    //         'user_addresses.landmark as user_address_landmark',
+    //         'user_addresses.city as user_address_city',
+    //         'user_addresses.state as user_address_state',
+    //         'user_addresses.country as user_address_country',
+    //         'user_addresses.pincode as user_address_pincode',
+    //         'user_addresses.latitude as user_latitude',
+    //         'user_addresses.longitude as user_longitude'
+    //     )
+    //         ->get();
+
+    //     return response()->json(['success' => true, 'data' => $orders]);
+    // }
+
     public function getPendingOrdersWithItemsAndDeliveryUser(Request $request, $id)
     {
-
         $deliveryUser = DeliveryUser::find($id);
         if (!$deliveryUser) {
             return response()->json(['success' => false, 'message' => 'Delivery user not found'], 404);
@@ -645,27 +794,7 @@ class OrderController extends Controller
         $totalCashCollected = $deliveryUser->total_cash_collected;
         $totalCashDeposited = $deliveryUser->total_cash_deposited;
 
-        // Calculate the difference
         $cashDifference = $totalCashCollected - $totalCashDeposited;
-
-        // $orders = Order::
-        //     leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
-        //     ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
-        //     ->leftJoin('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
-        //     ->where('orders.delivery_status', 'pending')
-        //     ->where(function ($query) use ($id) {
-        //         $query->where('delivery_tracking.delivery_user_id', $id)
-        //             ->orWhereNull('delivery_tracking.delivery_user_id');
-        //     })
-        //     ->where(function ($query) use ($id) {
-        //         $totalCashCollected = DeliveryUser::
-        //             where('id', $id)
-        //             ->value('total_cash_collected');
-
-        //         if ($totalCashCollected >= 1000) {
-        //             $query->whereNotNull('delivery_tracking.delivery_user_id');
-        //         }
-        //     });
 
         $orders = Order::
             leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
@@ -679,7 +808,9 @@ class OrderController extends Controller
                 if ($cashDifference >= 1000) {
                     $query->whereNotNull('delivery_tracking.delivery_user_id');
                 }
-            });
+            })
+            ->orderBy('orders.id', 'desc')
+        ;
 
         $orders = $orders->select(
             'orders.id as order_id',
@@ -692,6 +823,7 @@ class OrderController extends Controller
             'orders.order_date',
             'delivery_tracking.id as delivery_tracking_id',
             'delivery_tracking.order_status as delivery_status',
+            'delivery_tracking.delivery_user_id',
             'delivery_user.name as delivery_person_name',
             'delivery_user.contact as delivery_person_contact',
             'user_addresses.name as user_address_name',
@@ -708,8 +840,35 @@ class OrderController extends Controller
         )
             ->get();
 
+        foreach ($orders as $order) {
+            if ($order->delivery_user_id == $id) {
+                $calculateDistancetime = $this->calculateDistance(
+                    $order->user_latitude,
+                    $order->user_longitude,
+                    $deliveryUser->latitude,
+                    $deliveryUser->longitude
+                );
+                if ($calculateDistancetime <= 0) {
+                    $time = 10;
+                    $order->calculatedTime = $time;
+                } else {
+                    $baseTime = 10;
+                    $additionalTime = 5;
+
+                    $additionalDistance = max(0, $calculateDistancetime - 1);
+
+                    $time = $baseTime + ($additionalDistance * $additionalTime);
+                    $order->calculatedTime = $time;
+                }
+
+            } else {
+                $order->calculatedTime = 0;
+            }
+        }
+
         return response()->json(['success' => true, 'data' => $orders]);
     }
+
     public function getOrdersWithItemsAndDeliveryUser(Request $request, $id)
     {
         $startOfDay = now()->startOfDay();
@@ -770,45 +929,75 @@ class OrderController extends Controller
 
     public function getOrdersWithItemsAndDeliveryUserWithId($deliveryTrackingId)
     {
-        $orders = Order::
-            // join('order_items', 'orders.id', '=', 'order_items.order_id')
-            join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+        $orders = Order::join('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
             ->join('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
             ->join('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
-            ->where('delivery_tracking.id', $deliveryTrackingId);
+            ->leftJoin('delivery_tracking_order', 'delivery_tracking.id', '=', 'delivery_tracking_order.delivery_tracking_id')
+            ->where('delivery_tracking.id', $deliveryTrackingId)
+            ->select(
+                'orders.id as order_id',
+                'orders.user_id',
+                'orders.total_amount',
+                'orders.status',
+                'orders.payment_method',
+                'orders.delivery_status as order_status',
+                'orders.payment_status',
+                'orders.order_date',
+                'delivery_tracking.id as delivery_tracking_id',
+                'delivery_tracking.order_status as delivery_status',
+                'delivery_user.name as delivery_person_name',
+                'delivery_user.contact as delivery_person_contact',
+                'user_addresses.name as user_address_name',
+                'user_addresses.contact as user_address_contact',
+                'user_addresses.house_address as user_address_house',
+                'user_addresses.street_address as user_address_street',
+                'user_addresses.landmark as user_address_landmark',
+                'user_addresses.city as user_address_city',
+                'user_addresses.state as user_address_state',
+                'user_addresses.country as user_address_country',
+                'user_addresses.pincode as user_address_pincode',
+                'user_addresses.latitude as user_latitude',
+                'user_addresses.longitude as user_longitude',
+                'latest_delivery_tracking_order.id as last_delivery_tracking_order_id',
+                'latest_delivery_tracking_order.latitude as deliveryUserLatitude',
+                'latest_delivery_tracking_order.longitude as deliveryUserLongitude',
+            )
+            ->leftJoinSub(
+                function ($query) {
+                    $query->from('delivery_tracking_order')
+                        ->select('delivery_tracking_id', 'id', 'latitude', 'longitude')
+                        ->whereIn('id', function ($subquery) {
+                            $subquery->from('delivery_tracking_order')
+                                ->selectRaw('MAX(id)')
+                                ->groupBy('delivery_tracking_id');
+                        });
+                },
+                'latest_delivery_tracking_order',
+                'delivery_tracking.id',
+                '=',
+                'latest_delivery_tracking_order.delivery_tracking_id'
+            )
+            ->first();
 
-        $orders = $orders->select(
-            'orders.id as order_id',
-            'orders.user_id',
-            'orders.total_amount',
-            'orders.status',
-            'orders.payment_method',
-            'orders.delivery_status as order_status',
-            'orders.payment_status',
-            'orders.order_date',
-            // 'order_items.id as order_item_id',
-            // 'order_items.product_id',
-            // 'order_items.quantity',
-            // 'order_items.price',
-            'delivery_tracking.id as delivery_tracking_id',
-            'delivery_tracking.order_status as delivery_status',
-            'delivery_user.name as delivery_person_name',
-            'delivery_user.contact as delivery_person_contact',
-            'user_addresses.name as user_address_name',
-            'user_addresses.contact as user_address_contact',
-            'user_addresses.house_address as user_address_house',
-            'user_addresses.street_address as user_address_street',
-            'user_addresses.landmark as user_address_landmark',
-            'user_addresses.city as user_address_city',
-            'user_addresses.state as user_address_state',
-            'user_addresses.country as user_address_country',
-            'user_addresses.pincode as user_address_pincode',
-            'user_addresses.latitude as user_latitude',
-            'user_addresses.longitude as user_longitude'
-        )
-            ->get();
+        $distance = $this->calculateDistance(
+            $orders->user_latitude,
+            $orders->user_longitude,
+            $orders->deliveryUserLatitude,
+            $orders->deliveryUserLongitude,
+        );
 
-        return response()->json(['success' => true, 'data' => $orders]);
+        if ($distance <= 0) {
+            $time = 10;
+        } else {
+            $baseTime = 10;
+            $additionalTime = 5;
+
+            $additionalDistance = max(0, $distance - 1);
+
+            $time = $baseTime + ($additionalDistance * $additionalTime);
+        }
+
+        return response()->json(['success' => true, 'data' => $orders, 'distance' => $distance, 'calculatedTime' => $time]);
     }
 
 
@@ -877,6 +1066,24 @@ class OrderController extends Controller
         $cancelledOrdersCount = DeliveryTracking::where('delivery_user_id', $id)->where('order_status', 'cancelled')->whereBetween('delivery_tracking.assigned_at', [$startOfDay, $endOfDay])->count();
         $totalOrdersCount = DeliveryTracking::where('delivery_user_id', $id)->whereBetween('delivery_tracking.assigned_at', [$startOfDay, $endOfDay])->count();
 
+        $deliveryUser = DeliveryUser::find($id);
+        if (!$deliveryUser) {
+            return response()->json(['error' => 'Delivery user not found'], 404);
+        }
+
+        // Calculate total incentives paid
+        $paidIncentives = DeliveryTracking::join('orders', 'delivery_tracking.order_id', '=', 'orders.id')
+            ->where('delivery_tracking.delivery_user_id', $id)
+            ->selectRaw('SUM(CASE WHEN orders.incentive_status = "paid" THEN orders.incentive_amount ELSE 0 END) AS total_incentive_paid')
+            ->value('total_incentive_paid');
+
+        // Calculate total incentives unpaid
+        $unpaidIncentives = DeliveryTracking::join('orders', 'delivery_tracking.order_id', '=', 'orders.id')
+            ->where('delivery_tracking.delivery_user_id', $id)
+            ->selectRaw('SUM(CASE WHEN orders.incentive_status = "unpaid" THEN orders.incentive_amount ELSE 0 END) AS total_incentive_unpaid')
+            ->value('total_incentive_unpaid');
+
+
         return response()->json([
             'success' => true,
             'order_counts' => [
@@ -890,7 +1097,10 @@ class OrderController extends Controller
                 'total_cash_deposited' => (float) $pendingCash[0]->total_cash_deposited,
                 'total_cash_pending' => (float) $pendingCash[0]->total_cash_pending,
                 // 'total_cash_sent_back' => (float) $pendingCash[0]->total_cash_to_send_back
-            ]
+            ],
+            'total_incentive_paid' => (int) ($paidIncentives ?? 0),
+            'total_incentive_unpaid' => (int) ($unpaidIncentives ?? 0),
+
         ]);
     }
 
@@ -915,6 +1125,12 @@ class OrderController extends Controller
             $order->status = 'completed';
             $order->delivery_status = $request->status;
             $order->payment_status = 'paid';
+
+            if ($deliveryUser->incentive_type == "fixed") {
+                $order->incentive_amount += $deliveryUser->incentive;
+            } else if ($deliveryUser->incentive_type == "percentage") {
+                $order->incentive_amount += $deliveryUser->incentive;
+            }
             $order->save();
         } else {
             $deliveryTracking = DeliveryTracking::where('order_id', $order->id)->orderBy('created_at', 'desc')
@@ -930,6 +1146,12 @@ class OrderController extends Controller
             $order->status = 'completed';
             $order->delivery_status = $request->status;
             $order->payment_status = 'paid';
+
+            if ($deliveryUser->incentive_type == "fixed") {
+                $order->incentive_amount += $deliveryUser->incentive;
+            } else if ($deliveryUser->incentive_type == "percentage") {
+                $order->incentive_amount += $deliveryUser->incentive;
+            }
             $order->save();
         }
 

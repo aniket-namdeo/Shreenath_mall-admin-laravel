@@ -11,6 +11,7 @@
                             <th class="table-id">Id</th>
                             <th>Delivery User</th>
                             <th>Requested Amount</th>
+                            <th>OTP</th>
                             <th>Approved Amount</th>
                             <th>Status</th>
                             <th>Actions</th>
@@ -45,6 +46,7 @@
                             <td>{{ $request->id }}</td>
                             <td>{{ $request->delivery_user_name }}</td>
                             <td>{{ $request->cash_amount }}</td>
+                            <td>{{ $request->otp }}</td>
                             <td>{{ $request->deposit_amount ?? 'N/A' }}</td>
                             <td>{{ ucfirst($request->status) }}</td>
                             <td class="">
