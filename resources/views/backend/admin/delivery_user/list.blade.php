@@ -47,9 +47,9 @@
 
                         @foreach ($list as $s)
 
-                        @php
+                        {{-- @php
                         $incentive = $incentives->get($s->id, (object) ['total_incentive_paid' => 0, 'total_incentive_unpaid' => 0]);
-                    @endphp
+                    @endphp --}}
                         <tr>
                             <td>{{ $a++ }}</td>
                             <td>{{ $s['name'] }}</td>
@@ -59,8 +59,10 @@
                             <td>{{ $s['total_cash_collected'] }}</td>
                             <td> {{ $s['total_cash_collected'] - $s['total_cash_to_sent_back'] ?? 0 }} </td>
                             <td>{{ $s['total_cash_to_sent_back'] ?? 0 }}</td>
-                            <td>{{ $incentive->total_incentive_paid }}</td>
-                            <td>{{ $incentive->total_incentive_unpaid }}</td>
+                            <td>{{ $s['paid_incentive'] ?? 0 }}</td>
+                            <td>{{ $s['pending_incentive'] ?? 0 }}</td>
+                            {{-- <td>{{ $incentive->total_incentive_paid }}</td>
+                            <td>{{ $incentive->total_incentive_unpaid }}</td> --}}
                             <td class="text-end">
                                 <div class="table-action-btns">
                                     <a href={{ url('/admin/delivery-user-edit/' . $s['id']) }} class="btn btn-primary">

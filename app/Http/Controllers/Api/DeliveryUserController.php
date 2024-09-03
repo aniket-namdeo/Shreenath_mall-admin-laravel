@@ -207,7 +207,7 @@ class DeliveryUserController extends Controller
             return response()->json(['message' => 'Delivery user not found.'], 404);
         }
         if ($deliveryUser->current_status == 'free') {
-            return response()->json(['message' => 'Delivery User is already free.'], 400);
+            return response()->json(['message' => 'Delivery User is already free.']);
         }
         $qrData = QrTable::create([
             'delivery_user_id' => $validated['delivery_user_id'],
@@ -221,7 +221,7 @@ class DeliveryUserController extends Controller
             return response()->json(['message' => 'Delivery user status updated successfully.'], 200);
         }
 
-        return response()->json(['message' => 'Unable to update delivery user status.'], 400);
+        return response()->json(['message' => 'Unable to update delivery user status.']);
     }
 
 

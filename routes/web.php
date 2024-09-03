@@ -135,7 +135,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // state city
     Route::get('state/{country_id}', [App\Http\Controllers\UserController::class, 'state']);
     Route::get('city/{state_id}', [App\Http\Controllers\UserController::class, 'city']);
-    
+
     // Sales
     Route::get('/listSales', [App\Http\Controllers\SalesController::class, 'listSales']);
     Route::get('/deposit-request', [App\Http\Controllers\SalesController::class, 'listRequest'])->name('deposit-request.list');
@@ -148,10 +148,15 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/tag-list', [App\Http\Controllers\TagController::class, 'list'])->name('tag-list.list');
     Route::get('/edit-tag/{id}', [App\Http\Controllers\TagController::class, 'tagEdit'])->name('tag.edit');
     Route::post('/tag-update/{id}', [App\Http\Controllers\TagController::class, 'tagUpdate'])->name('update-tag.update');
-    
+
     Route::get('/productTagAssign-list/{id}', [App\Http\Controllers\TagController::class, 'productTagAssign'])->name('productTagAssign.list');
 
     Route::post('/productTagAssign', [App\Http\Controllers\TagController::class, 'AssignProductTags'])->name('productTagAssign.store');
+
+
+    // Incentive
+
+    Route::get('/incentive_list', [App\Http\Controllers\SalesController::class, 'incentive'])->name('incentive.show');
 
 
 });

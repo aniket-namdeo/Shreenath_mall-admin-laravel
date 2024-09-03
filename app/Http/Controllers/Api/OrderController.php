@@ -34,20 +34,19 @@ class OrderController extends Controller
 
         return $distance;
     }
-    
+
     public function getDistanceTime(Request $request)
     {
         $userLat = $request->input('userlat');
         $userLong = $request->input('userlong');
         $deliveryUserLat = $request->input('deliveryUserLat');
         $deliveryUserLong = $request->input('deliveryUserLong');
-        $apiKey = 'AIzaSyDs7nLUXJhjNgWBr6kkz-5-PyvG15FU3aQ';
         $url = 'https://maps.googleapis.com/maps/api/distancematrix/json';
 
         $params = [
             'origins' => "$userLat,$userLong",
             'destinations' => "$deliveryUserLat,$deliveryUserLong",
-            'key' => $apiKey,
+            'key' => env('GOOGLE_API_KEY'),
             'mode' => 'driving'
         ];
 
@@ -352,7 +351,6 @@ class OrderController extends Controller
     public function getLastOrderDetail($userId)
     {
 
-        $apiKey = 'AIzaSyDs7nLUXJhjNgWBr6kkz-5-PyvG15FU3aQ';
         $url = 'https://maps.googleapis.com/maps/api/distancematrix/json';
 
         $lastOrder = Order::select(
@@ -405,7 +403,7 @@ class OrderController extends Controller
             $params = [
                 'origins' => "$lastOrder->user_latitude,$lastOrder->user_longitude",
                 'destinations' => "$deliveryTrackingDetails->delivery_latitude,$deliveryTrackingDetails->delivery_longitude",
-                'key' => $apiKey,
+                'key' => env('GOOGLE_API_KEY'),
                 'mode' => 'driving'
             ];
 
@@ -424,21 +422,6 @@ class OrderController extends Controller
                     $estimatedTime = $data['rows'][0]['elements'][0]['duration']['value'] / 60; // Convert seconds to minutes
                 }
             }
-
-            // $calculateDistancetime = $this->calculateDistance(
-            //     $lastOrder->user_latitude,
-            //     $lastOrder->user_longitude,
-            //     $deliveryTrackingDetails->delivery_latitude,
-            //     $deliveryTrackingDetails->delivery_longitude
-            // );
-
-            // if ($calculateDistancetime == 0) {
-            //     $calculateDistancetime = 10;
-            // } else if ($calculateDistancetime < 10) {
-            //     $calculateDistancetime = 10;
-            // } else {
-            //     $calculateDistancetime;
-            // }
         }
 
         $response = [
@@ -505,7 +488,6 @@ class OrderController extends Controller
                 'delivery_tracking.id as deliveryTrackingId'
             )
             ->get();
-
         if ($orders->isEmpty()) {
             return response()->json(['message' => 'No orders with this id'], 404);
         }
@@ -544,7 +526,7 @@ class OrderController extends Controller
                 'id' => $orderData->user_id,
                 'name' => $orderData->user_name,
                 'contact' => $orderData->user_contact,
-                'latitide' => $orderData->latitude,
+                'latitude' => $orderData->latitude,
                 'longitude' => $orderData->longitude
             ];
 
@@ -575,11 +557,38 @@ class OrderController extends Controller
                 'items' => $items,
                 'delivery_user' => $deliveryUser,
                 'user_detail' => $userDetail,
-                'deliveryTrackingId' => $orderData->deliveryTrackingId
+                'deliveryTrackingId' => $orderData->deliveryTrackingId,
             ];
         });
 
-        return response()->json(['orders' => $result->values()], 200);
+        $DeliveryUserTime = DeliveryTrackingOrder::select('latitude', 'longitude')->where('order_id', $id)->orderBy('id', 'desc')->first();
+        if (!$DeliveryUserTime) {
+            return response()->json(['orders' => $result->values(), 'estimateTimeDistance' => null], 200);
+        }
+
+        $url = 'https://maps.googleapis.com/maps/api/distancematrix/json';
+        $params = [
+            'origins' => $result->values()[0]['user_detail']['latitude'] . ',' . $result->values()[0]['user_detail']['longitude'],
+            'destinations' => $DeliveryUserTime->latitude . ',' . $DeliveryUserTime->longitude,
+            'key' => env('GOOGLE_API_KEY'),
+            'mode' => 'driving'
+        ];
+
+        $response = Http::get($url, $params);
+
+        $estimateTimeDistance = [];
+        if ($response->successful()) {
+            $data = $response->json();
+            $distance = $data['rows'][0]['elements'][0]['distance']['value'] / 1000;
+            $duration = $data['rows'][0]['elements'][0]['duration']['value'] / 60;
+
+            $estimateTimeDistance = [
+                'distance' => round($distance, 2),
+                'estimated_time' => round($duration, 0)
+            ];
+        }
+
+        return response()->json(['orders' => $result->values(), 'estimateTimeDistance' => $estimateTimeDistance], 200);
     }
 
     public function saveRemark(Request $request)
@@ -1184,8 +1193,13 @@ class OrderController extends Controller
 
             if ($deliveryUser->incentive_type == "fixed") {
                 $order->incentive_amount += $deliveryUser->incentive;
+                $deliveryUser->total_incentive += $deliveryUser->incentive;
+                $deliveryUser->pending_incentive += $deliveryUser->incentive;
             } else if ($deliveryUser->incentive_type == "percentage") {
                 $order->incentive_amount += $deliveryUser->incentive;
+                $deliveryUser->total_incentive += $deliveryUser->incentive;
+                $deliveryUser->pending_incentive += $deliveryUser->incentive;
+
             }
             $order->save();
         } else {
@@ -1205,8 +1219,14 @@ class OrderController extends Controller
 
             if ($deliveryUser->incentive_type == "fixed") {
                 $order->incentive_amount += $deliveryUser->incentive;
+                $deliveryUser->total_incentive += $deliveryUser->incentive;
+                $deliveryUser->pending_incentive += $deliveryUser->incentive;
+
             } else if ($deliveryUser->incentive_type == "percentage") {
                 $order->incentive_amount += $deliveryUser->incentive;
+                $deliveryUser->total_incentive += $deliveryUser->incentive;
+                $deliveryUser->pending_incentive += $deliveryUser->incentive;
+
             }
             $order->save();
         }
@@ -1306,9 +1326,6 @@ class OrderController extends Controller
             }
         }
     }
-
-
-
     public function deliveredOrderByDeliveryUser($id)
     {
         $deliveredOrder = DeliveryTracking::
@@ -1328,5 +1345,16 @@ class OrderController extends Controller
             ->where('delivery_tracking.delivery_user_id', $id)->get();
 
         return response()->json(['status' => true, 'message' => 'Delivered Orders.', 'data' => $deliveredOrder]);
+    }
+
+    public function verifyOrderOtp(Request $request)
+    {
+        $orderData = Order::where('id', $request->order_id)->first();
+
+        if ($orderData->otp == $request->otp) {
+            return response()->json(['status' => true, 'message' => 'Otp verified successfully.']);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Incorrect Otp.']);
+        }
     }
 }

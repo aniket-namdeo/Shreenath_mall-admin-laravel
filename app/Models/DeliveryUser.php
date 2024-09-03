@@ -49,6 +49,9 @@ class DeliveryUser extends Model
         'deviceId',
         'incentive_type',
         'incentive',
+        'total_incentive',
+        'paid_incentive',
+        'pending_incentive',
         'current_status'
     ];
 

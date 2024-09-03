@@ -178,3 +178,5 @@ Route::post('/customer-support', [CustomerSupportController::class, 'store']);
 // calculate Distance
 
 Route::post('/getDistanceTime', [OrderController::class, 'getDistanceTime']);
+
+Route::post('/verifyOrderOtp', [OrderController::class, 'verifyOrderOtp']);

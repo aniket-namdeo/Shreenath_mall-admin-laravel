@@ -101,6 +101,28 @@ class SalesController extends Controller
         return redirect()->route('deposit-request.list')->with('success', 'Deposit request updated successfully.');
 
     }
+
+    // public function incentiveUpdate(Request $request){
+    //     $page_name = 'sales/edit_request';
+    //     $current_page = 'edit-deposit-request';
+    //     $page_title = 'Edit Deposit request';
+       
+    //     return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'depositRequest'));
+    // }
+
+    public function incentive() {
+        $page_name = 'incentive/list';
+        $current_page = 'incentive_list';
+        $page_title = 'Incentive List';
+
+        $deliveryUser = DeliveryUser::where('status', 'verified')->get();
+       
+        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'deliveryUser'));
+    }
+
+    public function incentivePay(Request $request) {
+
+    }
     
 
 }

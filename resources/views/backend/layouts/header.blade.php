@@ -138,6 +138,12 @@
                 </a>
             </li>
 
+            <li class="mb-2 {{ $current_page == 'incentive' ? 'active' : '' }}">
+                <a href="{{ url('admin/incentive_list') }}">
+                    <font><i class="bx bxs-sales"></i> <span>Incentive</span></font>
+                </a>
+            </li>
+
             {{-- <li class="mb-2 dropdown {{ $current_page == 'add-home_video' ? 'active' : '' }} {{ $current_page == 'home_video-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                     <font><i class="bx bxs-user-plus"></i> <span>Manage Home Video</span></font>

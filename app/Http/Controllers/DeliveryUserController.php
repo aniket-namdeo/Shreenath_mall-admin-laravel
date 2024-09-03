@@ -31,32 +31,32 @@ class DeliveryUserController extends Controller
         $page_title = 'List';
         $list = DeliveryUser::orderBy('id', 'desc')->paginate(20);
 
-        $paidIncentives = DeliveryTracking::join('orders', 'delivery_tracking.order_id', '=', 'orders.id')
-            ->select('delivery_tracking.delivery_user_id')
-            ->selectRaw('SUM(CASE WHEN orders.incentive_status = "paid" THEN orders.incentive_amount ELSE 0 END) AS total_incentive_paid')
-            ->groupBy('delivery_tracking.delivery_user_id');
+        // $paidIncentives = DeliveryTracking::join('orders', 'delivery_tracking.order_id', '=', 'orders.id')
+        //     ->select('delivery_tracking.delivery_user_id')
+        //     ->selectRaw('SUM(CASE WHEN orders.incentive_status = "paid" THEN orders.incentive_amount ELSE 0 END) AS total_incentive_paid')
+        //     ->groupBy('delivery_tracking.delivery_user_id');
 
-        $unpaidIncentives = DeliveryTracking::join('orders', 'delivery_tracking.order_id', '=', 'orders.id')
-            ->select('delivery_tracking.delivery_user_id')
-            ->selectRaw('SUM(CASE WHEN orders.incentive_status = "unpaid" THEN orders.incentive_amount ELSE 0 END) AS total_incentive_unpaid')
-            ->groupBy('delivery_tracking.delivery_user_id');
+        // $unpaidIncentives = DeliveryTracking::join('orders', 'delivery_tracking.order_id', '=', 'orders.id')
+        //     ->select('delivery_tracking.delivery_user_id')
+        //     ->selectRaw('SUM(CASE WHEN orders.incentive_status = "unpaid" THEN orders.incentive_amount ELSE 0 END) AS total_incentive_unpaid')
+        //     ->groupBy('delivery_tracking.delivery_user_id');
 
-        $incentives = DeliveryUser::leftJoinSub($paidIncentives, 'paid_incentives', function ($join) {
-            $join->on('delivery_user.id', '=', 'paid_incentives.delivery_user_id');
-        })
-            ->leftJoinSub($unpaidIncentives, 'unpaid_incentives', function ($join) {
-                $join->on('delivery_user.id', '=', 'unpaid_incentives.delivery_user_id');
-            })
-            ->select(
-                'delivery_user.id as delivery_user_id',
-                'delivery_user.name as delivery_user_name',
-                'paid_incentives.total_incentive_paid',
-                'unpaid_incentives.total_incentive_unpaid'
-            )
-            ->get()
-            ->keyBy('delivery_user_id');
+        // $incentives = DeliveryUser::leftJoinSub($paidIncentives, 'paid_incentives', function ($join) {
+        //     $join->on('delivery_user.id', '=', 'paid_incentives.delivery_user_id');
+        // })
+        //     ->leftJoinSub($unpaidIncentives, 'unpaid_incentives', function ($join) {
+        //         $join->on('delivery_user.id', '=', 'unpaid_incentives.delivery_user_id');
+        //     })
+        //     ->select(
+        //         'delivery_user.id as delivery_user_id',
+        //         'delivery_user.name as delivery_user_name',
+        //         'paid_incentives.total_incentive_paid',
+        //         'unpaid_incentives.total_incentive_unpaid'
+        //     )
+        //     ->get()
+        //     ->keyBy('delivery_user_id');
 
-        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'list', 'incentives'));
+        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'list'));
     }
 
     public function AddDeliveryUserPost(Request $request)
