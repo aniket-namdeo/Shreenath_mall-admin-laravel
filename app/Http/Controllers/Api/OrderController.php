@@ -17,25 +17,6 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    private $maxDeliveryDistance = 5;
-    private $mallLatitude = 40.712776;
-    private $mallLongitude = -74.005974;
-
-    private function haversineGreatCircleDistance($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo, $earthRadius = 6371)
-    {
-        $latFrom = deg2rad($latitudeFrom);
-        $lonFrom = deg2rad($longitudeFrom);
-        $latTo = deg2rad($latitudeTo);
-        $lonTo = deg2rad($longitudeTo);
-
-        $latDelta = $latTo - $latFrom;
-        $lonDelta = $lonTo - $lonFrom;
-
-        $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) +
-            cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
-        return $angle * $earthRadius;
-    }
-
     private function calculateDistance($lat1, $lon1, $lat2, $lon2)
     {
         $earthRadius = 6371;
@@ -53,24 +34,7 @@ class OrderController extends Controller
 
         return $distance;
     }
-
-    // public function getDistanceTime(Request $request)
-    // {
-    //     $userLat = $request->userlat;
-    //     $userLong = $request->userlong;
-    //     $deliveryUserLat = $request->deliveryUserLat;
-    //     $deliveryUserLong = $request->deliveryUserLong;
-
-    //     $totalDistance = $this->calculateDistance($userLat, $userLong, $deliveryUserLat, $deliveryUserLong);
-
-    //     $estimatedTime = $this->calculateTime($totalDistance);
-
-    //     return response()->json([
-    //         'distance' => round($totalDistance, 2),
-    //         'estimated_time' => $estimatedTime
-    //     ]);
-    // }
-
+    
     public function getDistanceTime(Request $request)
     {
         $userLat = $request->input('userlat');
@@ -104,17 +68,16 @@ class OrderController extends Controller
         return response()->json(['error' => 'Unable to fetch distance and time'], 500);
     }
 
-
-
     public function getDeviceId()
     {
-        $deviceIds = DeliveryUser::pluck('deviceId')->filter()->all();
+        $deviceIds = DeliveryUser::where('current_status', 'free')->pluck('deviceId')->filter()->all();
         $title = 'New Order';
         $body = 'You got a new order.';
         $data = ['data1' => 'screen'];
         $image = null;
 
         $response = sendFirebaseNotification($title, $body, $deviceIds, $image, $data);
+
         return response()->json(['deviceIds' => $deviceIds, 'response' => $response]);
     }
 
@@ -187,7 +150,8 @@ class OrderController extends Controller
                 Cart::where('id', $item['cart_id'])->delete();
             }
 
-            $deviceIds = DeliveryUser::pluck('deviceId')->filter()->all();
+            // $deviceIds = DeliveryUser::pluck('deviceId')->filter()->all();
+            $deviceIds = DeliveryUser::where('current_status', 'free')->pluck('deviceId')->filter()->all();
             $title = 'New Order';
             $body = 'You got a new order.';
             $image = null;
@@ -309,6 +273,7 @@ class OrderController extends Controller
                 'orders.tax_amount',
                 'orders.shipping_fee',
                 'orders.handling_charge',
+                'orders.otp',
                 'order_items.product_id',
                 'order_items.quantity',
                 'order_items.price',
@@ -348,7 +313,6 @@ class OrderController extends Controller
                 ];
             });
 
-            // $totalMrp = number_format($order->sum('product_mrp'), 2, '.', '');
             $totalMrp = number_format($order->sum(function ($item) {
                 return $item->product_mrp * $item->quantity;
             }), 2, '.', '');
@@ -377,6 +341,7 @@ class OrderController extends Controller
                 'country' => $orderData->country,
                 'pincode' => $orderData->pincode,
                 'total_mrp' => $totalMrp,
+                'otp' => $orderData->otp,
                 'items' => $items,
             ];
         });
@@ -454,7 +419,7 @@ class OrderController extends Controller
                 if (isset($data['rows'][0]['elements'][0]['distance']['value'])) {
                     $distance = $data['rows'][0]['elements'][0]['distance']['value'] / 1000; // Convert meters to kilometers
                 }
-    
+
                 if (isset($data['rows'][0]['elements'][0]['duration']['value'])) {
                     $estimatedTime = $data['rows'][0]['elements'][0]['duration']['value'] / 60; // Convert seconds to minutes
                 }
@@ -510,6 +475,7 @@ class OrderController extends Controller
                 'orders.discount_amount',
                 'orders.tax_amount',
                 'orders.shipping_fee',
+                'orders.otp',
                 'order_items.product_id',
                 'order_items.quantity',
                 'order_items.price',
@@ -605,6 +571,7 @@ class OrderController extends Controller
                 'country' => $orderData->country,
                 'pincode' => $orderData->pincode,
                 'total_mrp' => $totalMrp,
+                'otp' => $orderData->otp,
                 'items' => $items,
                 'delivery_user' => $deliveryUser,
                 'user_detail' => $userDetail,
@@ -784,6 +751,91 @@ class OrderController extends Controller
     //     return response()->json(['success' => true, 'data' => $orders]);
     // }
 
+    // public function getPendingOrdersWithItemsAndDeliveryUser(Request $request, $id)
+    // {
+    //     $deliveryUser = DeliveryUser::find($id);
+    //     if (!$deliveryUser) {
+    //         return response()->json(['success' => false, 'message' => 'Delivery user not found'], 404);
+    //     }
+
+    //     $totalCashCollected = $deliveryUser->total_cash_collected;
+    //     $totalCashDeposited = $deliveryUser->total_cash_deposited;
+
+    //     $cashDifference = $totalCashCollected - $totalCashDeposited;
+
+    //     $orders = Order::
+    //         leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+    //         ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
+    //         ->leftJoin('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
+    //         ->where('orders.delivery_status', 'pending')
+    //         ->where(function ($query) use ($id, $cashDifference) {
+    //             $query->where('delivery_tracking.delivery_user_id', $id)
+    //                 ->orWhereNull('delivery_tracking.delivery_user_id');
+
+    //             if ($cashDifference >= 1000) {
+    //                 $query->whereNotNull('delivery_tracking.delivery_user_id');
+    //             }
+    //         })
+    //         ->orderBy('orders.id', 'desc')
+    //     ;
+
+    //     $orders = $orders->select(
+    //         'orders.id as order_id',
+    //         'orders.user_id',
+    //         'orders.total_amount',
+    //         'orders.status',
+    //         'orders.payment_method',
+    //         'orders.delivery_status as order_status',
+    //         'orders.payment_status',
+    //         'orders.order_date',
+    //         'delivery_tracking.id as delivery_tracking_id',
+    //         'delivery_tracking.order_status as delivery_status',
+    //         'delivery_tracking.delivery_user_id',
+    //         'delivery_user.name as delivery_person_name',
+    //         'delivery_user.contact as delivery_person_contact',
+    //         'user_addresses.name as user_address_name',
+    //         'user_addresses.contact as user_address_contact',
+    //         'user_addresses.house_address as user_address_house',
+    //         'user_addresses.street_address as user_address_street',
+    //         'user_addresses.landmark as user_address_landmark',
+    //         'user_addresses.city as user_address_city',
+    //         'user_addresses.state as user_address_state',
+    //         'user_addresses.country as user_address_country',
+    //         'user_addresses.pincode as user_address_pincode',
+    //         'user_addresses.latitude as user_latitude',
+    //         'user_addresses.longitude as user_longitude'
+    //     )
+    //         ->get();
+
+    //     foreach ($orders as $order) {
+    //         if ($order->delivery_user_id == $id) {
+    //             $calculateDistancetime = $this->calculateDistance(
+    //                 $order->user_latitude,
+    //                 $order->user_longitude,
+    //                 $deliveryUser->latitude,
+    //                 $deliveryUser->longitude
+    //             );
+    //             if ($calculateDistancetime <= 0) {
+    //                 $time = 10;
+    //                 $order->calculatedTime = $time;
+    //             } else {
+    //                 $baseTime = 10;
+    //                 $additionalTime = 5;
+
+    //                 $additionalDistance = max(0, $calculateDistancetime - 1);
+
+    //                 $time = $baseTime + ($additionalDistance * $additionalTime);
+    //                 $order->calculatedTime = $time;
+    //             }
+
+    //         } else {
+    //             $order->calculatedTime = 0;
+    //         }
+    //     }
+
+    //     return response()->json(['success' => true, 'data' => $orders]);
+    // }
+
     public function getPendingOrdersWithItemsAndDeliveryUser(Request $request, $id)
     {
         $deliveryUser = DeliveryUser::find($id);
@@ -793,26 +845,31 @@ class OrderController extends Controller
 
         $totalCashCollected = $deliveryUser->total_cash_collected;
         $totalCashDeposited = $deliveryUser->total_cash_deposited;
-
         $cashDifference = $totalCashCollected - $totalCashDeposited;
 
-        $orders = Order::
+        $ordersQuery = Order::
             leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
             ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
             ->leftJoin('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
-            ->where('orders.delivery_status', 'pending')
-            ->where(function ($query) use ($id, $cashDifference) {
-                $query->where('delivery_tracking.delivery_user_id', $id)
-                    ->orWhereNull('delivery_tracking.delivery_user_id');
+            ->where('orders.delivery_status', 'pending');
 
-                if ($cashDifference >= 1000) {
-                    $query->whereNotNull('delivery_tracking.delivery_user_id');
+        if ($cashDifference >= 1000) {
+            $ordersQuery->where('delivery_tracking.delivery_user_id', $id);
+        } else {
+            // If the cash difference is less than 1000, check the delivery user's current status
+            $ordersQuery->where(function ($query) use ($id, $deliveryUser) {
+                if ($deliveryUser->current_status === 'engaged') {
+                    // If engaged, only show assigned orders
+                    $query->where('delivery_tracking.delivery_user_id', $id);
+                } else {
+                    // Otherwise, show assigned or unassigned orders
+                    $query->where('delivery_tracking.delivery_user_id', $id)
+                        ->orWhereNull('delivery_tracking.delivery_user_id');
                 }
-            })
-            ->orderBy('orders.id', 'desc')
-        ;
+            });
+        }
 
-        $orders = $orders->select(
+        $orders = $ordersQuery->select(
             'orders.id as order_id',
             'orders.user_id',
             'orders.total_amount',
@@ -838,6 +895,7 @@ class OrderController extends Controller
             'user_addresses.latitude as user_latitude',
             'user_addresses.longitude as user_longitude'
         )
+            ->orderBy('orders.id', 'desc')
             ->get();
 
         foreach ($orders as $order) {
@@ -854,13 +912,10 @@ class OrderController extends Controller
                 } else {
                     $baseTime = 10;
                     $additionalTime = 5;
-
                     $additionalDistance = max(0, $calculateDistancetime - 1);
-
                     $time = $baseTime + ($additionalDistance * $additionalTime);
                     $order->calculatedTime = $time;
                 }
-
             } else {
                 $order->calculatedTime = 0;
             }
@@ -868,6 +923,7 @@ class OrderController extends Controller
 
         return response()->json(['success' => true, 'data' => $orders]);
     }
+
 
     public function getOrdersWithItemsAndDeliveryUser(Request $request, $id)
     {
@@ -1159,45 +1215,99 @@ class OrderController extends Controller
         return response()->json(['success' => true, 'data' => null, 'message' => "Order delivered and cash updated successfully!"]);
     }
 
+    // public function acceptOrRejectOrder(Request $request)
+    // {
+    //     if ($request->id > 0) {
+    //         $deliveryTracking = DeliveryTracking::find($request->id);
+
+    //         if ($deliveryTracking) {
+    //             $deliveryTracking->order_status = $request->status;
+    //             $deliveryTracking->save();
+    //             return response()->json(['status' => true, 'message' => 'Order status updated successfully.']);
+    //         } else {
+    //             return response()->json(['status' => false, 'message' => 'Order not found.'], 404);
+    //         }
+    //     } else {
+    //         $check = DeliveryTracking::where(['order_id', $request->order_id])->orderBy('id', 'desc');
+    //         if ($check->count() == 0) {
+    //             $deliveryTracking = new DeliveryTracking();
+    //             $deliveryTracking->order_id = $request->order_id;
+    //             $deliveryTracking->delivery_user_id = $request->delivery_user_id;
+    //             $deliveryTracking->order_status = $request->status;
+    //             $deliveryTracking->status = 'assigned';
+    //             $deliveryTracking->assigned_at = now();
+    //             $deliveryTracking->save();
+
+    //             $deliveryUser = DeliveryUser::where('id', $request->delivery_user_id)->first();
+    //             $deliveryUser->current_status = 'engaged';
+    //             $deliveryUser->save();
+
+    //             return response()->json(['status' => true, 'message' => 'New delivery tracking created successfully.']);
+    //         } else {
+    //             return response()->json(['status' => false, 'message' => 'Order accepted by someone else.']);
+    //         }
+    //     }
+    // }
+
     public function acceptOrRejectOrder(Request $request)
     {
-        // $request->validate([
-        //     'id' => 'required|integer',
-        //     'status' => 'required'
-        // ]);
-
-        // $deliveryTracking = DeliveryTracking::where('id', $request->id)->first();
-
-        // if ($deliveryTracking) {
-        //     $deliveryTracking->order_status = $request->status;
-        //     $deliveryTracking->save();
-        //     return response()->json(['status' => true, 'message' => 'Order status updated successfully.']);
-        // } else {
-        //     return response()->json(['status' => false, 'message' => 'Order not found.'], 404);
-        // }
-
         if ($request->id > 0) {
             $deliveryTracking = DeliveryTracking::find($request->id);
 
             if ($deliveryTracking) {
                 $deliveryTracking->order_status = $request->status;
                 $deliveryTracking->save();
+
+                if ($request->status === 'rejected') {
+                    $deliveryUser = DeliveryUser::find($deliveryTracking->delivery_user_id);
+                    if ($deliveryUser) {
+                        if ($request->status == 'rejected') {
+                            $deliveryUser->current_status = 'free';
+                            $deliveryUser->save();
+                        } else {
+                            $deliveryUser->current_status = 'engaged';
+                            $deliveryUser->save();
+                        }
+                    }
+                }
+
                 return response()->json(['status' => true, 'message' => 'Order status updated successfully.']);
             } else {
                 return response()->json(['status' => false, 'message' => 'Order not found.'], 404);
             }
         } else {
-            $deliveryTracking = new DeliveryTracking();
-            $deliveryTracking->order_id = $request->order_id;
-            $deliveryTracking->delivery_user_id = $request->delivery_user_id;
-            $deliveryTracking->order_status = $request->status;
-            $deliveryTracking->status = 'assigned';
-            $deliveryTracking->assigned_at = now();
-            $deliveryTracking->save();
+            $check = DeliveryTracking::where('order_id', $request->order_id)
+                ->orderBy('id', 'desc')
+                ->first();
 
-            return response()->json(['status' => true, 'message' => 'New delivery tracking created successfully.']);
+            if (!$check || ($check && $check->order_status === 'rejected')) {
+                $deliveryTracking = new DeliveryTracking();
+                $deliveryTracking->order_id = $request->order_id;
+                $deliveryTracking->delivery_user_id = $request->delivery_user_id;
+                $deliveryTracking->order_status = $request->status;
+                $deliveryTracking->status = 'assigned';
+                $deliveryTracking->assigned_at = now();
+                $deliveryTracking->save();
+
+                $deliveryUser = DeliveryUser::find($request->delivery_user_id);
+                if ($deliveryUser) {
+                    if ($request->status == 'rejected') {
+                        $deliveryUser->current_status = 'free';
+                        $deliveryUser->save();
+                    } else {
+                        $deliveryUser->current_status = 'engaged';
+                        $deliveryUser->save();
+                    }
+                }
+
+                return response()->json(['status' => true, 'message' => 'New delivery tracking created successfully.']);
+            } else {
+                return response()->json(['status' => false, 'message' => 'Order accepted by someone else.']);
+            }
         }
     }
+
+
 
     public function deliveredOrderByDeliveryUser($id)
     {

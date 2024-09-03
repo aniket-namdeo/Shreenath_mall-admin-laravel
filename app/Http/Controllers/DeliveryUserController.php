@@ -8,7 +8,6 @@ use App\Models\Order;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class DeliveryUserController extends Controller
 {

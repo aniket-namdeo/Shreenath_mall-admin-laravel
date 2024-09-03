@@ -48,7 +48,8 @@ class DeliveryUser extends Model
         'longitude',
         'deviceId',
         'incentive_type',
-        'incentive'
+        'incentive',
+        'current_status'
     ];
 
 }

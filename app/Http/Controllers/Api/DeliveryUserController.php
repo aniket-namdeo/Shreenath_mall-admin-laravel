@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\DeliveryUser;
+use App\Models\QrTable;
 use Exception;
 use Illuminate\Support\Str;
 
@@ -191,6 +192,36 @@ class DeliveryUserController extends Controller
     {
         $result = DeliveryUser::select('id', 'name', 'email', 'contact', 'gender', 'dob', 'profile_image', 'aadhar_card', 'pan_no', 'address', 'state', 'city', 'vehicle_name', 'vehicle_no', 'driving_license')->where('id', $id)->first();
         return response()->json(['data' => $result], 200);
+    }
+
+    public function scanQr(Request $request)
+    {
+        $validated = $request->validate([
+            'delivery_user_id' => 'required|exists:delivery_user,id',
+            'qr_code' => 'required'
+        ]);
+        $deliveryUserId = $request->input('delivery_user_id');
+        $deliveryUser = DeliveryUser::find($deliveryUserId);
+
+        if (!$deliveryUser) {
+            return response()->json(['message' => 'Delivery user not found.'], 404);
+        }
+        if ($deliveryUser->current_status == 'free') {
+            return response()->json(['message' => 'Delivery User is already free.'], 400);
+        }
+        $qrData = QrTable::create([
+            'delivery_user_id' => $validated['delivery_user_id'],
+            'qr_code' => $validated['qr_code'],
+        ]);
+        if (!$qrData) {
+            return response()->json(['message' => 'QR code data could not be saved.'], 500);
+        }
+        if ($deliveryUser->current_status == 'engaged') {
+            $deliveryUser->update(['current_status' => 'free']);
+            return response()->json(['message' => 'Delivery user status updated successfully.'], 200);
+        }
+
+        return response()->json(['message' => 'Unable to update delivery user status.'], 400);
     }
 
 

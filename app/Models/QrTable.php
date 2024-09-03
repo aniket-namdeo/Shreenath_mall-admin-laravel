@@ -9,11 +9,11 @@ class QrTable extends Model
 {
     use HasFactory;
 
-    protected $table = 'qr_table';
+    protected $table = 'qr';
 
     protected $fillable = [
         'delivery_user_id',
-        'token',
+        'qr_code',
         'status',
     ];
 }

@@ -164,6 +164,10 @@ class OrderController extends Controller
             'assigned_at' => now(),
         ]);
 
+        $deliveryUser = DeliveryUser::where('id', $request->delivery_user_id)->first();
+        $deliveryUser->current_status = 'free';
+        $deliveryUser->save();
+
         return redirect()->back()->with('success', 'Order assigned successfully!');
     }
 
