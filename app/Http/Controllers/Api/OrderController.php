@@ -1163,8 +1163,10 @@ class OrderController extends Controller
                 'total_cash_pending' => (float) $pendingCash[0]->total_cash_pending,
                 // 'total_cash_sent_back' => (float) $pendingCash[0]->total_cash_to_send_back
             ],
-            'total_incentive_paid' => (int) ($paidIncentives ?? 0),
-            'total_incentive_unpaid' => (int) ($unpaidIncentives ?? 0),
+            // 'total_incentive_paid' => (int) ($paidIncentives ?? 0),
+            // 'total_incentive_unpaid' => (int) ($unpaidIncentives ?? 0),
+            'total_incentive_paid' => $deliveryUser->paid_incentive,
+            'total_incentive_unpaid' => $deliveryUser->pending_incentive,
 
         ]);
     }

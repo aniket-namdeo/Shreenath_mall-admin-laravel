@@ -134,6 +134,8 @@ Route::post('/update-delivery-profile/{id}', [DeliveryUserController::class, 'up
 
 Route::post('/scan-qr', [DeliveryUserController::class, 'scanQr']);
 
+Route::get('/incentiveList/{id}', [DeliveryUserController::class, 'incentiveList']);
+
 Route::post('/sendDepositOtp', [CashDepositController::class, 'sendOtp']);
 
 Route::post('/verifyDepositOtp', [CashDepositController::class, 'verifyOtp']);

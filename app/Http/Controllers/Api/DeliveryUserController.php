@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\DeliveryUser;
+use App\Models\IncentiveDeposit;
 use App\Models\QrTable;
 use Exception;
 use Illuminate\Support\Str;
@@ -194,6 +195,7 @@ class DeliveryUserController extends Controller
         return response()->json(['data' => $result], 200);
     }
 
+    // Scan qr
     public function scanQr(Request $request)
     {
         $validated = $request->validate([
@@ -223,6 +225,25 @@ class DeliveryUserController extends Controller
 
         return response()->json(['message' => 'Unable to update delivery user status.']);
     }
+
+
+    public function incentiveList(Request $request)
+    {
+        $data = IncentiveDeposit::select(
+            'incentive_deposit.*',
+            'delivery_user.name as delivery_user_name'
+        )
+            ->join('delivery_user', 'incentive_deposit.delivery_user_id', '=', 'delivery_user.id')
+            ->where('incentive_deposit.delivery_user_id', $request->id)
+            ->get();
+
+        if ($data->isEmpty()) {
+            return response()->json(['success' => false, 'data' => null, 'message' => 'No Data Found'], 400);
+        }
+
+        return response()->json(['success' => true, 'data' => $data], 200);
+    }
+
 
 
 }

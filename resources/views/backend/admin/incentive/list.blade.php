@@ -6,7 +6,7 @@
             <div class="card-header bg-white">
 
 
-                <form action="{{ route('add-product.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('incentive.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="card h-auto">
                         <div class="card-body">
@@ -23,9 +23,9 @@
                                 </div>
                                 
                                 <div class="col-md-4 mb-2">
-                                    <label for="mrp">MRP</label>
-                                    <input type="number" step="0.01" class="form-control" id="mrp" name="mrp"
-                                        value="{{ old('mrp') }}">
+                                    <label for="total_amount">Total amount</label>
+                                    <input type="number" step="0.01" class="form-control" id="total_amount" name="total_amount"
+                                        value="{{ old('total_amount') }}">
                                 </div>
                                
                                 <div class="col-md-12">
@@ -45,22 +45,24 @@
                         <tr>
                             <th class="table-id">Id</th>
                             <th>User</th>
-                            <th>Amount</th>
+                            <th>Total Amount</th>
+                            <th>Paid Amount</th>
+                            <th>Pending Amount</th>
                         </tr>
                     </thead>
                     <tbody>
 
                         @php $a = 1; @endphp
-                        {{-- 
-                        @foreach($list as $offerSliderData)
+                        
+                        @foreach($list as $data)
                         <tr>
                             <td>{{ $a++ }}</td>
-                            <td>{{ $offerSliderData->category_name }}</td>
-                            
-                            
-                           
+                            <td>{{ $data->delivery_user_name }}</td>
+                            <td>{{ $data->total_amount }}</td>
+                            <td>{{ $data->paid_amount }}</td>
+                            <td>{{ $data->pending_amount }}</td>                      
                         </tr>
-                        @endforeach --}}
+                        @endforeach
                     </tbody>
                 </table>
                 <div class="pagination-all">

@@ -13,7 +13,9 @@ class IncentiveDeposit extends Model
 
     protected $fillable = [
         'delivery_user_id',
-        'amount',
+        'total_amount',
+        'paid_amount',
+        'pending_amount',
         'status',
     ];
 }

@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('incentive_deposit', function (Blueprint $table) {
             $table->id();
             $table->string("delivery_user_id")->nullable();
-            $table->string('amount');
+            $table->string('total_amount');
+            $table->string('paid_amount');
+            $table->string('pending_amount');
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
