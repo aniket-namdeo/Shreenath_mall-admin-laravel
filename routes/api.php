@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\OfferSliderController;
 use App\Http\Controllers\Api\AssignProductTagController;
 use App\Http\Controllers\Api\CustomerSupportController;
 use App\Http\Controllers\Api\DeliveryTrackingOrderController;
+use App\Http\Controllers\Api\RatingController;
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
@@ -44,6 +45,8 @@ Route::delete('/user-addresses/{id}', [AuthController::class, 'deleteAddress']);
 // category
 Route::get('/category', [CategoryController::class, 'getCategory']);
 Route::get('/sub-category', [CategoryController::class, 'getSubCategory']);
+Route::get('/categories/{id}', [CategoryController::class, 'getCategoryWithSubcategories']);
+
 
 // products
 Route::get('/product', [ProductController::class, 'getProduct']);
@@ -182,3 +185,9 @@ Route::post('/customer-support', [CustomerSupportController::class, 'store']);
 Route::post('/getDistanceTime', [OrderController::class, 'getDistanceTime']);
 
 Route::post('/verifyOrderOtp', [OrderController::class, 'verifyOrderOtp']);
+
+
+// Rate Order
+Route::post('/ratings/submit', [RatingController::class, 'submitRatings']);
+
+Route::get('/ratings/{order_id}/{user_id}', [RatingController::class, 'getRatings']);

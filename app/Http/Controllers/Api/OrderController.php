@@ -933,7 +933,6 @@ class OrderController extends Controller
         return response()->json(['success' => true, 'data' => $orders]);
     }
 
-
     public function getOrdersWithItemsAndDeliveryUser(Request $request, $id)
     {
         $startOfDay = now()->startOfDay();
@@ -998,6 +997,8 @@ class OrderController extends Controller
             ->join('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
             ->join('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
             ->leftJoin('delivery_tracking_order', 'delivery_tracking.id', '=', 'delivery_tracking_order.delivery_tracking_id')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('product', 'order_items.product_id', '=', 'product.id')
             ->where('delivery_tracking.id', $deliveryTrackingId)
             ->select(
                 'orders.id as order_id',
@@ -1026,6 +1027,9 @@ class OrderController extends Controller
                 'latest_delivery_tracking_order.id as last_delivery_tracking_order_id',
                 'latest_delivery_tracking_order.latitude as deliveryUserLatitude',
                 'latest_delivery_tracking_order.longitude as deliveryUserLongitude',
+                'product.product_name',
+                'product.price',
+                'product.mrp'
             )
             ->leftJoinSub(
                 function ($query) {
@@ -1043,6 +1047,18 @@ class OrderController extends Controller
                 'latest_delivery_tracking_order.delivery_tracking_id'
             )
             ->first();
+
+        $products = Order_items::
+            join('product', 'order_items.product_id', '=', 'product.id')
+            ->where('order_items.order_id', $orders->order_id)
+            ->select(
+                'product.product_name',
+                'product.price',
+                'product.mrp',
+                'product.image_url1 as product_image',
+                'order_items.quantity'
+            )
+            ->get();
 
         $distance = $this->calculateDistance(
             $orders->user_latitude,
@@ -1062,7 +1078,15 @@ class OrderController extends Controller
             $time = $baseTime + ($additionalDistance * $additionalTime);
         }
 
-        return response()->json(['success' => true, 'data' => $orders, 'distance' => $distance, 'calculatedTime' => $time]);
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $orders,
+                'products' => $products,
+                'distance' => $distance,
+                'calculatedTime' => $time
+            ]
+        );
     }
 
 
