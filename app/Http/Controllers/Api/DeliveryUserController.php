@@ -47,10 +47,17 @@ class DeliveryUserController extends Controller
             ], 403);
         }
 
+        $data = [
+            "id" => $user->id,
+            "name" => $user->name,
+            "contact" => $user->contact,
+            "email" => $user->email,
+            "user_type" => $user->user_type,
+        ];
         if ($user && Hash::check($request->password, $user->password)) {
             return response()->json([
                 'message' => 'Login successfully',
-                'user' => $user,
+                'user' => $data,
                 'status' => true
             ]);
         } else {

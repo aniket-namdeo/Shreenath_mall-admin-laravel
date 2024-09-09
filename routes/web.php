@@ -157,7 +157,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // Incentive
 
     Route::get('/incentive_list', [App\Http\Controllers\SalesController::class, 'incentive'])->name('incentive.show');
-
     Route::post('/incentive-pay', [App\Http\Controllers\SalesController::class, 'incentivePay'])->name('incentive.store');
 
 

@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\AssignProductTagController;
 use App\Http\Controllers\Api\CustomerSupportController;
 use App\Http\Controllers\Api\DeliveryTrackingOrderController;
 use App\Http\Controllers\Api\RatingController;
+use App\Http\Controllers\Api\OrderQueueController;
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
@@ -191,3 +192,6 @@ Route::post('/verifyOrderOtp', [OrderController::class, 'verifyOrderOtp']);
 Route::post('/ratings/submit', [RatingController::class, 'submitRatings']);
 
 Route::get('/ratings/{order_id}/{user_id}', [RatingController::class, 'getRatings']);
+
+
+Route::post('/assign-orders', [OrderQueueController::class, 'assignOrdersToDeliveryUsers']);

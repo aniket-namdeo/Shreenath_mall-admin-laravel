@@ -68,9 +68,6 @@
                                     <a href={{ url('/admin/delivery-user-edit/' . $s['id']) }} class="btn btn-primary">
                                         <i class="bx bx-pencil"></i>
                                     </a>
-                                    <a href={{ url('/admin/delivery-user-edit/' . $s['id']) }} class="btn btn-primary">
-                                        <i class="bx bx-edit"></i>
-                                    </a>
                                 </div>
                             </td>
                         </tr>

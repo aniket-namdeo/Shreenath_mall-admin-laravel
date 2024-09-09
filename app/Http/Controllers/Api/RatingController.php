@@ -17,10 +17,10 @@ class RatingController extends Controller
         $validated = $request->validate([
             'order_id' => 'required|exists:orders,id',
             'delivery_rating.delivery_user_id' => 'required|exists:delivery_user,id',
-            'delivery_rating.rating' => 'required|integer',
+            'delivery_rating.rating' => 'required|min:1|max:5',
             'product_ratings' => 'required|array|min:1',
             'product_ratings.*.product_id' => 'required|exists:product,id',
-            'product_ratings.*.rating' => 'required|integer|min:1|max:5',
+            'product_ratings.*.rating' => 'required|min:1|max:5',
             'product_ratings.*.description' => 'nullable|string',
             'product_ratings.*.images' => 'nullable|array',
             'product_ratings.*.images.*' => 'file|image|max:2048',
@@ -90,7 +90,7 @@ class RatingController extends Controller
             ->first();
 
         $productRatings = ProductRating::join('product', 'product_rating.product_id', '=', 'product.id')
-            ->select('product_rating.*', 'product.product_name as product_name')
+            ->select('product_rating.*', 'product.product_name as product_name', 'product.image_url1 as product_image_url')
             ->where('product_rating.order_id', $order_id)
             ->where('product_rating.user_id', $user_id)
             ->get();

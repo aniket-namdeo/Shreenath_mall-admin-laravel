@@ -52,7 +52,8 @@ class DeliveryUser extends Model
         'total_incentive',
         'paid_incentive',
         'pending_incentive',
-        'current_status'
+        'current_status',
+        'user_type'
     ];
 
 }

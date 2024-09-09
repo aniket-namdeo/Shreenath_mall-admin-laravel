@@ -71,6 +71,7 @@ class DeliveryUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:delivery_user,email',
             'contact' => 'required|string|digits:10',
+            'user_type' => 'required',
             'password' => 'required|string|min:6',
             'address' => 'required|string|max:255',
             'dob' => 'required|date',
@@ -100,7 +101,7 @@ class DeliveryUserController extends Controller
             $deliveryUser->password = bcrypt($request->password);
             $deliveryUser->save();
 
-            return redirect()->route('admin.delivery_user.list')->with('success', 'Delivery User added successfully');
+            return redirect()->route('deliveryUser-list.list')->with('success', 'Delivery User added successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage())->withInput();
         }
@@ -122,6 +123,7 @@ class DeliveryUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'contact' => 'required|string|min:10|max:10',
+            'user_type' => 'required',
             'dob' => 'required|date',
             'gender' => 'required|string',
             'address' => 'required|string|max:255',

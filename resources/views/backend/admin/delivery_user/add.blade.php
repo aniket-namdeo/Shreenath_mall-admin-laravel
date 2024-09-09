@@ -20,6 +20,16 @@
                             <label class="form-label" for="">Mobile</label>
                             <input type="text" class="form-control" name="contact" onkeypress="return /[0-9]/i.test(event.key)" minlength="10" maxlength="10" pattern="[6-9]{1}[0-9]{9}" required value="{{ old('contact') }}" />
                         </div>
+
+                        <div class="col-md-4 mb-2">
+                            <label for="user_type">User type</label>
+                            <select class="form-control" id="user_type" name="user_type" required>
+                                <option value="" disabled>Select user_type</option>
+                                <option value="delivery_user" {{ old('user_type') == 'delivery_user' ? 'selected' : '' }}>Delivery User</option>
+                                <option value="marketing" {{ old('user_type') == 'marketing' ? 'selected' : '' }}>Marketing</option>
+                            </select>
+                        </div>
+
                         <div class="col-md-4 mb-2">
                             <label class="form-label" for="">Password</label>
                             <input type="text" class="form-control" name="password" required value="{{ old('password') }}" />
