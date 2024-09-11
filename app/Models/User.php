@@ -30,6 +30,10 @@ class User extends Authenticatable
         'cash_deposit_otp',
         'otp',
         'otp_status',
+        'referral_code',
+        'wallet_balance',
+        'latitude',
+        'longitude'
     ];
 
     /**

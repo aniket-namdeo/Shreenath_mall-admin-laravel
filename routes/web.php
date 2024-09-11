@@ -159,6 +159,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/incentive_list', [App\Http\Controllers\SalesController::class, 'incentive'])->name('incentive.show');
     Route::post('/incentive-pay', [App\Http\Controllers\SalesController::class, 'incentivePay'])->name('incentive.store');
 
+    // Referral list
+    Route::get('/referral_list', [App\Http\Controllers\ReferralListController::class, 'referralList'])->name('referralList.show');
 
 });
 

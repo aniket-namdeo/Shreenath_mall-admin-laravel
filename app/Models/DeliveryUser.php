@@ -53,7 +53,10 @@ class DeliveryUser extends Model
         'paid_incentive',
         'pending_incentive',
         'current_status',
-        'user_type'
+        'user_type',
+        'qr_code',
+        'referral_code',
+        'wallet_balance',
     ];
 
 }

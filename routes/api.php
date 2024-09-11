@@ -134,6 +134,11 @@ Route::post('/delivery-login', [DeliveryUserController::class, 'Deliverylogin'])
 
 Route::get("/getDeliveryUser/{id}", [DeliveryUserController::class, "getUser"]);
 
+Route::get('/getReferralCode/{id}', [DeliveryUserController::class, 'getQrReferralCode']);
+
+Route::get('/getReferralList/{referrer_id}', [DeliveryUserController::class, 'listReferrals']);
+
+
 Route::post('/update-delivery-profile/{id}', [DeliveryUserController::class, 'updateProfile']);
 
 Route::post('/scan-qr', [DeliveryUserController::class, 'scanQr']);
@@ -195,3 +200,7 @@ Route::get('/ratings/{order_id}/{user_id}', [RatingController::class, 'getRating
 
 
 Route::post('/assign-orders', [OrderQueueController::class, 'assignOrdersToDeliveryUsers']);
+
+Route::get('/getMallLocation', [AuthController::class, 'getAdminDetails']);
+
+Route::post('/auto-reject', [OrderQueueController::class, 'autoReject']);

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\City;
+use App\Models\DeliveryUser;
+use App\Models\Referrals;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,22 +25,37 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users,email',
             'contact' => 'required|string|unique:users,contact',
             'password' => 'required|string',
+            'referral_code' => 'nullable'
         ], [
             'email.unique' => 'A user with this email already exists.',
             'contact.unique' => 'Mobile number already exists.'
         ]);
 
-        $user = User::create([
+        $newUser = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'contact' => $request->input('contact'),
             'password' => Hash::make($request->input('password')),
-            'user_type' => 'User'
+            'user_type' => 'User',
+            'referral_code' => $request->referral_code,
         ]);
 
-        return response()->json(['message' => 'User created successfully', 'data' => $user, 'status' => true], 201);
-    }
+        if ($request->referral_code) {
+            $referrer = DeliveryUser::where('referral_code', $request->referral_code)->first();
+            if ($referrer) {
+                $referrer->wallet_balance += 20;
+                $newUser->wallet_balance += 20;
+                $referrer->save();
+                $newUser->save();
 
+                Referrals::create([
+                    'referrer_id' => $referrer->id,
+                    'referred_id' => $newUser->id,
+                ]);
+            }
+        }
+        return response()->json(['message' => 'User created successfully', 'data' => $newUser, 'status' => true], 201);
+    }
 
     public function login(Request $request)
     {
@@ -331,6 +348,17 @@ class AuthController extends Controller
         $state = State::where(array('name' => $name))->first();
         $city = City::where(array('state_id' => $state->state_id))->get();
         return response()->json(['message' => 'Data got successfully', 'data' => $city], 200);
+    }
+
+    public function getAdminDetails()
+    {
+        $result = User::select('id', 'contact', 'latitude', 'longitude')->where('user_type', 'Admin')->first();
+
+        if ($result) {
+            return response()->json(['status' => true, 'data' => $result], 200);
+        } else {
+            return response()->json(['status' => false, 'message' => 'User not found'], 404);
+        }
     }
 
 

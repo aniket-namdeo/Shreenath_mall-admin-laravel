@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\DeliveryUser;
 use App\Models\IncentiveDeposit;
 use App\Models\QrTable;
+use App\Models\Referrals;
 use Exception;
 use Illuminate\Support\Str;
 
@@ -251,6 +252,52 @@ class DeliveryUserController extends Controller
         return response()->json(['success' => true, 'data' => $data], 200);
     }
 
+    public function getQrReferralCode($id)
+    {
+        $result = DeliveryUser::select('id', 'name', 'qr_code', 'referral_code')->where('id', $id)->first();
+        return response()->json(['success' => true, 'data' => $result], 200);
+    }
 
+    public function listReferrals($referrer_id)
+    {
+        $referrals = Referrals::query()
+            ->leftJoin('users as referred', 'referral.referred_id', '=', 'referred.id')
+            ->leftJoin('users as referrer_user', 'referral.referrer_id', '=', 'referrer_user.id')
+            ->leftJoin('delivery_user as referrer_delivery', 'referral.referrer_id', '=', 'referrer_delivery.id')
+            ->where('referral.referrer_id', $referrer_id)
+            ->select(
+                'referral.*',
+                'referred.name as referred_name',
+                'referred.contact as referred_contact',
+                'referred.wallet_balance as referred_wallet_balance',
+                'referrer_user.name as referrer_name_user',
+                'referrer_user.wallet_balance as referrer_wallet_balance_user',
+                'referrer_delivery.name as referrer_name_delivery',
+                'referrer_delivery.wallet_balance as referrer_wallet_balance_delivery'
+            )
+            ->get();
+
+        $referrerBalance = null;
+
+        $formattedReferrals = $referrals->map(function ($referral) use (&$referrerBalance) {
+            if ($referral->referrer_name_user) {
+                $referrerBalance = $referral->referrer_wallet_balance_user;
+            } elseif ($referral->referrer_name_delivery) {
+                $referrerBalance = $referral->referrer_wallet_balance_delivery;
+            }
+
+            return [
+                'referred_name' => $referral->referred_name,
+                'referred_contact' => $referral->referred_contact,
+                'referred_wallet_balance' => $referral->referred_wallet_balance,
+                'referred_at' => $referral->created_at
+            ];
+        });
+
+        return response()->json([
+            'data' => $formattedReferrals,
+            'wallet_balance' => $referrerBalance,
+        ]);
+    }
 
 }

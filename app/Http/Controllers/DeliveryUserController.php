@@ -8,6 +8,8 @@ use App\Models\Order;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Str;
 
 class DeliveryUserController extends Controller
 {
@@ -97,6 +99,21 @@ class DeliveryUserController extends Controller
                 $request->profile_image->move(public_path('uploads/delivery_users'), $fileName);
                 $deliveryUser->profile_image = $fileName;
             }
+
+            $url = "https://play.google.com/store/apps/details?id=com.shreenath.app";
+            $qrcodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=$url";
+
+            $imageContents = @file_get_contents($qrcodeUrl);
+
+            if ($imageContents !== false) {
+                $imageName = now()->timestamp . '.png';
+                $qrCodePath = public_path('uploads/qrcodes/' . $imageName);
+                file_put_contents($qrCodePath, $imageContents);
+                $deliveryUser->qr_code = 'uploads/qrcodes/' . $imageName;
+                $deliveryUser->save();
+            }
+
+            $deliveryUser->referral_code = strtoupper(Str::random(8));
 
             $deliveryUser->password = bcrypt($request->password);
             $deliveryUser->save();

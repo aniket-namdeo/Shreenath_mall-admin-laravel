@@ -29,7 +29,9 @@ if (!function_exists('sendFirebaseNotification')) {
 
             $messaging = $firebase->createMessaging();
 
-            $notification = Notification::create($title, $body);
+            $sound = "custom_notification_sound";
+            
+            $notification = Notification::create($title, $body, $sound);
 
             $message = CloudMessage::new()->withNotification($notification);
 

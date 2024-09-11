@@ -70,7 +70,7 @@ class OrderController extends Controller
 
     public function getDeviceId()
     {
-        $deviceIds = DeliveryUser::where('current_status', 'free')->pluck('deviceId')->filter()->all();
+        $deviceIds = DeliveryUser::where('user_type', 'delivery_user')->where('status', 'verified')->pluck('deviceId')->filter()->all();
         $title = 'New Order';
         $body = 'You got a new order.';
         $data = ['data1' => 'screen'];

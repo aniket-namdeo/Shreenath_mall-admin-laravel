@@ -9,45 +9,36 @@ use App\Models\PrivacyPolicy;
 use App\Models\OfferSlider;
 use App\Models\Order_Queue;
 use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\DB;
 
 class OrderQueueController extends Controller
 {
     function checkUserResponse($deliveryUserId, $orderId)
     {
-        // Timeout period (e.g., 1 minute)
-        $timeout = 60; // seconds
+        $timeout = 60;
         $elapsedTime = 0;
-        $pollInterval = 5; // Check every 5 seconds
+        $pollInterval = 5;
 
         while ($elapsedTime < $timeout) {
-            // Check the response in the delivery_tracking table
             $trackingRecord = DeliveryTracking::
                 where('delivery_user_id', $deliveryUserId)
                 ->where('order_id', $orderId)
                 ->first();
 
             if ($trackingRecord && $trackingRecord->response !== null) {
-                // Return the response (accepted or rejected)
                 return $trackingRecord->response;
             }
 
-            // Sleep for the poll interval before checking again
             sleep($pollInterval);
             $elapsedTime += $pollInterval;
         }
 
-        // If no response after timeout, return null or 'timeout'
         return null;
     }
-
-    function waitForUserResponse($deliveryUserId, $orderId)
+    public function waitForUserResponse($deliveryUserId, $orderId)
     {
         $response = $this->checkUserResponse($deliveryUserId, $orderId);
-        if ($response == null) {
-            // Implement timeout (e.g., 1 minute)
-            return 'timeout';
-        }
-        return $response;
+        return $response === null ? 'timeout' : $response;
     }
 
     function assignOrdersToDeliveryUsers()
@@ -65,13 +56,28 @@ class OrderQueueController extends Controller
     {
         // Get a free delivery user
 
-        $deliveryUser = DeliveryUser::where('current_status', 'free')->first();
+        $deliveryUser = DeliveryUser::
+            where('current_status', 'free')
+            ->first();
 
-        if ($deliveryUser) {
+        $deliveryTrack = DeliveryTracking::where('order_id', $order->id);
+
+        if($deliveryTrack->count() > 0){
+            
+            $details = DeliveryTracking::where('order_id', $order->id)->pluck('delivery_user_id')->filter()->all();
+
+            $deliveryUserData = DeliveryUser::where('current_status', 'free')->whereNotIn('id',$details)->first();
+        }else{
+            
+            $deliveryUserData = $deliveryUser;
+        }
+
+
+        if ($deliveryUserData) {
             // Insert the new tracking record with a pending response
-            DeliveryTracking::create([
+            $deliveryTracking = DeliveryTracking::create([
                 'order_id' => $order->id,
-                'delivery_user_id' => $deliveryUser->id,
+                'delivery_user_id' => $deliveryUserData->id,
                 'status' => 'pending',
                 'order_status' => 'pending',
                 'assigned_at' => now(),
@@ -96,40 +102,22 @@ class OrderQueueController extends Controller
                 'status' => true
             ], 201);
 
-            // Wait for a response
-            // $response = $this->waitForUserResponse($deliveryUser->id, $order->order_id);
 
-            // if ($response == 'accepted') {
+            // $response = $this->waitForUserResponse($deliveryUser->id, $order->id);
 
-            //     $deliveryTracking->order_status = 'accepted';
-            //     $deliveryTracking->save();
-
-            //     // Remove the order from the order queue
-            //     $orderQueueData = Order_Queue::where('order_id', $order->id)->first();
-            //     if ($orderQueueData) {
-            //         $orderQueueData->delete();
-            //     }
-
-            //     return response()->json(['success' => true, 'message' => 'Order accepted successfully.']);
-            // } else if($response == "rejected") {
-
+            // if ($response === 'accepted') {
+            //     return response()->json([
+            //         'message' => 'Order accepted by the delivery user',
+            //         'status' => true
+            //     ], 200);
+            // } elseif ($response === 'rejected' || $response === 'timeout') {
             //     $deliveryTracking->order_status = 'rejected';
             //     $deliveryTracking->save();
 
-            //     // Mark the delivery user as free again
             //     $deliveryUser->current_status = 'free';
             //     $deliveryUser->save();
 
-            //     // Retry with another delivery user
             //     $this->processOrder($order);
-            // }else {
-            //     // Handle the case of timeout
-            //     $deliveryTracking->order_status = 'pending';
-            //     $deliveryTracking->save();
-            //     $deliveryUser->current_status = 'free';
-            //     $deliveryUser->save();
-
-            //     return response()->json(['success' => false, 'message' => 'Order response timed out.']);
             // }
         } else {
             // If no free delivery users are found, wait and retry
@@ -139,5 +127,24 @@ class OrderQueueController extends Controller
                 'status' => false
             ], 400);
         }
+    }
+
+    public function autoReject(Request $request)
+    {
+        $deliveryTracking = DeliveryTracking::find($request->id);
+        $deliveryUser = DeliveryUser::where('id', $deliveryTracking->delivery_user_id);
+
+        if (!$deliveryTracking) {
+            return response()->json(['success' => false, 'message' => 'Delivery tracking not found'], 404);
+        }
+        $order_queue_data = Order_Queue::where('order_id', $deliveryTracking->order_id)->first();
+
+        $order_queue_data->status = 0;
+        $order_queue_data->save();
+        $deliveryTracking->order_status = 'auto_reject';
+        $deliveryTracking->save();
+        $deliveryUser->current_status = 'free';
+
+        return response()->json(['success' => true, 'message' => 'Order status updated successfully']);
     }
 }
