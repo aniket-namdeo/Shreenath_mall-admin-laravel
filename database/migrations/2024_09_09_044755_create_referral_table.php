@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('referral', function (Blueprint $table) {
             $table->id();
+            $table->string('referrer_id');
+            $table->string('referred_id');
             $table->timestamps();
         });
     }
