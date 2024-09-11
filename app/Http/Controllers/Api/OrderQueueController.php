@@ -54,10 +54,11 @@ class OrderQueueController extends Controller
 
     function processOrder($order)
     {
-        // Get a free delivery user
 
+        // check this raw condition once if it doesn't work then comment it
         $deliveryUser = DeliveryUser::
             where('current_status', 'free')
+            ->whereRaw('(total_cash_collected - total_cash_deposited) < 1000')
             ->first();
 
         $deliveryTrack = DeliveryTracking::where('order_id', $order->id);
