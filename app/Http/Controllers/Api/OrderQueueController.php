@@ -44,7 +44,7 @@ class OrderQueueController extends Controller
     function assignOrdersToDeliveryUsers()
     {
         // Fetch all unassigned orders from the order_queue table
-        $orders = Order_Queue::where('status', 0)->get();
+        $orders = Order_Queue::get();
 
         foreach ($orders as $order) {
             // Process each order to assign a delivery user
@@ -62,16 +62,23 @@ class OrderQueueController extends Controller
 
         $deliveryTrack = DeliveryTracking::where('order_id', $order->id);
 
-        if($deliveryTrack->count() > 0){
-            
+        if ($deliveryTrack->count() > 0) {
+
             $details = DeliveryTracking::where('order_id', $order->id)->pluck('delivery_user_id')->filter()->all();
 
-            $deliveryUserData = DeliveryUser::where('current_status', 'free')->whereNotIn('id',$details)->first();
-        }else{
-            
+            foreach ($deliveryTrack->get() as $delivery_user_id) {
+                $checktime = $delivery_user_id->rejected_at;
+                if (now() > $checktime) {
+                    DeliveryTracking::where('delivery_user_id', $delivery_user_id->delivery_user_id)->update(array('order_status' => 'auto_reject'));
+                    DeliveryUser::where('id', $delivery_user_id->delivery_user_id)->update(array('current_status' => 'free'));
+                }
+            }
+
+            $deliveryUserData = DeliveryUser::where('current_status', 'free')->whereNotIn('id', $details)->first();
+        } else {
+
             $deliveryUserData = $deliveryUser;
         }
-
 
         if ($deliveryUserData) {
             // Insert the new tracking record with a pending response
@@ -81,6 +88,7 @@ class OrderQueueController extends Controller
                 'status' => 'pending',
                 'order_status' => 'pending',
                 'assigned_at' => now(),
+                'rejected_at' => now()->addSeconds(30)
             ]);
 
             $deliveryUser->current_status = 'engaged';
@@ -144,6 +152,7 @@ class OrderQueueController extends Controller
         $deliveryTracking->order_status = 'auto_reject';
         $deliveryTracking->save();
         $deliveryUser->current_status = 'free';
+        $deliveryUser->save();
 
         return response()->json(['success' => true, 'message' => 'Order status updated successfully']);
     }

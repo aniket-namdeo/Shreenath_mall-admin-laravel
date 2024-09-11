@@ -18,6 +18,7 @@ class DeliveryTracking extends Model
         'order_status',
         'deliver_feedback',
         'assigned_at',
+        'rejected_at',
         'status'
     ];
 }
