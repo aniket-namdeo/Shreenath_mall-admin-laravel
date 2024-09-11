@@ -79,6 +79,16 @@
                     <li class="{{ $current_page == 'privacypolicy-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/privacypolicy-list') }}">List</a></li>
                 </ul>
             </li>
+            <li class="mb-2 dropdown {{ $current_page == 'add-terms_and_condition' ? 'active' : '' }} {{ $current_page == 'terms_and_condition-list' ? 'active' : '' }}">
+                <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <font><i class="bx bxs-user-plus"></i> <span>Manage Terms And Condition</span></font>
+                    <span class="bx bx-chevron-right"></span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li class="{{ $current_page == 'add-terms_and_condition' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-terms_and_condition') }}">Add </a></li>
+                    <li class="{{ $current_page == 'terms_and_condition-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/terms_and_condition-list') }}">List</a></li>
+                </ul>
+            </li>
             <li class="mb-2 dropdown {{ $current_page == 'add-aboutus' ? 'active' : '' }} {{ $current_page == 'aboutus-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                     <font><i class="bx bxs-user-plus"></i> <span>Manage Aboutus</span></font>

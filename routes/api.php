@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\CustomerSupportController;
 use App\Http\Controllers\Api\DeliveryTrackingOrderController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\OrderQueueController;
+use App\Http\Controllers\Api\TermsAndConditionController;
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
@@ -120,6 +121,10 @@ Route::get('/aboutus', [AboutUsController::class, 'getAboutUs']);
 // privacy policy
 
 Route::get('/privacypolicy', [PrivacyPolicyController::class, 'getPrivacyPolicy']);
+
+// Terms and condition
+
+Route::get('/terms-and-Condition', [TermsAndConditionController::class, 'getTermsAndCondition']);
 
 // coupon
 

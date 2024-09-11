@@ -13,6 +13,7 @@ use App\Http\Controllers\DeliveryUserController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OfferSliderController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\TermsAndConditionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,6 +103,13 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/privacypolicy-list', [App\Http\Controllers\PrivacyPolicyController::class, 'list'])->name('privacypolicy-list.list');
     Route::get('/edit-privacypolicy/{id}', [App\Http\Controllers\PrivacyPolicyController::class, 'privacypolicyEdit'])->name('privacypolicy.edit');
     Route::post('/privacypolicy-update/{id}', [App\Http\Controllers\PrivacyPolicyController::class, 'privacypolicyUpdate'])->name('update-privacypolicy.update');
+
+     // terms and condition
+     Route::get('/add-terms_and_condition', [App\Http\Controllers\TermsAndConditionController::class, 'show'])->name('terms_and_condition.show');
+     Route::post('/add-terms_and_condition', [App\Http\Controllers\TermsAndConditionController::class, 'store'])->name('terms_and_condition.store');
+     Route::get('/terms_and_condition-list', [App\Http\Controllers\TermsAndConditionController::class, 'list'])->name('terms_and_condition-list.list');
+     Route::get('/edit-terms_and_condition/{id}', [App\Http\Controllers\TermsAndConditionController::class, 'terms_and_conditionEdit'])->name('terms_and_condition.edit');
+     Route::post('/terms_and_condition-update/{id}', [App\Http\Controllers\TermsAndConditionController::class, 'terms_and_conditionUpdate'])->name('update-terms_and_condition.update');
 
     // aboutus
     Route::get('/add-aboutus', [App\Http\Controllers\AboutUsController::class, 'show'])->name('aboutus.show');
