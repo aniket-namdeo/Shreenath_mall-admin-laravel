@@ -204,7 +204,7 @@ Route::post('/ratings/submit', [RatingController::class, 'submitRatings']);
 Route::get('/ratings/{order_id}/{user_id}', [RatingController::class, 'getRatings']);
 
 
-Route::post('/assign-orders', [OrderQueueController::class, 'assignOrdersToDeliveryUsers']);
+Route::get('/assign-orders', [OrderQueueController::class, 'assignOrdersToDeliveryUsers']);
 
 Route::get('/getMallLocation', [AuthController::class, 'getAdminDetails']);
 
