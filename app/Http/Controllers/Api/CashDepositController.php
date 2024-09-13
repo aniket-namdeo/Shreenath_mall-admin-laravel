@@ -30,6 +30,7 @@ class CashDepositController extends Controller
         $data = [
             'delivery_user_id' => $request->delivery_user_id,
             'cash_amount' => $request->cash_amount,
+            'deposit_amount' => $request->cash_amount,
             'deposit_date' => $request->deposit_date,
             'otp' => $otp,
         ];
@@ -129,7 +130,7 @@ class CashDepositController extends Controller
     public function updateCashDeposit(Request $request)
     {
         $deliveryUser = DeliveryUser::where('id', $request->delivery_user_id)->first();
-        $data = CashDeposit::where('delivery_user_id', $request->delivery_user_id)->where('status', 'approved')->orderBy('id', 'desc')->first();
+        $data = CashDeposit::where(array('delivery_user_id'=>$request->delivery_user_id,'status'=>'approved'))->orderBy('id', 'desc')->first();
 
         $newTotalCashDeposit = $deliveryUser->total_cash_deposited + $data->deposit_amount;
 
