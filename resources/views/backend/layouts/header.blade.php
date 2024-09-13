@@ -30,7 +30,7 @@
             </li>
             <li class="mb-2 dropdown {{ $current_page == 'add-plan' ? 'active' : '' }} {{ $current_page == 'plan-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <font><i class="bx bxs-user-plus"></i> <span>Manage Categories</span></font>
+                    <font><i class="bx bxs-dashboard"></i> <span>Manage Categories</span></font>
                     <span class="bx bx-chevron-right"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -42,7 +42,7 @@
             </li>
             <li class="mb-2 dropdown {{ $current_page == 'add-brand' ? 'active' : '' }} {{ $current_page == 'brand-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <font><i class="bx bxs-user-plus"></i> <span>Manage Brand</span></font>
+                    <font><i class="bx bxs-dashboard"></i> <span>Manage Brand</span></font>
                     <span class="bx bx-chevron-right"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -52,7 +52,7 @@
             </li>
             <li class="mb-2 dropdown {{ $current_page == 'add-product' ? 'active' : '' }} {{ $current_page == 'product-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <font><i class="bx bxs-user-plus"></i> <span>Manage Product</span></font>
+                    <font><i class="bx bxs-dashboard"></i> <span>Manage Product</span></font>
                     <span class="bx bx-chevron-right"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -62,7 +62,7 @@
             </li>
             <li class="mb-2 dropdown {{ $current_page == 'order-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <font><i class="bx bxs-user-plus"></i> <span>Manage Orders</span></font>
+                    <font><i class="bx bxs-dashboard"></i> <span>Manage Orders</span></font>
                     <span class="bx bx-chevron-right"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -71,7 +71,7 @@
             </li>
             <li class="mb-2 dropdown {{ $current_page == 'add-privacypolicy' ? 'active' : '' }} {{ $current_page == 'privacypolicy-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <font><i class="bx bxs-user-plus"></i> <span>Manage Privacypolicy</span></font>
+                    <font><i class="bx bxs-dashboard"></i> <span>Manage Privacypolicy</span></font>
                     <span class="bx bx-chevron-right"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -81,7 +81,7 @@
             </li>
             <li class="mb-2 dropdown {{ $current_page == 'add-terms_and_condition' ? 'active' : '' }} {{ $current_page == 'terms_and_condition-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <font><i class="bx bxs-user-plus"></i> <span>Manage Terms And Condition</span></font>
+                    <font><i class="bx bxs-dashboard"></i> <span>Terms And Condition</span></font>
                     <span class="bx bx-chevron-right"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -91,7 +91,7 @@
             </li>
             <li class="mb-2 dropdown {{ $current_page == 'add-aboutus' ? 'active' : '' }} {{ $current_page == 'aboutus-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <font><i class="bx bxs-user-plus"></i> <span>Manage Aboutus</span></font>
+                    <font><i class="bx bxs-dashboard"></i> <span>Manage Aboutus</span></font>
                     <span class="bx bx-chevron-right"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -101,7 +101,7 @@
             </li>
             <li class="mb-2 dropdown {{ $current_page == 'add-coupon' ? 'active' : '' }} {{ $current_page == 'coupon-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <font><i class="bx bxs-user-plus"></i> <span>Manage Coupon</span></font>
+                    <font><i class="bx bxs-dashboard"></i> <span>Manage Coupon</span></font>
                     <span class="bx bx-chevron-right"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -118,7 +118,7 @@
 
             <li class="mb-2 dropdown {{ $current_page == 'offer-slider' ? 'active' : '' }} {{ $current_page == 'offer-slider-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <font><i class="bx bxs-user-plus"></i> <span>Manage Offer Slider</span></font>
+                    <font><i class="bx bxs-dashboard"></i> <span>Manage Offer Slider</span></font>
                     <span class="bx bx-chevron-right"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -128,7 +128,7 @@
             </li>
             <li class="mb-2 dropdown {{ $current_page == 'add-tag' ? 'active' : '' }} {{ $current_page == 'tag-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <font><i class="bx bxs-user-plus"></i> <span>Manage Tags</span></font>
+                    <font><i class="bx bxs-dashboard"></i> <span>Manage Tags</span></font>
                     <span class="bx bx-chevron-right"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
