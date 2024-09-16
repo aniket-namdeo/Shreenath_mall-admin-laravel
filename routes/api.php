@@ -143,6 +143,8 @@ Route::get('/getReferralCode/{id}', [DeliveryUserController::class, 'getQrReferr
 
 Route::get('/getReferralList/{referrer_id}', [DeliveryUserController::class, 'listReferrals']);
 
+Route::get('/user-referral-list/{user_id}', [DeliveryUserController::class, 'userReferralsList']);
+
 
 Route::post('/update-delivery-profile/{id}', [DeliveryUserController::class, 'updateProfile']);
 
