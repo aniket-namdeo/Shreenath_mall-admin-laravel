@@ -1432,6 +1432,10 @@ class OrderController extends Controller
             return response()->json(['success' => false, 'message' => 'Delivery tracking not found'], 404);
         }
 
+        if($deliveryTracking->order_status == 'accepted'){
+            return response()->json([['success' => false, 'message' => 'Already accepted by some other delivery user.'], 404]);
+        }
+
         if ($request->status == 'accepted') {
 
             $deliveryTracking->order_status = $request->status;

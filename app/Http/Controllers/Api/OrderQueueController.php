@@ -65,7 +65,7 @@ class OrderQueueController extends Controller
 
         if ($deliveryTrack->count() > 0) {
 
-            $details = DeliveryTracking::where('order_id', $order->id)->pluck('delivery_user_id')->filter()->all();
+            $details = DeliveryTracking::where('order_id', $order->id)->where('order_status', 'pending')->pluck('delivery_user_id')->filter()->all();
 
             foreach ($deliveryTrack->get() as $delivery_user_id) {
                 $checktime = $delivery_user_id->rejected_at;
