@@ -52,19 +52,17 @@ class AuthController extends Controller
                 $userType = "user";
             }
             
-            if($referrer->id != $newUser->id){
-                if ($referrer) {
-                    $referrer->wallet_balance += 20;
-                    $newUser->wallet_balance += 20;
-                    $referrer->save();
-                    $newUser->save();
+            if ($referrer) {
+                $referrer->wallet_balance += 20;
+                $newUser->wallet_balance += 20;
+                $referrer->save();
+                $newUser->save();
 
-                    Referrals::create([
-                        'referrer_id' => $referrer->id,
-                        'referred_id' => $newUser->id,
-                        'referr_type' => $userType,
-                    ]);
-                }
+                Referrals::create([
+                    'referrer_id' => $referrer->id,
+                    'referred_id' => $newUser->id,
+                    'referr_type' => $userType,
+                ]);
             }
         }
         return response()->json(['message' => 'User created successfully', 'data' => $newUser, 'status' => true], 201);
