@@ -48,7 +48,7 @@ class AuthController extends Controller
             if($referrer){
                 $userType = "marketing";
             }else{
-                $referrer = User::where(array('referral_code'=>$request->referral_code))->first();
+                $referrer = User::where(array('my_referral_code'=>$request->referral_code))->first();
                 $userType = "user";
             }
             
