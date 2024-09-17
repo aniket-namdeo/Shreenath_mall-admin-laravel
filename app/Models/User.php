@@ -33,7 +33,8 @@ class User extends Authenticatable
         'referral_code',
         'wallet_balance',
         'latitude',
-        'longitude'
+        'longitude',
+        'my_referral_code',
     ];
 
     /**

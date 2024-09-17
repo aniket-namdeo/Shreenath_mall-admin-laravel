@@ -13,6 +13,7 @@ class Referrals extends Model
 
     protected $fillable = [
         'referrer_id',
+        'referr_type',
         'referred_id'
     ];
 }

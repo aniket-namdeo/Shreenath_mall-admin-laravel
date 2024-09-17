@@ -38,20 +38,33 @@ class AuthController extends Controller
             'password' => Hash::make($request->input('password')),
             'user_type' => 'User',
             'referral_code' => $request->referral_code,
+            'my_referral_code' => strtoupper(Str::random(8)),
         ]);
 
         if ($request->referral_code) {
-            $referrer = DeliveryUser::where('referral_code', $request->referral_code)->first();
-            if ($referrer) {
-                $referrer->wallet_balance += 20;
-                $newUser->wallet_balance += 20;
-                $referrer->save();
-                $newUser->save();
+            $referrer = DeliveryUser::where(array('referral_code'=>$request->referral_code))->first();
+            $userType = "";
 
-                Referrals::create([
-                    'referrer_id' => $referrer->id,
-                    'referred_id' => $newUser->id,
-                ]);
+            if($referrer){
+                $userType = "marketing";
+            }else{
+                $referrer = User::where(array('referral_code'=>$request->referral_code))->first();
+                $userType = "user";
+            }
+            
+            if($referrer->id != $newUser->id){
+                if ($referrer) {
+                    $referrer->wallet_balance += 20;
+                    $newUser->wallet_balance += 20;
+                    $referrer->save();
+                    $newUser->save();
+
+                    Referrals::create([
+                        'referrer_id' => $referrer->id,
+                        'referred_id' => $newUser->id,
+                        'referr_type' => $userType,
+                    ]);
+                }
             }
         }
         return response()->json(['message' => 'User created successfully', 'data' => $newUser, 'status' => true], 201);
