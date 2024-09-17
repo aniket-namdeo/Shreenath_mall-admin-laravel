@@ -226,7 +226,7 @@ class AuthController extends Controller
 
     public function getUser($id)
     {
-        $result = User::select('id', 'name', 'email', 'contact', 'gender', 'dob', 'profile_image')->where('id', $id)->first();
+        $result = User::select('id', 'name', 'email', 'contact', 'gender', 'dob', 'profile_image', 'wallet_balance', 'my_referral_code')->where('id', $id)->first();
         if ($result) {
 
             return response()->json(['status' => true, 'data' => $result], 200);
