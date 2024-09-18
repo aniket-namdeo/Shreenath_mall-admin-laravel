@@ -73,7 +73,7 @@ class OrderController extends Controller
         $deviceIds = DeliveryUser::where('user_type', 'delivery_user')->where('status', 'verified')->pluck('deviceId')->filter()->all();
         $title = 'New Order';
         $body = 'You got a new order.';
-        $data = ['data1' => 'screen'];
+        $data = ['screen' => 'home'];
         $image = null;
 
         $response = sendFirebaseNotification($title, $body, $deviceIds, $image, $data);
@@ -96,6 +96,7 @@ class OrderController extends Controller
             'items.*.product_id' => 'required',
             'items.*.quantity' => 'required|integer',
             'items.*.price' => 'required|numeric',
+            'used_coin' => 'nullable'
         ]);
 
         // $OrderDetail = User_addresses::where('address_id',$request->address_id)->first();
@@ -134,7 +135,8 @@ class OrderController extends Controller
                 'tax_amount' => $request->tax_amount,
                 'shipping_fee' => $request->shipping_fee,
                 'otp' => $otp,
-                'handling_charge' => $request->handling_charge
+                'handling_charge' => $request->handling_charge,
+                'used_coin' => $request->used_coin
             ]);
 
             foreach ($request->items as $item) {
@@ -1432,7 +1434,7 @@ class OrderController extends Controller
             return response()->json(['success' => false, 'message' => 'Delivery tracking not found'], 404);
         }
 
-        if($deliveryTracking->order_status == 'accepted'){
+        if ($deliveryTracking->order_status == 'accepted') {
             return response()->json([['success' => false, 'message' => 'Already accepted by some other delivery user.'], 404]);
         }
 

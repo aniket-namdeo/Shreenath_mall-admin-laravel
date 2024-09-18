@@ -306,7 +306,7 @@ class DeliveryUserController extends Controller
             ->leftJoin('users as referred', 'referral.referred_id', '=', 'referred.id')
             ->leftJoin('users as referrer_user', 'referral.referrer_id', '=', 'referrer_user.id')
             ->leftJoin('users as users', 'referral.referrer_id', '=', 'users.id')
-            ->where(array('referral.referrer_id'=>$user_id,'referral.referr_type'=>"user"))
+            ->where(array('referral.referrer_id' => $user_id, 'referral.referr_type' => "user"))
             ->select(
                 'referral.*',
                 'referred.name as referred_name',
@@ -315,7 +315,8 @@ class DeliveryUserController extends Controller
                 'referrer_user.name as referrer_name_user',
                 'referrer_user.wallet_balance as referrer_wallet_balance_user',
                 'users.name as referrer_name_delivery',
-                'users.wallet_balance as referrer_wallet_balance_delivery'
+                'users.wallet_balance as referrer_wallet_balance_delivery',
+                'referral.status as referral_status'
             )
             ->get();
 
@@ -332,7 +333,8 @@ class DeliveryUserController extends Controller
                 'referred_name' => $referral->referred_name,
                 'referred_contact' => $referral->referred_contact,
                 'referred_wallet_balance' => $referral->referred_wallet_balance,
-                'referred_at' => $referral->created_at
+                'referred_at' => $referral->created_at,
+                'referral_status' => $referral->referral_status
             ];
         });
 

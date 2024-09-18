@@ -29,7 +29,8 @@ class Order extends Model
         'order_rating',
         'order_feedback',
         'otp',
-        'handling_charge'
+        'handling_charge',
+        'used_coin'
     ];
 
     public function orderItems()

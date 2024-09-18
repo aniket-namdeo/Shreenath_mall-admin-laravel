@@ -170,6 +170,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // Referral list
     Route::get('/referral_list', [App\Http\Controllers\ReferralListController::class, 'referralList'])->name('referralList.show');
 
+    Route::post('/updateReferralStatus', [App\Http\Controllers\ReferralListController::class, 'updateReferralStatus'])->name('updateReferralStatus.update');
+
 });
 
 Route::group(['middleware' => 'auth'], function () {
