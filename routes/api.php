@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\DeliveryTrackingOrderController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\OrderQueueController;
 use App\Http\Controllers\Api\TermsAndConditionController;
+use App\Http\Controllers\Api\UserNotificationController;
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
@@ -211,3 +212,5 @@ Route::get('/assign-orders', [OrderQueueController::class, 'assignOrdersToDelive
 Route::get('/getMallLocation', [AuthController::class, 'getAdminDetails']);
 
 Route::post('/auto-reject', [OrderQueueController::class, 'autoReject']);
+
+Route::get('/send-user-notification', [UserNotificationController::class, 'send_notification']);

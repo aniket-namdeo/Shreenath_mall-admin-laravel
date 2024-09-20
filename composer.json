@@ -31,7 +31,8 @@
         },
         "files": [
             "app/Helpers/send_mail.php",
-            "app/Helpers/send_notification.php"
+            "app/Helpers/send_notification.php",
+            "app/Helpers/send_user_notification.php"
        ]
     },
     "autoload-dev": {

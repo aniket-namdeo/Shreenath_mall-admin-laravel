@@ -39,6 +39,7 @@ class AuthController extends Controller
             'user_type' => 'User',
             'referral_code' => $request->referral_code,
             'my_referral_code' => strtoupper(Str::random(8)),
+            'deviceId' => $request->input('deviceId'),
         ]);
 
         if ($request->referral_code) {
@@ -73,12 +74,18 @@ class AuthController extends Controller
         $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
+            'deviceId' => 'required|string',
         ]);
 
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
             return response()->json(['message' => 'User not found, Register your account', 'status' => false], 401);
+        }
+        
+        if ($request->deviceId) {
+            $user->deviceId = $request->deviceId;
+            $user->save();
         }
 
         if ($user && Hash::check($request->password, $user->password)) {
