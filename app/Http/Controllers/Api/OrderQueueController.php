@@ -103,7 +103,9 @@ class OrderQueueController extends Controller
             $body = 'You got a new order.';
             $image = null;
 
-            $notificationResponse = sendFirebaseNotification($title, $body, [$deliveryUser->deviceId], $image);
+            $data = [];
+
+            $notificationResponse = sendFirebaseNotification($title, $body, [$deliveryUser->deviceId], $image, $data);
 
             return response()->json([
                 'message' => 'Order assigned successfully',

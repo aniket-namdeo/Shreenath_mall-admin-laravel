@@ -7,6 +7,12 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <h6 class="mb-0">Referral List</h6>
+
+                        <br>
+                        <h6 class="mb-0">Pending Count - {{ $pendingCount * 20 }}</h6>
+                        
+                        <br>
+                        <h6 class="mb-0">Redeemed Count - {{ $redeemedCount * 20 }}</h6>
                     </div>
                 </div>
             </div>
@@ -26,38 +32,29 @@
                     </thead>
                     <tbody>
                         @php $a = 1; @endphp
-                        @foreach($formattedReferrals as $value)
+                        @foreach($referrals as $value)
                         <tr>
                             <td>{{ $a++ }}</td>
                             <td>
-                                @if($value['referrer_name_delivery'] == '')
-                                    {{ $value['referred_name'] }}
-                                @else
-                                    {{ $value['referrer_name_delivery'] }}
-                                @endif
+                                    {{ $value['referred_by_name'] }}
                             </td>
                             
                             <td>{{ $value['referr_type'] }}</td>
-                            {{-- <td>{{ $value['referrer_name_user']  referred_name }}</td> --}}
 
                             <td>
-                                @if($value['referrer_name_user'] == '')
-                                    {{ $value['referred_name'] }}
-                                @else
-                                    {{ $value['referrer_name_user'] }}
-                                @endif
+                                    {{ $value['user_name'] }}
                             </td>
-                            <td>{{ $value['referral_status'] }}</td>
+                            <td>{{ $value['status'] }}</td>
                             <td>20</td>
                             <td>
                                 <div class="table-action-btns">
-                                    <button class="btn btn-primary" 
-                                        data-toggle="modal" 
-                                        data-target="#editModal" 
-                                        data-id="{{ $value['referral_id'] }}"
+
+                                    <button class="btn btn-primary open-edit-modal" 
+                                        data-id="{{ $value['id'] }}"
                                         data-status="{{ $value['referral_status'] }}">
                                         <i class="bx bx-pencil"></i>
                                     </button>
+
                                 </div>
                             </td>
                         </tr>
@@ -84,7 +81,7 @@
             <form action="{{ route('updateReferralStatus.update') }}" method="POST">
                 @csrf
                 <div class="modal-body">
-                    <input type="hidden" name="referral_id" id="referral_id">
+                    <input type="hidden" name="id" id="id">
                     <div class="form-group">
                         <label for="referral_status">Referral Status</label>
                         <select name="referral_status" id="referral_status" class="form-control">
@@ -102,20 +99,23 @@
     </div>
 </div>
 
+
 <script>
-    $(document).ready(function() {
-        $('#editModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var referralId = button.data('id');
-            var referralStatus = button.data('status');
-            
-            console.log('Referral ID:', referralId);
-            console.log('Referral Status:', referralStatus);
-            
-            var modal = $(this);
-            modal.find('#referral_id').val(referralId);
-            modal.find('#referral_status').val(referralStatus);
-        });
+$(document).ready(function() {
+    $('.open-edit-modal').on('click', function() {
+        var referralId = $(this).data('id');
+        var referralStatus = $(this).data('status');
+        
+        console.log('Referral ID:', referralId);
+        console.log('Referral Status:', referralStatus);
+
+        $('#editModal').find('#id').val(referralId);
+        $('#editModal').find('#referral_status').val(referralStatus);
+        
+        $('#editModal').modal('show');
     });
+});
+
 </script>
+
 

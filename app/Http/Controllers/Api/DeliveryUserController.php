@@ -258,7 +258,7 @@ class DeliveryUserController extends Controller
         return response()->json(['success' => true, 'data' => $result], 200);
     }
 
-    public function listReferrals($referrer_id)
+    public function listReferralsold($referrer_id)
     {
         $referrals = Referrals::query()
             ->leftJoin('users as referred', 'referral.referred_id', '=', 'referred.id')
@@ -290,15 +290,70 @@ class DeliveryUserController extends Controller
                 'referred_name' => $referral->referred_name,
                 'referred_contact' => $referral->referred_contact,
                 'referred_wallet_balance' => $referral->referred_wallet_balance,
-                'referred_at' => $referral->created_at
+                'referred_at' => $referral->created_at,
+                'referral_status' => $referral->status
             ];
         });
 
         return response()->json([
             'data' => $formattedReferrals,
-            'wallet_balance' => $referrerBalance,
+            'pending_wallet_balance' => $referrerBalance,
         ]);
     }
+
+    public function listReferrals($referrer_id)
+    {
+        $referrals = Referrals::query()
+            ->leftJoin('users as referred', 'referral.referred_id', '=', 'referred.id')
+            ->leftJoin('users as referrer_user', 'referral.referrer_id', '=', 'referrer_user.id')
+            ->leftJoin('delivery_user as referrer_delivery', 'referral.referrer_id', '=', 'referrer_delivery.id')
+            ->where('referral.referrer_id', $referrer_id)
+            ->select(
+                'referral.*',
+                'referred.name as referred_name',
+                'referred.contact as referred_contact',
+                'referred.wallet_balance as referred_wallet_balance',
+                'referrer_user.name as referrer_name_user',
+                'referrer_user.wallet_balance as referrer_wallet_balance_user',
+                'referrer_delivery.name as referrer_name_delivery',
+                'referrer_delivery.wallet_balance as referrer_wallet_balance_delivery'
+            )
+            ->get();
+
+        $referrerBalance = null;
+        $pendingWalletBalance = 0;
+        $redeemedWalletBalance = 0;
+
+        $formattedReferrals = $referrals->map(function ($referral) use (&$referrerBalance, &$pendingWalletBalance, &$redeemedWalletBalance) {
+            if ($referral->referrer_name_user) {
+                $referrerBalance = $referral->referrer_wallet_balance_user;
+            } elseif ($referral->referrer_name_delivery) {
+                $referrerBalance = $referral->referrer_wallet_balance_delivery;
+            }
+
+            if ($referral->status === 'pending') {
+                $pendingWalletBalance += 20;
+            } elseif ($referral->status === 'redeemed') {
+                $redeemedWalletBalance += 20;
+            }
+
+            return [
+                'referred_name' => $referral->referred_name,
+                'referred_contact' => $referral->referred_contact,
+                'referred_wallet_balance' => $referral->referred_wallet_balance,
+                'referred_at' => $referral->created_at,
+                'referral_status' => $referral->status,
+            ];
+        });
+
+        return response()->json([
+            'data' => $formattedReferrals,
+            'pending_wallet_balance' => $pendingWalletBalance,
+            'redeemed_wallet_balance' => $redeemedWalletBalance,
+            'total_wallet_balance' => $referrerBalance,
+        ]);
+    }
+
 
     public function userReferralsList($user_id)
     {
