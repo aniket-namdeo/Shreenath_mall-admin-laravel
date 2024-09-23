@@ -30,8 +30,11 @@ if (!function_exists('sendUserNotification')) {
             $messaging = $firebase->createMessaging();
 
             $sound = "custom_notification_sound";
+            $click_action = "FLUTTER_NOTIFICATION_CLICK";
+            $priority = "high";
+            $show_on_foreground = true;
             
-            $notification = Notification::create($title, $body, $sound);
+            $notification = Notification::create($title, $body, $sound, $click_action, $priority, $show_on_foreground);
 
             $message = CloudMessage::new()->withNotification($notification);
 
