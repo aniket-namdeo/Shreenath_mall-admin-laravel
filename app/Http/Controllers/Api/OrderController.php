@@ -75,8 +75,14 @@ class OrderController extends Controller
         $body = 'You got a new order.';
         $data = ['screen' => 'home'];
         $image = null;
+        $sound = 'custom_notification_sound.wav';
+        $token = 'cO7iNTjMRq6kvbqiT_lwCD:APA91bGkZNrpw5pmQfRYDQPBdpIh4gj_XsbRCZbezcrPuBIQWQRjYukdjSoYKeXNzUu8WY66vxI2dGNY6Yx-04rnzbfButMfqohl9cv6yqX9gZjjDssQtsxFagHsx3ozugLKm2iMwuGv';
+
+        // $response = sendOneSignalNotification($title, $body,deviceTokens: ['da912089-df80-4ec9-b70f-3d3fe27060fc','2e0ada0d-4df1-473e-85ac-df162f15f2bb']);
 
         $response = sendFirebaseNotification($title, $body, $deviceIds, $image, $data);
+
+        print_r($response);
 
         return response()->json(['deviceIds' => $deviceIds, 'response' => $response]);
     }
@@ -708,242 +714,6 @@ class OrderController extends Controller
         }
     }
 
-    // public function getPendingOrdersWithItemsAndDeliveryUser(Request $request, $id)
-    // {
-
-    //     $deliveryUser = DeliveryUser::find($id);
-    //     if (!$deliveryUser) {
-    //         return response()->json(['success' => false, 'message' => 'Delivery user not found'], 404);
-    //     }
-
-    //     $totalCashCollected = $deliveryUser->total_cash_collected;
-    //     $totalCashDeposited = $deliveryUser->total_cash_deposited;
-
-    //     // Calculate the difference
-    //     $cashDifference = $totalCashCollected - $totalCashDeposited;
-
-    //     $orders = Order::
-    //         leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
-    //         ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
-    //         ->leftJoin('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
-    //         ->where('orders.delivery_status', 'pending')
-    //         ->where(function ($query) use ($id, $cashDifference) {
-    //             $query->where('delivery_tracking.delivery_user_id', $id)
-    //                 ->orWhereNull('delivery_tracking.delivery_user_id');
-
-    //             if ($cashDifference >= 1000) {
-    //                 $query->whereNotNull('delivery_tracking.delivery_user_id');
-    //             }
-    //         })
-    //         ->orderBy('orders.id', 'desc')
-    //     ;
-
-    //     $orders = $orders->select(
-    //         'orders.id as order_id',
-    //         'orders.user_id',
-    //         'orders.total_amount',
-    //         'orders.status',
-    //         'orders.payment_method',
-    //         'orders.delivery_status as order_status',
-    //         'orders.payment_status',
-    //         'orders.order_date',
-    //         'delivery_tracking.id as delivery_tracking_id',
-    //         'delivery_tracking.order_status as delivery_status',
-    //         'delivery_user.name as delivery_person_name',
-    //         'delivery_user.contact as delivery_person_contact',
-    //         'user_addresses.name as user_address_name',
-    //         'user_addresses.contact as user_address_contact',
-    //         'user_addresses.house_address as user_address_house',
-    //         'user_addresses.street_address as user_address_street',
-    //         'user_addresses.landmark as user_address_landmark',
-    //         'user_addresses.city as user_address_city',
-    //         'user_addresses.state as user_address_state',
-    //         'user_addresses.country as user_address_country',
-    //         'user_addresses.pincode as user_address_pincode',
-    //         'user_addresses.latitude as user_latitude',
-    //         'user_addresses.longitude as user_longitude'
-    //     )
-    //         ->get();
-
-    //     return response()->json(['success' => true, 'data' => $orders]);
-    // }
-
-    // public function getPendingOrdersWithItemsAndDeliveryUser(Request $request, $id)
-    // {
-    //     $deliveryUser = DeliveryUser::find($id);
-    //     if (!$deliveryUser) {
-    //         return response()->json(['success' => false, 'message' => 'Delivery user not found'], 404);
-    //     }
-
-    //     $totalCashCollected = $deliveryUser->total_cash_collected;
-    //     $totalCashDeposited = $deliveryUser->total_cash_deposited;
-
-    //     $cashDifference = $totalCashCollected - $totalCashDeposited;
-
-    //     $orders = Order::
-    //         leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
-    //         ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
-    //         ->leftJoin('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
-    //         ->where('orders.delivery_status', 'pending')
-    //         ->where(function ($query) use ($id, $cashDifference) {
-    //             $query->where('delivery_tracking.delivery_user_id', $id)
-    //                 ->orWhereNull('delivery_tracking.delivery_user_id');
-
-    //             if ($cashDifference >= 1000) {
-    //                 $query->whereNotNull('delivery_tracking.delivery_user_id');
-    //             }
-    //         })
-    //         ->orderBy('orders.id', 'desc')
-    //     ;
-
-    //     $orders = $orders->select(
-    //         'orders.id as order_id',
-    //         'orders.user_id',
-    //         'orders.total_amount',
-    //         'orders.status',
-    //         'orders.payment_method',
-    //         'orders.delivery_status as order_status',
-    //         'orders.payment_status',
-    //         'orders.order_date',
-    //         'delivery_tracking.id as delivery_tracking_id',
-    //         'delivery_tracking.order_status as delivery_status',
-    //         'delivery_tracking.delivery_user_id',
-    //         'delivery_user.name as delivery_person_name',
-    //         'delivery_user.contact as delivery_person_contact',
-    //         'user_addresses.name as user_address_name',
-    //         'user_addresses.contact as user_address_contact',
-    //         'user_addresses.house_address as user_address_house',
-    //         'user_addresses.street_address as user_address_street',
-    //         'user_addresses.landmark as user_address_landmark',
-    //         'user_addresses.city as user_address_city',
-    //         'user_addresses.state as user_address_state',
-    //         'user_addresses.country as user_address_country',
-    //         'user_addresses.pincode as user_address_pincode',
-    //         'user_addresses.latitude as user_latitude',
-    //         'user_addresses.longitude as user_longitude'
-    //     )
-    //         ->get();
-
-    //     foreach ($orders as $order) {
-    //         if ($order->delivery_user_id == $id) {
-    //             $calculateDistancetime = $this->calculateDistance(
-    //                 $order->user_latitude,
-    //                 $order->user_longitude,
-    //                 $deliveryUser->latitude,
-    //                 $deliveryUser->longitude
-    //             );
-    //             if ($calculateDistancetime <= 0) {
-    //                 $time = 10;
-    //                 $order->calculatedTime = $time;
-    //             } else {
-    //                 $baseTime = 10;
-    //                 $additionalTime = 5;
-
-    //                 $additionalDistance = max(0, $calculateDistancetime - 1);
-
-    //                 $time = $baseTime + ($additionalDistance * $additionalTime);
-    //                 $order->calculatedTime = $time;
-    //             }
-
-    //         } else {
-    //             $order->calculatedTime = 0;
-    //         }
-    //     }
-
-    //     return response()->json(['success' => true, 'data' => $orders]);
-    // }
-
-
-    // check
-    // public function getPendingOrdersWithItemsAndDeliveryUser(Request $request, $id)
-    // {
-    //     $deliveryUser = DeliveryUser::find($id);
-    //     if (!$deliveryUser) {
-    //         return response()->json(['success' => false, 'message' => 'Delivery user not found'], 404);
-    //     }
-
-    //     $totalCashCollected = $deliveryUser->total_cash_collected;
-    //     $totalCashDeposited = $deliveryUser->total_cash_deposited;
-    //     $cashDifference = $totalCashCollected - $totalCashDeposited;
-
-    //     $ordersQuery = Order::
-    //         leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
-    //         ->leftJoin('delivery_user', 'delivery_tracking.delivery_user_id', '=', 'delivery_user.id')
-    //         ->leftJoin('user_addresses', 'orders.address_id', '=', 'user_addresses.id')
-    //         ->where('orders.delivery_status', 'pending');
-
-    //     if ($cashDifference >= 1000) {
-    //         $ordersQuery->where('delivery_tracking.delivery_user_id', $id);
-    //     } else {
-    //         // If the cash difference is less than 1000, check the delivery user's current status
-    //         $ordersQuery->where(function ($query) use ($id, $deliveryUser) {
-    //             if ($deliveryUser->current_status === 'engaged') {
-    //                 // If engaged, only show assigned orders
-    //                 $query->where('delivery_tracking.delivery_user_id', $id);
-    //             } else {
-    //                 // Otherwise, show assigned or unassigned orders
-    //                 $query->where('delivery_tracking.delivery_user_id', $id)
-    //                     ->orWhereNull('delivery_tracking.delivery_user_id');
-    //             }
-    //         });
-    //     }
-
-    //     $orders = $ordersQuery->select(
-    //         'orders.id as order_id',
-    //         'orders.user_id',
-    //         'orders.total_amount',
-    //         'orders.status',
-    //         'orders.payment_method',
-    //         'orders.delivery_status as order_status',
-    //         'orders.payment_status',
-    //         'orders.order_date',
-    //         'delivery_tracking.id as delivery_tracking_id',
-    //         'delivery_tracking.order_status as delivery_status',
-    //         'delivery_tracking.delivery_user_id',
-    //         'delivery_user.name as delivery_person_name',
-    //         'delivery_user.contact as delivery_person_contact',
-    //         'user_addresses.name as user_address_name',
-    //         'user_addresses.contact as user_address_contact',
-    //         'user_addresses.house_address as user_address_house',
-    //         'user_addresses.street_address as user_address_street',
-    //         'user_addresses.landmark as user_address_landmark',
-    //         'user_addresses.city as user_address_city',
-    //         'user_addresses.state as user_address_state',
-    //         'user_addresses.country as user_address_country',
-    //         'user_addresses.pincode as user_address_pincode',
-    //         'user_addresses.latitude as user_latitude',
-    //         'user_addresses.longitude as user_longitude'
-    //     )
-    //         ->orderBy('orders.id', 'desc')
-    //         ->get();
-
-    //     foreach ($orders as $order) {
-    //         if ($order->delivery_user_id == $id) {
-    //             $calculateDistancetime = $this->calculateDistance(
-    //                 $order->user_latitude,
-    //                 $order->user_longitude,
-    //                 $deliveryUser->latitude,
-    //                 $deliveryUser->longitude
-    //             );
-    //             if ($calculateDistancetime <= 0) {
-    //                 $time = 10;
-    //                 $order->calculatedTime = $time;
-    //             } else {
-    //                 $baseTime = 10;
-    //                 $additionalTime = 5;
-    //                 $additionalDistance = max(0, $calculateDistancetime - 1);
-    //                 $time = $baseTime + ($additionalDistance * $additionalTime);
-    //                 $order->calculatedTime = $time;
-    //             }
-    //         } else {
-    //             $order->calculatedTime = 0;
-    //         }
-    //     }
-
-    //     return response()->json(['success' => true, 'data' => $orders]);
-    // }
-
-    // check2
     public function getPendingOrdersWithItemsAndDeliveryUser(Request $request, $id)
     {
         $deliveryUser = DeliveryUser::find($id);
@@ -986,7 +756,7 @@ class OrderController extends Controller
             'orders.payment_status',
             'orders.order_date',
             'delivery_tracking.id as delivery_tracking_id',
-            'delivery_tracking.order_status as delivery_status', // Order status from delivery_tracking
+            'delivery_tracking.order_status as delivery_status',
             'delivery_tracking.delivery_user_id',
             'delivery_user.name as delivery_person_name',
             'delivery_user.contact as delivery_person_contact',
@@ -1030,9 +800,6 @@ class OrderController extends Controller
 
         return response()->json(['success' => true, 'data' => $orders]);
     }
-
-
-
     public function getOrdersWithItemsAndDeliveryUser(Request $request, $id)
     {
         $startOfDay = now()->startOfDay();

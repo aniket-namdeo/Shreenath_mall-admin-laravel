@@ -32,38 +32,47 @@ if (!function_exists('sendFirebaseNotification')) {
 
             $messaging = $firebase->createMessaging();
 
-            $notification = [
-                'title' => $title,
-                'body' => $body,
-                'sound' => 'custom_notification_sound.mp3',
-                'android' => [
-                    'notification' => [
-                        'channelId' => 'default_notification_channel_id',
-                        'sound' => 'custom_notification_sound.mp3',
-                    ],
-                ],
-            ];
 
             $dataPayload = array_merge($data, [
                 'navigate_to' => 'open_latest_order'
             ]);
 
+            $notification = [
+                'title' => $title,
+                'body' => $body,
+                'sound' => 'custom_notification_sound',
+                'android' => [
+                    'notification' => [
+                        'channelId' => 'default_notification_channel_id',
+                        'sound' => 'custom_notification_sound',
+                    ],
+                ],
+            ];
+
             $message = CloudMessage::new()
-                // ->withNotification(Notification::create($title, $body))
                 ->withData($dataPayload)
-                ->withNotification(Notification::create($title, $body))
+                // ->withNotification(Notification::create($title, $body))
+                ->withNotification($notification)
                 ->withAndroidConfig(AndroidConfig::fromArray([
                     'notification' => [
                         'sound' => 'custom_notification_sound',
                     ],
                 ]));
 
+            // $sound = "custom_notification_sound";
+            // $click_action = "FLUTTER_NOTIFICATION_CLICK";
+            // $priority = "high";
+            // $channelId = "custom_channel";
+            // $show_on_foreground = true;
+
+            // $notification = Notification::create($title, $body, $sound, $click_action, $priority, $show_on_foreground, $channelId);
+
+            // $message = CloudMessage::new()->withNotification($notification);
+
 
             print_r($message);
 
-            // Check if there are device tokens
             if (!empty($deviceTokens)) {
-                // Send the message to multiple device tokens
                 $report = $messaging->sendMulticast($message, $deviceTokens);
                 $successCount = count($report->successes());
                 $failureCount = count($report->failures());
