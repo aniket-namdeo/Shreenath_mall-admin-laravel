@@ -144,20 +144,31 @@
             </li> --}}
             <li class="mb-2 {{ $current_page == 'deposit-request' ? 'active' : '' }}">
                 <a href="{{ url('admin/deposit-request') }}">
-                    <font><i class="bx bxs-sales"></i> <span>Deposit Request</span></font>
+                    <font><i class="bx bxs-dashboard"></i> <span>Deposit Request</span></font>
                 </a>
             </li>
 
             <li class="mb-2 {{ $current_page == 'incentive' ? 'active' : '' }}">
                 <a href="{{ url('admin/incentive_list') }}">
-                    <font><i class="bx bxs-sales"></i> <span>Incentive</span></font>
+                    <font><i class="bx bxs-dashboard"></i> <span>Incentive</span></font>
                 </a>
             </li>
 
             <li class="mb-2 {{ $current_page == 'referral' ? 'active' : '' }}">
                 <a href="{{ url('admin/referral_list') }}">
-                    <font><i class="bx bxs-sales"></i> <span>Referral</span></font>
+                    <font><i class="bx bxs-dashboard"></i> <span>Referral</span></font>
                 </a>
+            </li>
+
+            <li class="mb-2 dropdown {{ $current_page == 'contractor-cashier' ? 'active' : '' }} {{ $current_page == 'tag-list' ? 'active' : '' }}">
+                <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <font><i class="bx bxs-dashboard"></i> <span>Manage Tags</span></font>
+                    <span class="bx bx-chevron-right"></span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li class="{{ $current_page == 'contractor-cashier' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/contractor-cashier') }}">Add </a></li>
+                    <li class="{{ $current_page == 'tag-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/tag-list') }}">List</a></li>
+                </ul>
             </li>
 
             {{-- <li class="mb-2 dropdown {{ $current_page == 'add-home_video' ? 'active' : '' }} {{ $current_page == 'home_video-list' ? 'active' : '' }}">

@@ -14,6 +14,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OfferSliderController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TermsAndConditionController;
+use App\Http\Controllers\ContractorCashierController;
 
 /*
 |--------------------------------------------------------------------------
@@ -175,6 +176,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     Route::get('/referralListById/{referrerId}/{referr_type}', [App\Http\Controllers\ReferralListController::class, 'referralListById'])->name('referralListById.show');
 
+    Route::resource('contractor-cashier', ContractorCashierController::class);
 
 });
 
