@@ -177,6 +177,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/referralListById/{referrerId}/{referr_type}', [App\Http\Controllers\ReferralListController::class, 'referralListById'])->name('referralListById.show');
 
     Route::resource('contractor-cashier', ContractorCashierController::class);
+    
+    Route::resource('contractor-cashier', ContractorCashierController::class);
+
+    Route::get('contractor-cashier/delete/{id}', [ContractorCashierController::class, 'destroy']);
 
 });
 

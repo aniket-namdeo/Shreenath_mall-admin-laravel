@@ -268,6 +268,19 @@
     </script>
 @endif
 
+<script>
+    function readURL(input, showData) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('#img_preview_' + showData).attr('src', e.target.result);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 </body>
 
 </html>

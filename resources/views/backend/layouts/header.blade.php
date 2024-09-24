@@ -162,12 +162,12 @@
 
             <li class="mb-2 dropdown {{ $current_page == 'contractor-cashier' ? 'active' : '' }} {{ $current_page == 'tag-list' ? 'active' : '' }}">
                 <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <font><i class="bx bxs-dashboard"></i> <span>Manage Tags</span></font>
+                    <font><i class="bx bxs-dashboard"></i> <span>Man. Con. & Cas.</span></font>
                     <span class="bx bx-chevron-right"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li class="{{ $current_page == 'contractor-cashier' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/contractor-cashier') }}">Add </a></li>
-                    <li class="{{ $current_page == 'tag-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/tag-list') }}">List</a></li>
+                    <li class="{{ $current_page == 'contractor-cashier' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/contractor-cashier/create') }}">Add </a></li>
+                    <li class="{{ $current_page == 'tag-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/contractor-cashier') }}">List</a></li>
                 </ul>
             </li>
 
