@@ -11,7 +11,7 @@
                         <h6 class="mb-0">Users List</h6>
                     </div>
                    <a href="{{ url('admin/contractor-cashier/create'); }}" class="btn web-btn">
-                        Add Cashier
+                        Add New
                    </a>
                 </div>
             </div>
@@ -24,6 +24,8 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Mobile</th>
+                            <th>Type</th>
+                            <th>Commission</th>
                             <th class="text-end">Action</th>
                         </tr>
                     </thead>
@@ -38,6 +40,8 @@
                             <td>{{ $s['name'] }}</td>
                             <td>{{ $s['email'] }}</td>
                             <td>{{ $s['contact'] }}</td>
+                            <td>{{ Str::ucfirst($s['commission_type']); }}</td>
+                            <td>{{ $s['commission'] }}</td>
                             <td class="text-end">
                                 <div class="table-action-btns">
                                     <a href={{ url('/admin/contractor-cashier/'.$s['id'].'/edit') }} class="btn btn-primary">

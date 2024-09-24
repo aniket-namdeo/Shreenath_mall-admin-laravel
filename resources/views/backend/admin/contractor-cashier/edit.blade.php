@@ -84,7 +84,7 @@
         
                         <div class="col-md-12">
                             <button type="submit" class="btn web-btn mt-3" id="submit_btn">
-                                Register User
+                                Update User
                             </button>
                         </div>
                     </div>

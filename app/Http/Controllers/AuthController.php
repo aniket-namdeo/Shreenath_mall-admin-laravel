@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\ContractorCashier;
 
 class AuthController extends Controller
 {
@@ -39,10 +40,15 @@ class AuthController extends Controller
         ];
 
         $user = User::where(array('email' => $request->email))->first();
+        
+        $cashier = ContractorCashier::where(array('email' => $request->email))->first();
 
         if ($user) {
             $usertype = $user->user_type;
             if ($usertype == 'Admin') {
+                
+                session(['user_type'=>'admin']);
+
                 if (Auth::attempt($credentials)) {
                     return redirect('/admin/dashboard')->with('success', 'Login Success');
                 }
@@ -50,6 +56,26 @@ class AuthController extends Controller
             } else {
                 return back()->with('error', 'This is not admin email');
             }
+        } else if($cashier){
+            
+            $usertype = $cashier->user_type;
+
+            if($cashier->password == $request->password){
+                
+                session([
+                    'user_id'=>$cashier->id,
+                    'user_name'=>$cashier->name,
+                    'user_email'=>$cashier->email,
+                    'contact'=>$cashier->contact,
+                    'user_type'=>$cashier->user_type,
+                ]);
+
+                return redirect('/cashier/dashboard')->with('success', 'Login Success');
+
+            }else{
+                return back()->with('error', 'Please enter valid email address & password');
+            }
+           
         } else {
             return back()->with('error', 'This email is not registered.');
         }

@@ -184,6 +184,14 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
 });
 
+
+
+Route::prefix('cashier')->group(function () {
+
+    Route::get('dashboard', [App\Http\Controllers\cashier\DashboardController::class, 'index']);
+
+});
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });
