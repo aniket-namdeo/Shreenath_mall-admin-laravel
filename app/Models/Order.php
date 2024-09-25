@@ -28,6 +28,7 @@ class Order extends Model
         'transaction_time',
         'order_rating',
         'order_feedback',
+        'pickup_otp',
         'otp',
         'handling_charge',
         'used_coin'

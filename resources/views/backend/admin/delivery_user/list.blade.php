@@ -70,7 +70,7 @@
                     </tbody>
                 </table>
                 <div class="pagination pagination-all">
-                    {{ $campaigns->links(); }}
+                    {{ $list->links(); }}
                 </div>
             </div>
         </div>

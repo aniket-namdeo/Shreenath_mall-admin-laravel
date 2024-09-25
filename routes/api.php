@@ -214,3 +214,5 @@ Route::get('/getMallLocation', [AuthController::class, 'getAdminDetails']);
 Route::post('/auto-reject', [OrderQueueController::class, 'autoReject']);
 
 Route::get('/send-user-notification', [UserNotificationController::class, 'send_notification']);
+
+Route::post('/verify-pickup-otp', [OrderController::class, 'verifyPickupOtp']);

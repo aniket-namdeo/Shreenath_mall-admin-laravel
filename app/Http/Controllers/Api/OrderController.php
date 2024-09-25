@@ -123,6 +123,7 @@ class OrderController extends Controller
 
         try {
             $otp = random_int(100000, 999999);
+            $pickup_otp = random_int(100000, 999999);
             $orderDate = $request->order_date ?: date('Y-m-d H:i:s');
             $deliveryDate = $request->delivery_date ?: date('Y-m-d H:i:s');
 
@@ -140,6 +141,7 @@ class OrderController extends Controller
                 'discount_amount' => $request->discount_amount,
                 'tax_amount' => $request->tax_amount,
                 'shipping_fee' => $request->shipping_fee,
+                'pickup_otp' => $pickup_otp,
                 'otp' => $otp,
                 'handling_charge' => $request->handling_charge,
                 'used_coin' => $request->used_coin
@@ -875,6 +877,7 @@ class OrderController extends Controller
                 'orders.payment_method',
                 'orders.delivery_status as order_status',
                 'orders.payment_status',
+                'orders.pickup_otp_status',
                 'orders.order_date',
                 'delivery_tracking.id as delivery_tracking_id',
                 'delivery_tracking.order_status as delivery_status',
@@ -1251,6 +1254,20 @@ class OrderController extends Controller
 
         if ($orderData->otp == $request->otp) {
             return response()->json(['status' => true, 'message' => 'Otp verified successfully.']);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Incorrect Otp.']);
+        }
+    }
+
+    public function verifyPickupOtp(Request $request)
+    {
+        $orderData = Order::where('id', $request->order_id)->first();
+
+        if ($orderData->pickup_otp == $request->pickup_otp) {
+
+            Order::where('id', $request->order_id)->update(array('pickup_otp_status'=>1));
+
+            return response()->json(['status' => true, 'message' => 'Pickup Otp verified successfully.']);
         } else {
             return response()->json(['status' => false, 'message' => 'Incorrect Otp.']);
         }

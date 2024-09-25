@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->timestamp('order_date')->useCurrent();
             $table->timestamp('delivery_date')->nullable();
             $table->integer('address_id');
+            $table->integer('pickup_otp')->nullable();
             $table->string('coupon_code', 50)->nullable();
             $table->decimal('discount_amount', 10, 2)->default(0.00);
             $table->decimal('tax_amount', 10, 2)->default(0.00);
