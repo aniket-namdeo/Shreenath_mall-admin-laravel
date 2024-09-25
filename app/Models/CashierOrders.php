@@ -14,6 +14,6 @@ class CashierOrders extends Model
     protected $primaryKey = "id";
 
     protected $fillable = [
-        'order_id', 'pickup_status', 'status'
+        'cashier_id', 'delivery_user_id', 'order_id', 'pickup_status', 'status'
     ];
 }

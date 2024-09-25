@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('cashier_orders', function (Blueprint $table) {
             $table->id();
+            $table->integer('cashier_id');
+            $table->integer('delivery_user_id');
             $table->integer('order_id');
             $table->enum('pickup_status', ['pending','pickedup']);
             $table->tinyInteger('status')->default(1);

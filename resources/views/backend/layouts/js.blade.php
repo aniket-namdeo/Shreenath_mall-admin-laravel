@@ -281,6 +281,40 @@
         }
     }
 </script>
-</body>
 
+<script>
+
+    function updatePickedupStatus(orderId){
+
+        swal({
+            title: "Are you sure?",
+            text: `Are you sure to picked up order Id - SNM${orderId}`,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: `{{ url('cashier/order-pickedup/'); }}`,
+                    method: "POST",
+                    data: {
+                        order_id: orderId,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(result) {
+                        $(`#order-${orderId}`).css('background','#DC143C');
+                        $(`#order-${orderId}`).css('color','white');
+                    },
+                });
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+    }
+
+</script>
+
+</body>
 </html>

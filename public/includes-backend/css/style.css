@@ -3068,3 +3068,9 @@ tr.hide-table-padding td {
 .table .table-id {
     width: 30px;
 }
+
+
+.btn-pickedup{
+    width: auto !important;
+    padding: 5px 10px !important;
+}
