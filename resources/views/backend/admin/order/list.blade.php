@@ -73,7 +73,7 @@
                     @endforeach
                     </tbody>
                 </table>
-                <div class="pagination-all">
+                <div class="pagination pagination-all">
                     {{ $orderList->links(); }}
                 </div>
             </div>

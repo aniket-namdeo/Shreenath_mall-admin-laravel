@@ -65,7 +65,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                <div class="pagination-all">
+                <div class="pagination pagination-all">
                     {{-- {{ $list->links(); }} --}}
                 </div>
             </div>

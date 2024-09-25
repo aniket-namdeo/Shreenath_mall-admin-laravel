@@ -2911,44 +2911,61 @@
     background-color: var(--websitebackground);
 }
 
-.pagination-all svg.w-5.h-5 {
-    width: 40px !important;
-}
 
-.pagination-all div:first-child {
+/* Pagignation Work Start */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.pagination .border {
+    width: 40px !important;
+    height: 40px;
+    padding: 0px !important;
+    border-radius: 50px;
+    border: none !important;
+}
+.pagination svg.w-5.h-5 {
+    width: 40px !important;
+    height: 40px;
+    background: var(--bodycolor);
+    border: none !important;
+    color: var(--whitecolor);
+    padding: 9px;
+    border-radius: 50px;
+}
+.pagination div:first-child {
     display: none !important;
 }
-
-.pagination-all .rounded-md {
-    background: transparent !important;
-}
-
-.pagination-all .rounded-md {
-    background: var(--bglight) !important;
+.pagination .rounded-md {
     border: none !important;
     box-shadow: none !important;
+    display: flex;
+    height: auto;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
 }
-
-.pagination-all .rounded-md .duration-150 {
-    width: 100px !important;
-    border: none !important;
-    border-radius: 20px !important;
-    margin: 0 5px !important;
-    height: 50px !important;
-    background: #018a95 !important;
-    color: white !important;
+.pagination .rounded-md span[aria-current="page"] span {
+    background-color: var(--websitecolor) !important;
+    color: white;
 }
-
-.pagination-all .rounded-md span:first-child {
-    border: none !important;
-    border-radius: 20px !important;
-    background: #018a95 !important;
-    color: white !important;
+.pagination .rounded-md a {
+    background-color: #eee !important;
+    color: var(--bodycolor);
 }
-
-.pagination-all .rounded-md span:nth-child(2) span {
-    margin: 0 5px !important;
+.pagination .rounded-md span,
+.pagination .rounded-md a {
+    width: 40px !important;
+    height: 40px;
+    display: inline-flex;
+    padding: 0px !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+    font-weight: bold;
 }
+/* Pagignation Work End */
 
 /* admin-dash work start */
 

@@ -239,4 +239,15 @@ class DeliveryUserController extends Controller
 
 
 
+    public function deliveryOrdersView($id)
+    {
+        $page_name = "delivery_user/view";
+        $page_title = "Manage delivery user";
+        $current_page = "delivery_user";
+        
+        $list = DeliveryTracking::select('delivery_tracking.*','orders.total_amount','orders.payment_status','orders.delivery_status')->where(array('delivery_user_id'=>$id))->leftJoin('orders','orders.id','delivery_tracking.order_id')->orderBy('id','desc')->paginate(20);
+
+        return view('backend/admin/main', compact('page_name', 'page_title', 'current_page', 'list'));
+    }
+
 }

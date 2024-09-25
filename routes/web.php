@@ -61,6 +61,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/deliveryUser-update/{id}', [App\Http\Controllers\DeliveryUserController::class, 'DeliveryUserUpdate'])->name('deliveryUser-update.update');
     Route::post('/deliveryUserdoc-update/{id}', [App\Http\Controllers\DeliveryUserController::class, 'DeliveryUserDocupdate'])->name('deliveryUser-doc-update.update');
     // Route::post('/update-basic/{id}', [DeliveryUserBasicController::class, 'update'])->name('deliveryUser.updateBasic');
+    Route::get('delivery-order-view/{delivery_id}', [App\Http\Controllers\DeliveryUserController::class, 'deliveryOrdersView'])->name('delivery.order.view');
+   
 
     // category
     Route::get('/add-category', [App\Http\Controllers\CategoryController::class, 'show'])->name('add-category.show');
