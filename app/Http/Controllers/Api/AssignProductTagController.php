@@ -17,7 +17,7 @@ class AssignProductTagController extends Controller
 
         $data = Tag_Product_Assign::join('product', 'tag_product_assign.productId', '=', 'product.id')
             ->where('tag_product_assign.tagId', $tagId)
-            ->select('product.id', 'product.product_name', 'product.description', 'product.price', 'product.discount_percent', 'product.category_id', 'product.image_url1')
+            ->select('product.id', 'product.product_name', 'product.description', 'product.price', 'product.mrp', 'product.discount_percent', 'product.category_id', 'product.image_url1')
             ->get();
 
         if ($data) {
@@ -59,6 +59,7 @@ class AssignProductTagController extends Controller
                     'product_name' => $tag->productName,
                     'description' => $tag->productDescription,
                     'price' => $tag->productPrice,
+                    'mrp' => $tag->productMrp,
                     'discount_percent' => $tag->productOffPercent,
                     'category_id' => $tag->productCategoryId,
                     'image_url1' => $tag->productImage,
