@@ -184,6 +184,12 @@
                         </a>
                     </li>
                 
+                    <li class="mb-2 {{ $current_page == 'cash-collect' ? 'active' : '' }}">
+                        <a href="{{ url('cashier/cash-collect') }}">
+                            <font><i class="bx bxs-dashboard"></i> <span>Cash Collected</span></font>
+                        </a>
+                    </li>
+                
                 @elseif(session()->get('user_type') == 'contractor')
                 
                     <li class="mb-2 {{ $current_page == 'dashboard' ? 'active' : '' }}">
