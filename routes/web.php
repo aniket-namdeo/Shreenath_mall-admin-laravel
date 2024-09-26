@@ -196,6 +196,8 @@ Route::prefix('cashier')->group(function () {
 
     Route::post('order-pickedup', [App\Http\Controllers\cashier\CashierOrdersController::class, 'pickedup']);
 
+    Route::get('pickedup-list', [App\Http\Controllers\cashier\CashierOrdersController::class, 'pickedupList']);
+
 });
 
 Route::group(['middleware' => 'auth'], function () {

@@ -178,6 +178,12 @@
                         </a>
                     </li>
                 
+                    <li class="mb-2 {{ $current_page == 'pickedup-list' ? 'active' : '' }}">
+                        <a href="{{ url('cashier/pickedup-list') }}">
+                            <font><i class="bx bxs-dashboard"></i> <span>Your Pick-up</span></font>
+                        </a>
+                    </li>
+                
                 @elseif(session()->get('user_type') == 'contractor')
                 
                     <li class="mb-2 {{ $current_page == 'dashboard' ? 'active' : '' }}">

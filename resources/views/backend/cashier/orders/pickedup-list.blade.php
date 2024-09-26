@@ -20,28 +20,18 @@
                             <th>Status</th>
                             <th>Method</th>
                             <th>Order At</th>
-                            <th>Pickup OTP</th>
-                            <th class="text-end">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @php $a = 1; @endphp
                         @foreach($orderList as $s)
-                            <tr id="order-{{ $s['id']; }}">
+                            <tr>
                                 <td>{{ $a++ }}</td>
-                                <td>{{ "SNM".$s['id'] }}</td>
+                                <td>{{ "SNM".$s['order_id'] }}</td>
                                 <td>{{ "₹".$s['total_amount'] }}</td>
                                 <td>{{ $s['payment_status'] }}</td>
                                 <td>{{ $s['payment_method'] }}</td>
                                 <td>{{ date('d M, Y', strtotime($s['order_date'])); }}</td>
-                                <td>{{ $s['pickup_otp'] }}</td>
-                                <td class="text-end">
-                                    <div class="table-action-btns">
-                                        <a class="btn btn-primary btn-pickedup" onclick="updatePickedupStatus({{ $s['id']; }})">
-                                           Picked Up
-                                        </a>
-                                    </div>
-                                </td>
                             </tr>
                         @endforeach
                     </tbody>

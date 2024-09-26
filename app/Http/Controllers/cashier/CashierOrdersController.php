@@ -43,7 +43,19 @@ class CashierOrdersController extends Controller
         }else{
             return false;
         }
+    }
+    
+    public function pickedupList()
+    {
+        $page_name = 'orders/pickedup-list';
+        $current_page = 'pickedup-list';
+        $page_title = 'Manage Orders';
 
+        $cashier_id = session('user_id');
+
+        $orderList = CashierOrders::select('cashier_orders.*','orders.total_amount','orders.payment_status','orders.payment_method','orders.order_date','orders.payment_status')->leftJoin('orders','orders.id','cashier_orders.order_id')->where(array('cashier_id'=>$cashier_id))->orderBy('id', 'desc')->paginate(20);
+        
+        return view('backend/cashier/main', compact('page_name', 'current_page', 'page_title', 'orderList'));
     }
 
 }
