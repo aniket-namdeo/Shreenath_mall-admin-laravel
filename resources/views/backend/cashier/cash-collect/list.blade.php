@@ -6,7 +6,7 @@
             <div class="card-header bg-white">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <h6 class="mb-0">Orders List</h6>
+                        <h6 class="mb-0">Cash Collected List</h6>
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                                 <td>{{ $s['delivery_user_id'] }}</td>
                                 <td>{{ "₹".$s['collected_amount'] }}</td>
                                 <td>{{ $s['collected_status'] }}</td>
-                                <td>{{ date('d M, Y', strtotime($s['created_at'])); }}</td>
+                                <td class="text-end">{{ date('d M, Y', strtotime($s['created_at'])); }}</td>
                             </tr>
                         @endforeach
                     </tbody>

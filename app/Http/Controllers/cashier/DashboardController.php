@@ -4,6 +4,7 @@ namespace App\Http\Controllers\cashier;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\ContractorCashier;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -15,6 +16,8 @@ class DashboardController extends Controller
         $current_page = 'dashboard';
         $page_title = 'Dashboard';
         $cash_deposit = ContractorCashier::where('id', session('user_id'))->first();
+        
+        $admin_details = User::where(array('user_type'=>'admin'))->first();
 
         function unique_code($limit)
         {
@@ -23,6 +26,6 @@ class DashboardController extends Controller
 
         $data = unique_code(9);
         $qrCode = QrCode::size(200)->generate($data);
-        return view('backend/cashier/main', compact('page_name', 'current_page', 'page_title', 'cash_deposit', 'qrCode'));
+        return view('backend/cashier/main', compact('page_name', 'current_page', 'page_title', 'cash_deposit', 'qrCode', 'admin_details'));
     }
 }

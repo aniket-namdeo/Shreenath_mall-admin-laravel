@@ -37,6 +37,9 @@
                                 <td>{{ $s['pickup_otp'] }}</td>
                                 <td class="text-end">
                                     <div class="table-action-btns">
+                                        <a class="btn btn-info btn-pickedup" href="{{ url('cashier/order-details/'.$s['id']); }}" >
+                                           view
+                                        </a>
                                         <a class="btn btn-primary btn-pickedup" onclick="updatePickedupStatus({{ $s['id']; }})">
                                            Picked Up
                                         </a>

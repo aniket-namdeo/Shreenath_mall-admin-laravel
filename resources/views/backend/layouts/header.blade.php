@@ -10,7 +10,7 @@
             <ul class="nav sidebar-nav">
                 <li class="sidebar-brand d-none d-md-block">
                     <a href="{{ url('admin/dashboard') }}">
-                        <span><img src="{{ asset('includes-backend/images/logo.webp') }}" alt=""></span>
+                        <span><img src="{{ asset('includes-backend/images/logo.png') }}" alt=""></span>
                     </a>
                 </li>
                 @if(session()->get('user_type') == 'admin')
@@ -184,9 +184,15 @@
                         </a>
                     </li>
                 
+                    <li class="mb-2 {{ $current_page == 'cash-collect-add' ? 'active' : '' }}">
+                        <a href="{{ url('cashier/cash-collect/create') }}">
+                            <font><i class="bx bxs-dashboard"></i> <span>Add Cash Collect</span></font>
+                        </a>
+                    </li>
+                
                     <li class="mb-2 {{ $current_page == 'cash-collect' ? 'active' : '' }}">
                         <a href="{{ url('cashier/cash-collect') }}">
-                            <font><i class="bx bxs-dashboard"></i> <span>Cash Collected</span></font>
+                            <font><i class="bx bxs-dashboard"></i> <span>Cash Collected List</span></font>
                         </a>
                     </li>
                 

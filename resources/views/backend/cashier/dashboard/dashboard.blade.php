@@ -11,8 +11,9 @@
         <div class="col-lg-3 col-md-6 col-6">
             <div class="card card-body d-flex justify-content-center  text-center">
                 <div class="title">
-                    <i class="fa fa-lock fa-4x"></i>
+                    <i class="fa fa-lock fa-3x"></i>
                     <h4>Cash Deposit OTP</h4>
+                    <h1>{{ $admin_details->cash_deposit_otp }}</h1>
                 </div>
             </div>
         </div>

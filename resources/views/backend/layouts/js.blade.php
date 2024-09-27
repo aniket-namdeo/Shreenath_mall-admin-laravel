@@ -305,6 +305,13 @@
                         $(`#order-${orderId}`).css('background','#DC143C');
                         $(`#order-${orderId}`).css('color','white');
                     },
+                    error:function(error){
+                        swal({
+                            title: "Error",
+                            text: `Order Not Assigned Yet - SNM${orderId}`,
+                            icon: "error",
+                        });
+                    }
                 });
                 return true;
             } else {

@@ -196,6 +196,8 @@ Route::prefix('cashier')->group(function () {
 
     Route::post('order-pickedup', [App\Http\Controllers\cashier\CashierOrdersController::class, 'pickedup']);
 
+    Route::get('order-details/{order_id}', [App\Http\Controllers\cashier\CashierOrdersController::class, 'show']);
+
     Route::get('pickedup-list', [App\Http\Controllers\cashier\CashierOrdersController::class, 'pickedupList']);
     
     Route::resource('cash-collect', App\Http\Controllers\cashier\CashCollectController::class);

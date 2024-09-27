@@ -20,6 +20,7 @@
                             <th>Status</th>
                             <th>Method</th>
                             <th>Order At</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,6 +33,11 @@
                                 <td>{{ $s['payment_status'] }}</td>
                                 <td>{{ $s['payment_method'] }}</td>
                                 <td>{{ date('d M, Y', strtotime($s['order_date'])); }}</td>
+                                <td>
+                                    <a class="btn btn-info btn-pickedup" href="{{ url('cashier/order-details/'.$s['id']); }}" >
+                                        view
+                                     </a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
