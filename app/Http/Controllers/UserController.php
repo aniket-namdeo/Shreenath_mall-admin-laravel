@@ -29,7 +29,7 @@ class UserController extends Controller
     public function UserList()
     {
         $page_name = 'users/list';
-        $current_page = 'List';
+        $current_page = 'users';
         $page_title = 'List';
         $list = User::where(array('status' => 1))->where('user_type', '!=', 'Admin')->orderBy('id', 'desc')->paginate(20);
         return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'list'));

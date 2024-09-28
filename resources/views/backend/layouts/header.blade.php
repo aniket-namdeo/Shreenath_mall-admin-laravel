@@ -20,19 +20,19 @@
                             <font><i class="bx bxs-dashboard"></i> <span>Dashboard</span></font>
                         </a>
                     </li>
-                    <li class="mb-2 dropdown {{ $current_page == 'users' ? 'active' : '' }} {{ $current_page == 'users-list' ? 'active' : '' }}">
+                    <li class="mb-2 dropdown {{ ($current_page == 'users' || $current_page == 'add-user' || $current_page == 'add-delivery_user'  || $current_page == 'delivery_user') ? 'active' : '' }}">
                         <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <font><i class="bx bxs-user-plus"></i> <span>Manage Users</span></font>
                             <span class="bx bx-chevron-right"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li class="{{ $current_page == 'users' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-user') }}">Add User</a></li>
+                            <li class="{{ ($current_page == 'add-user') ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-user') }}">Add User</a></li>
                             <li class="{{ $current_page == 'delivery-user' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-delivery-user') }}">Add Delivery User</a></li>
                             <li class="{{ $current_page == 'users-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/users-list') }}">Users List</a></li>
                             <li class="{{ $current_page == 'delivery-user-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/delivery-user-list') }}">Delivery Users List</a></li>
                         </ul>
                     </li>
-                    <li class="mb-2 dropdown {{ $current_page == 'add-plan' ? 'active' : '' }} {{ $current_page == 'plan-list' ? 'active' : '' }}">
+                    <li class="mb-2 dropdown {{ ($current_page == 'add-category' || $current_page == 'category-list' || $current_page == 'add-subcategory' || $current_page == 'category') ? 'active' : '' }} {{ $current_page == 'plan-list' ? 'active' : '' }}">
                         <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <font><i class="bx bxs-dashboard"></i> <span>Manage Categories</span></font>
                             <span class="bx bx-chevron-right"></span>
@@ -44,7 +44,7 @@
                             <li class="{{ $current_page == 'subcategory-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/subcategory-list') }}">Sub Category List</a></li>
                         </ul>
                     </li>
-                    <li class="mb-2 dropdown {{ $current_page == 'add-brand' ? 'active' : '' }} {{ $current_page == 'brand-list' ? 'active' : '' }}">
+                    <li class="mb-2 dropdown {{ ($current_page == 'add-brand' || $current_page == 'brand-list' ) ? 'active' : '' }} {{ $current_page == 'brand-list' ? 'active' : '' }}">
                         <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <font><i class="bx bxs-dashboard"></i> <span>Manage Brand</span></font>
                             <span class="bx bx-chevron-right"></span>
@@ -201,6 +201,18 @@
                     <li class="mb-2 {{ $current_page == 'dashboard' ? 'active' : '' }}">
                         <a href="{{ url('cashier/dashboard') }}">
                             <font><i class="bx bxs-dashboard"></i> <span>Dashboard</span></font>
+                        </a>
+                    </li>
+                
+                    <li class="mb-2 {{ $current_page == 'delivery-user-add' ? 'active' : '' }}">
+                        <a href="{{ url('cashier/cashier-delivery-user/create') }}">
+                            <font><i class="bx bxs-dashboard"></i> <span>Add Delivery User</span></font>
+                        </a>
+                    </li>
+                
+                    <li class="mb-2 {{ $current_page == 'delivery-user' ? 'active' : '' }}">
+                        <a href="{{ url('cashier/cashier-delivery-user') }}">
+                            <font><i class="bx bxs-dashboard"></i> <span>Delivery User</span></font>
                         </a>
                     </li>
                     

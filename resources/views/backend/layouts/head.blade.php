@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shree Nath Mall</title>
+    <title>Shrinath Mall</title>
     <link rel="shortcut icon" href="{{ asset('includes-backend/images/favicon.png'); }}" />
 
     <link rel="stylesheet" href="{{ asset('includes-backend/css/font-awesome.min.css'); }}">

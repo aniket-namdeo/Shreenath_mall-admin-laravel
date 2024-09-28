@@ -53,7 +53,7 @@ class CategoryController extends Controller
     public function categorylist()
     {
         $page_name = 'category/list';
-        $current_page = 'List';
+        $current_page = 'category-list';
         $page_title = 'List';
         $list = Category::from('category as c1')
             ->leftJoin('category as c2', 'c1.parentCategoryId', '=', 'c2.id')
@@ -69,7 +69,7 @@ class CategoryController extends Controller
     public function subcategorylist()
     {
         $page_name = 'category/sublist';
-        $current_page = 'Sub CategoryList';
+        $current_page = 'category-list';
         $page_title = 'List';
         $list = Category::from('category as c1')
             ->leftJoin('category as c2', 'c1.parentCategoryId', '=', 'c2.id')

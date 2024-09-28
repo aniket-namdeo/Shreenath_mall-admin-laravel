@@ -112,7 +112,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/add-terms_and_condition', [App\Http\Controllers\TermsAndConditionController::class, 'store'])->name('terms_and_condition.store');
     Route::get('/terms_and_condition-list', [App\Http\Controllers\TermsAndConditionController::class, 'list'])->name('terms_and_condition-list.list');
     Route::get('/edit-terms_and_condition/{id}', [App\Http\Controllers\TermsAndConditionController::class, 'terms_and_conditionEdit'])->name('terms_and_condition.edit');
-    Route::post('/terms_and_condition-update/{id}', [App\Http\Controllers\TermsAndConditionController::class, 'terms_and_conditionUpdate'])->name('update-terms_and_condition.update');
+    Route::post('/terms_and_condition-update/{id}', [App\Http\Controllers\TermsAndConditionController::class, 'termsconditionUpdate'])->name('update-terms_and_condition.update');
 
     // aboutus
     Route::get('/add-aboutus', [App\Http\Controllers\AboutUsController::class, 'show'])->name('aboutus.show');
@@ -201,6 +201,9 @@ Route::prefix('cashier')->group(function () {
     Route::get('pickedup-list', [App\Http\Controllers\cashier\CashierOrdersController::class, 'pickedupList']);
     
     Route::resource('cash-collect', App\Http\Controllers\cashier\CashCollectController::class);
+
+
+    Route::resource('cashier-delivery-user', App\Http\Controllers\cashier\ContractorController::class);
 
 });
 

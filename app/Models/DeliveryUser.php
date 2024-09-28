@@ -14,6 +14,7 @@ class DeliveryUser extends Model
     protected $primaryKey = "id";
 
     protected $fillable = [
+        'added_by',
         'name',
         'contact',
         'email',
