@@ -64,13 +64,14 @@
                             <li class="{{ $current_page == 'product-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/product-list') }}">Product List</a></li>
                         </ul>
                     </li>
-                    <li class="mb-2 dropdown {{ $current_page == 'order-list' ? 'active' : '' }}">
+                    <li class="mb-2 dropdown {{ ($current_page == 'order-list' || $current_page == 'commissions-list') ? 'active' : '' }}">
                         <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <font><i class="bx bxs-dashboard"></i> <span>Manage Orders</span></font>
                             <span class="bx bx-chevron-right"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li class="{{ $current_page == 'order-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/order-list') }}">List</a></li>
+                            <li class="{{ $current_page == 'order-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/order-list') }}">Order List</a></li>
+                            <li class="{{ $current_page == 'commissions-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ route('commission-list.show') }}">Commission List</a></li>
                         </ul>
                     </li>
                     <li class="mb-2 dropdown {{ $current_page == 'add-privacypolicy' ? 'active' : '' }} {{ $current_page == 'privacypolicy-list' ? 'active' : '' }}">
@@ -213,6 +214,18 @@
                     <li class="mb-2 {{ $current_page == 'delivery-user' ? 'active' : '' }}">
                         <a href="{{ url('cashier/cashier-delivery-user') }}">
                             <font><i class="bx bxs-dashboard"></i> <span>Delivery User</span></font>
+                        </a>
+                    </li>
+                
+                    <li class="mb-2 {{ $current_page == 'delivery-order-commission' ? 'active' : '' }}">
+                        <a href="{{ url('cashier/delivery-order-commission') }}">
+                            <font><i class="bx bxs-dashboard"></i> <span>Order Commissions</span></font>
+                        </a>
+                    </li>
+                
+                    <li class="mb-2 {{ $current_page == 'our-order-commission' ? 'active' : '' }}">
+                        <a href="{{ url('cashier/our-order-commission') }}">
+                            <font><i class="bx bxs-dashboard"></i> <span>My Commissions</span></font>
                         </a>
                     </li>
                     

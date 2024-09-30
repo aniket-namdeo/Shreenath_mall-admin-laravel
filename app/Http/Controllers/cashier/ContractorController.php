@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ContractorCashier;
 use App\Models\DeliveryUser;
+use App\Models\Order;
 use App\Models\DeliveryTracking;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -132,5 +133,52 @@ class ContractorController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage())->withInput();
         }
+    }
+
+    public function commission_list()
+    {
+        $page_name = 'delivery-user/order-commission';
+        $current_page = 'delivery-order-commission';
+        $page_title = 'Manage Delivery Orde Commission';
+
+        $user_id = session('user_id');
+
+        $list = Order::select('orders.*', 
+                    'delivery_tracking.delivery_user_id', 
+                    'delivery_user.name', 
+                    'delivery_user.contact', 
+                    'delivery_user.email', 
+                    'delivery_user.incentive_type', 
+                    'delivery_user.incentive')
+                ->leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+                ->leftJoin('delivery_user', 'delivery_user.id', '=', 'delivery_tracking.delivery_user_id')
+                ->where('delivery_user.added_by', $user_id)
+                ->where('orders.delivery_status', 'delivered')
+                ->orderBy('orders.id', 'desc')
+                ->groupBy('orders.id')
+                ->paginate(20);
+
+        return view('backend/cashier/main', compact('page_name', 'current_page', 'page_title','list'));
+    }
+
+    public function our_commission_list()
+    {
+        $page_name = 'delivery-user/our-commission';
+        $current_page = 'our-order-commission';
+        $page_title = 'Manage Delivery Orde Commission';
+
+        $user_id = session('user_id');
+
+        $list = Order::select('orders.*', 'contractor_cashier.commission_type', 'contractor_cashier.commission')
+                ->leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+                ->leftJoin('delivery_user', 'delivery_user.id', '=', 'delivery_tracking.delivery_user_id')
+                ->leftJoin('contractor_cashier', 'contractor_cashier.id', '=', 'delivery_user.added_by')
+                ->where('contractor_cashier.id', $user_id)
+                ->where('orders.delivery_status', 'delivered')
+                ->orderBy('orders.id', 'desc')
+                ->groupBy('orders.id')
+                ->paginate(20);
+        
+        return view('backend/cashier/main', compact('page_name', 'current_page', 'page_title','list'));
     }
 }

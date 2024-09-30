@@ -99,6 +99,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/order/assign', [OrderController::class, 'assignOrder'])->name('order.assign');
     Route::get('/admin/check-order-assignment', [OrderController::class, 'checkOrderAssignment'])->name('order.checkAssignment');
 
+    Route::get('commission-list', [App\Http\Controllers\OrderController::class, 'orderCommissions'])->name('commission-list.show');
 
     // privacypolicy
     Route::get('/add-privacypolicy', [App\Http\Controllers\PrivacyPolicyController::class, 'show'])->name('privacypolicy.show');
@@ -204,6 +205,10 @@ Route::prefix('cashier')->group(function () {
 
 
     Route::resource('cashier-delivery-user', App\Http\Controllers\cashier\ContractorController::class);
+
+    Route::get('delivery-order-commission', [App\Http\Controllers\cashier\ContractorController::class, 'commission_list']);
+
+    Route::get('our-order-commission', [App\Http\Controllers\cashier\ContractorController::class, 'our_commission_list']);
 
 });
 

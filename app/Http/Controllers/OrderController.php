@@ -184,5 +184,28 @@ class OrderController extends Controller
         }
     }
 
+    public function orderCommissions()
+    {
+        $page_name = 'order/commissions-list';
+        $current_page = 'commissions-list';
+        $page_title = 'Manage Orders';
+
+        $list = Order::select('orders.*', 
+                        'delivery_tracking.delivery_user_id', 
+                        'delivery_user.name', 
+                        'delivery_user.contact', 
+                        'delivery_user.email', 
+                        'delivery_user.incentive_type', 
+                        'delivery_user.incentive')
+                    ->leftJoin('delivery_tracking', 'orders.id', '=', 'delivery_tracking.order_id')
+                    ->leftJoin('delivery_user', 'delivery_user.id', '=', 'delivery_tracking.delivery_user_id')
+                    ->where('orders.delivery_status', 'delivered')
+                    ->orderBy('orders.id', 'desc')
+                    ->groupBy('orders.id')
+                    ->paginate(20);
+    
+        return view('backend/admin/main', compact('page_name', 'current_page', 'page_title', 'list'));
+    }
+
 
 }
