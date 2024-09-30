@@ -40,7 +40,7 @@
                         @foreach($orderList as $value)
                         <tr>
                             <td>{{ $a++ }}</td>
-                            <td>{{ $value->id }}</td>
+                            <td>SNM{{ $value->id }}</td>
                             <td>{{ $value->user_name }}</td>
                             <td>{{ $value->total_amount ?? 'N/A' }}</td>
                             <td>{{ $value->status == "completed" ? "Delivered" : $value->status }}</td>
