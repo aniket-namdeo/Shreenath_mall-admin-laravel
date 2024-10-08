@@ -3074,3 +3074,7 @@ tr.hide-table-padding td {
     width: auto !important;
     padding: 5px 10px !important;
 }
+
+.tox-notifications-container, .tox-statusbar{
+    display: none !important;
+}

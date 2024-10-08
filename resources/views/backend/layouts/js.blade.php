@@ -8,10 +8,6 @@
 
 <script src="{{ asset('includes-backend/js/apexcharts.min.js') }}"></script>
 
-<script src="{{ asset('includes-backend/js/editor.js') }}"></script>
-
-<script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
-
 <script src="{{ asset('includes-backend/js/second-medic.js') }}"></script>
 <script language="JavaScript" src="{{ asset('includes-backend/js/jquery.dataTables.min.js'); }}" type="text/javascript"></script>
 <script language="JavaScript" src="{{ asset('includes-backend/js/dataTables.bootstrap.min.js'); }}" type="text/javascript"></script>
@@ -19,6 +15,7 @@
 
 <script language="JavaScript" src="{{ asset('includes-backend/js/responsive.bootstrap.min.js'); }}" type="text/javascript"></script>
 
+<script src="{{ asset('includes-backend/js/editor.js') }}"></script>
 
 <script>
     const useDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -321,6 +318,31 @@
 
     }
 
+</script>
+
+
+
+@if(@$current_page == "contact-request")
+    <script>
+        $('.contact-request').click(function(){
+
+            var name = $(this).attr('name');
+            var email = $(this).attr('email');
+            var contact = $(this).attr('contact');
+            var subject = $(this).attr('subject');
+            var message = $(this).attr('message');
+
+            $('#viewDetailsModal #name').text(name);
+            $('#viewDetailsModal #email').text(email);
+            $('#viewDetailsModal #contact').text(contact);
+            $('#viewDetailsModal #subject').text(subject);
+            $('#viewDetailsModal #message').text(message);
+        });
+    </script>
+@endif
+
+<script>
+    tinymce.init(getEditorData());
 </script>
 
 </body>

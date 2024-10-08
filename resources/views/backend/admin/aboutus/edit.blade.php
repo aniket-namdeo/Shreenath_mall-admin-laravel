@@ -11,7 +11,7 @@
                     <div class="row align-items-center">
                         <div class="col-md-full mb-2">
                             <label class="form-label" for="">Content</label>
-                            <textarea class="form-control" name="content">{{ $details->content }}</textarea>
+                            <textarea class="form-control" name="content" id="description">{{ $details->content }}</textarea>
                         </div>
 
                         <div class="col-md-12">

@@ -40,8 +40,8 @@ class AboutUsController extends Controller
     public function aboutusEdit(AboutUs $id)
     {
         $page_name = "aboutus/edit";
-        $page_title = "Manage aboutus";
-        $current_page = "About Us";
+        $page_title = "Manage About Us";
+        $current_page = "about-us";
         $details = $id;
         $list = AboutUs::where(array('status' => 1))->orderBy('id', 'desc')->paginate(20);
         return view('backend/admin/main', compact('page_name', 'page_title', 'current_page', 'details', 'list'));

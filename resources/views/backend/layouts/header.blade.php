@@ -32,6 +32,35 @@
                             <li class="{{ $current_page == 'delivery-user-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/delivery-user-list') }}">Delivery Users List</a></li>
                         </ul>
                     </li>
+
+                    <li class="mb-2 dropdown {{ $current_page == 'contractor-cashier' ? 'active' : '' }} {{ $current_page == 'tag-list' ? 'active' : '' }}">
+                        <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <font><i class="bx bxs-dashboard"></i> <span>Man. Con. & Cas.</span></font>
+                            <span class="bx bx-chevron-right"></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li class="{{ $current_page == 'contractor-cashier' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/contractor-cashier/create') }}">Add </a></li>
+                            <li class="{{ $current_page == 'tag-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/contractor-cashier') }}">List</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li class="mb-2 dropdown {{ ($current_page == 'order-list' || $current_page == 'commissions-list') ? 'active' : '' }}">
+                        <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <font><i class="bx bxs-dashboard"></i> <span>Manage Orders</span></font>
+                            <span class="bx bx-chevron-right"></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li class="{{ $current_page == 'order-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/order-list') }}">Order List</a></li>
+                            <li class="{{ $current_page == 'commissions-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ route('commission-list.show') }}">Commission List</a></li>
+                        </ul>
+                    </li>
+                
+                    <li class="mb-2 {{ $current_page == 'contact-request' ? 'active' : '' }}">
+                        <a href="{{ route('contact.request') }}">
+                            <font><i class="bx bxs-dashboard"></i> <span>Contact Request</span></font>
+                        </a>
+                    </li>
+
                     <li class="mb-2 dropdown {{ ($current_page == 'add-category' || $current_page == 'category-list' || $current_page == 'add-subcategory' || $current_page == 'category') ? 'active' : '' }} {{ $current_page == 'plan-list' ? 'active' : '' }}">
                         <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <font><i class="bx bxs-dashboard"></i> <span>Manage Categories</span></font>
@@ -64,46 +93,8 @@
                             <li class="{{ $current_page == 'product-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/product-list') }}">Product List</a></li>
                         </ul>
                     </li>
-                    <li class="mb-2 dropdown {{ ($current_page == 'order-list' || $current_page == 'commissions-list') ? 'active' : '' }}">
-                        <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            <font><i class="bx bxs-dashboard"></i> <span>Manage Orders</span></font>
-                            <span class="bx bx-chevron-right"></span>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li class="{{ $current_page == 'order-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/order-list') }}">Order List</a></li>
-                            <li class="{{ $current_page == 'commissions-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ route('commission-list.show') }}">Commission List</a></li>
-                        </ul>
-                    </li>
-                    <li class="mb-2 dropdown {{ $current_page == 'add-privacypolicy' ? 'active' : '' }} {{ $current_page == 'privacypolicy-list' ? 'active' : '' }}">
-                        <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            <font><i class="bx bxs-dashboard"></i> <span>Manage Privacypolicy</span></font>
-                            <span class="bx bx-chevron-right"></span>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li class="{{ $current_page == 'add-privacypolicy' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-privacypolicy') }}">Add </a></li>
-                            <li class="{{ $current_page == 'privacypolicy-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/privacypolicy-list') }}">List</a></li>
-                        </ul>
-                    </li>
-                    <li class="mb-2 dropdown {{ $current_page == 'add-terms_and_condition' ? 'active' : '' }} {{ $current_page == 'terms_and_condition-list' ? 'active' : '' }}">
-                        <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            <font><i class="bx bxs-dashboard"></i> <span>Terms And Condition</span></font>
-                            <span class="bx bx-chevron-right"></span>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li class="{{ $current_page == 'add-terms_and_condition' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-terms_and_condition') }}">Add </a></li>
-                            <li class="{{ $current_page == 'terms_and_condition-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/terms_and_condition-list') }}">List</a></li>
-                        </ul>
-                    </li>
-                    <li class="mb-2 dropdown {{ $current_page == 'add-aboutus' ? 'active' : '' }} {{ $current_page == 'aboutus-list' ? 'active' : '' }}">
-                        <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            <font><i class="bx bxs-dashboard"></i> <span>Manage Aboutus</span></font>
-                            <span class="bx bx-chevron-right"></span>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li class="{{ $current_page == 'add-aboutus' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/add-aboutus') }}">Add </a></li>
-                            <li class="{{ $current_page == 'aboutus-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/aboutus-list') }}">List</a></li>
-                        </ul>
-                    </li>
+                    
+
                     <li class="mb-2 dropdown {{ $current_page == 'add-coupon' ? 'active' : '' }} {{ $current_page == 'coupon-list' ? 'active' : '' }}">
                         <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <font><i class="bx bxs-dashboard"></i> <span>Manage Coupon</span></font>
@@ -154,15 +145,22 @@
                         </a>
                     </li>
 
-                    <li class="mb-2 dropdown {{ $current_page == 'contractor-cashier' ? 'active' : '' }} {{ $current_page == 'tag-list' ? 'active' : '' }}">
-                        <a href="javascript:;" class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            <font><i class="bx bxs-dashboard"></i> <span>Man. Con. & Cas.</span></font>
-                            <span class="bx bx-chevron-right"></span>
+                    <li class="mb-2 {{ $current_page == 'privacypolicy' ? 'active' : '' }}">
+                        <a href="{{ url('admin/edit-privacypolicy/1') }}">
+                            <font><i class="bx bxs-dashboard"></i> <span>Privacy Policy</span></font>
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li class="{{ $current_page == 'contractor-cashier' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/contractor-cashier/create') }}">Add </a></li>
-                            <li class="{{ $current_page == 'tag-list' ? 'active' : '' }}"><a class="dropdown-item" href="{{ url('/admin/contractor-cashier') }}">List</a></li>
-                        </ul>
+                    </li>
+
+                    <li class="mb-2 {{ $current_page == 'terms__and_condition' ? 'active' : '' }}">
+                        <a href="{{ url('admin/edit-terms_and_condition/1') }}">
+                            <font><i class="bx bxs-dashboard"></i> <span>Terms & Conditions</span></font>
+                        </a>
+                    </li>
+                    
+                    <li class="mb-2 {{ $current_page == 'about-us' ? 'active' : '' }}">
+                        <a href="{{ url('admin/edit-aboutus/1') }}">
+                            <font><i class="bx bxs-dashboard"></i> <span>Manage About Us</span></font>
+                        </a>
                     </li>
                 
                 @elseif(session()->get('user_type') == 'cashier')

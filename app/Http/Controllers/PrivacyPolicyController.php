@@ -40,8 +40,8 @@ class PrivacyPolicyController extends Controller
     public function privacypolicyEdit(PrivacyPolicy $id)
     {
         $page_name = "privacypolicy/edit";
-        $page_title = "Manage privacypolicy";
-        $current_page = "Privacy policy";
+        $page_title = "Manage Privacy Policy";
+        $current_page = "privacypolicy";
         $details = $id;
         $list = PrivacyPolicy::where(array('status' => 1))->orderBy('id', 'desc')->paginate(20);
         return view('backend/admin/main', compact('page_name', 'page_title', 'current_page', 'details', 'list'));

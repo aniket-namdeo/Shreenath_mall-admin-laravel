@@ -185,6 +185,11 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     Route::get('contractor-cashier/delete/{id}', [ContractorCashierController::class, 'destroy']);
 
+
+    Route::get('/contact-request', [App\Http\Controllers\ContactRequestController::class, 'index'])->name('contact.request');
+
+    Route::get('contact-request-delete/{id}', [App\Http\Controllers\ContactRequestController::class, 'destroy']);
+
 });
 
 
@@ -209,7 +214,7 @@ Route::prefix('cashier')->group(function () {
     Route::get('delivery-order-commission', [App\Http\Controllers\cashier\ContractorController::class, 'commission_list']);
 
     Route::get('our-order-commission', [App\Http\Controllers\cashier\ContractorController::class, 'our_commission_list']);
-
+    
 });
 
 Route::group(['middleware' => 'auth'], function () {
