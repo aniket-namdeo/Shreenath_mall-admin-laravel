@@ -30,10 +30,10 @@ class LoginController extends Controller
             'password' => $request->password,
         ];
     
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->where('isdeleted',0)->first();
     
         if ($user) {
-            if ($user->isdeleted == 0) {
+            if ($user->isdeleted == 1) {
                 return back()->with('error', 'User not Exit.');
             }
     

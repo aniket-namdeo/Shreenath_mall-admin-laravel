@@ -96,7 +96,7 @@
                         </h4>
                         
                         <div class="mbr-section-btn mt-4">
-                        <a class="btn btn-primary display-4" href="https://mobiri.se">Download</a>
+                        <a class="btn btn-primary display-4" href="{{ url('/'); }}">Download</a>
                         </div>
                     </div>
                 </div>
@@ -117,13 +117,13 @@
                     <strong>Join Our Supermarket Family!</strong>
                 </h3>
                 <div class="social-list align-center">
-                    <a class="iconfont-wrapper bg-facebook m-2 " target="_blank" href="https://mobiri.se">
+                    <a class="iconfont-wrapper bg-facebook m-2 " target="_blank" href="{{ url('/'); }}">
                         <span class="socicon-facebook socicon"></span>
                     </a>
-                    <a class="iconfont-wrapper bg-twitter m-2" href="https://mobiri.se" target="_blank">
+                    <a class="iconfont-wrapper bg-twitter m-2" href="{{ url('/'); }}" target="_blank">
                         <span class="socicon-twitter socicon"></span>
                     </a>
-                    <a class="iconfont-wrapper bg-instagram m-2" href="https://mobiri.se" target="_blank">
+                    <a class="iconfont-wrapper bg-instagram m-2" href="{{ url('/'); }}" target="_blank">
                         <span class="socicon-instagram socicon"></span>
                     </a>
                     
@@ -131,7 +131,7 @@
                     
                     
                     
-                    <a class="iconfont-wrapper bg-tiktok m-2" href="https://mobiri.se" target="_blank">
+                    <a class="iconfont-wrapper bg-tiktok m-2" href="{{ url('/'); }}" target="_blank">
                         <span class="socicon-tiktok socicon"></span>
                     </a>
                     
@@ -194,5 +194,4 @@
             </div>
         </div>
     </div>
-</section><section class="display-7" style="padding: 0;align-items: center;justify-content: center;flex-wrap: wrap;    align-content: center;display: flex;position: relative;height: 4rem;"><a href="https://mobiri.se/336110" style="flex: 1 1;height: 4rem;position: absolute;width: 100%;z-index: 1;">
-    <img alt="" style="height: 4rem;" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="></a><p style="margin: 0;text-align: center;" class="display-7">&#8204;</p><a style="z-index:1" href="https://mobirise.com/builder/ai-website-generator.html">AI Website Generator</a></section>
+</section>

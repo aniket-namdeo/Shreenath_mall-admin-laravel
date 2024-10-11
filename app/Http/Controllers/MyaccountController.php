@@ -28,7 +28,7 @@ class MyaccountController extends Controller
    
     public function destroy($id)
     {
-        $data = ['isdeleted' => 0];
+        $data = ['isdeleted' => 1];
     
         $result = User::where('id', $id)->update($data);
     
