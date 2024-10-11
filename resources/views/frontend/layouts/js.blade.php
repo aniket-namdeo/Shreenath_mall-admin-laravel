@@ -12,6 +12,13 @@
 <!-- SweetAlert JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<!-- Include SweetAlert CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+
+<!-- Include SweetAlert JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
+
 @if (session('success'))
         <script>
             Swal.fire({
@@ -34,10 +41,25 @@
         </script>
     @endif
 
+          
     <script>
     function confirmDelete() {
-        return confirm("Are you sure you want to delete your account? This action cannot be undone.");
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit the form to delete the account
+                document.getElementById('delete-account-form').submit();
+            }
+        });
     }
 </script>
+
 </body>
 </html>

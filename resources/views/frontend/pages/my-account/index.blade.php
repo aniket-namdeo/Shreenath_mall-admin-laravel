@@ -53,8 +53,8 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 mx-auto mbr-form" data-form-type="formoid">
-            <form action="{{ route('account-delete',['id' => $user->id]) }}" method="POST" 
-            class="mbr-form form-with-styler" data-form-title="Form Name"  onsubmit="return confirmDelete();">
+            <form id="delete-account-form"  action="{{ route('account-delete',['id' => $user->id]) }}" method="POST" 
+            class="mbr-form form-with-styler" data-form-title="Form Name"  >
 @csrf
                     <div class="row">
                         <div hidden="hidden" data-form-alert="" class="alert alert-success col-12">Thanks for filling out the form!</div>
@@ -72,7 +72,7 @@
                         </div>
                      
                         <div class="mbr-section-btn col-12 col-md-auto">
-                            <button type="submit" class="btn btn-danger display-4">Delete My Account</button>
+                        <button type="button" class="btn btn-danger display-4" onclick="confirmDelete()">Delete My Account</button>
 
                         </div>
                     </div>
@@ -83,10 +83,6 @@
 </section>
 
 <section data-bs-version="5.1" class="footer3 cid-uqPLl3jG0a" once="footers" id="footer03-5">
-
-        
-
-    
 
     <div class="container">
         <div class="row">
@@ -109,6 +105,3 @@
     </div>
 </section><section class="display-7" style="padding: 0;align-items: center;justify-content: center;flex-wrap: wrap;    align-content: center;display: flex;position: relative;height: 4rem;"><a href="https://mobiri.se/336110" style="flex: 1 1;height: 4rem;position: absolute;width: 100%;z-index: 1;"><img alt="" style="height: 4rem;" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="></a><p style="margin: 0;text-align: center;" class="display-7">&#8204;</p><a style="z-index:1" href="https://mobirise.com"> Website Builder Software</a></section><script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>  <script src="assets/parallax/jarallax.js"></script>  <script src="assets/smoothscroll/smooth-scroll.js"></script>  <script src="assets/ytplayer/index.js"></script>  <script src="assets/dropdown/js/navbar-dropdown.js"></script>  <script src="assets/theme/js/script.js"></script>  <script src="assets/formoid/formoid.min.js"></script>  
   
-  
-</body>
-</html>

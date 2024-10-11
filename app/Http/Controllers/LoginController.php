@@ -34,7 +34,7 @@ class LoginController extends Controller
     
         if ($user) {
             if ($user->isdeleted == 0) {
-                return back()->with('error', 'Your account has been deleted. Please contact support.');
+                return back()->with('error', 'User not Exit.');
             }
     
             $usertype = $user->user_type;
