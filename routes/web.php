@@ -31,13 +31,32 @@ use App\Http\Controllers\ContractorCashierController;
 //     return view('welcome');
 // });
 
-Route::get('/', [AuthController::class, 'login'])->name('login');
 
+
+Route::get('/', [App\Http\Controllers\Controller::class, 'index'])->name('default_home');
+
+Route::get('user-login', [App\Http\Controllers\LoginController::class, 'index'])->name('user-login');
+
+Route::post('/logindata', [App\Http\Controllers\LoginController::class, 'logindata'])->name('logindata');
+
+Route::get('my-account', [App\Http\Controllers\MyaccountController::class, 'index'])->name('my-account');
+
+Route::post('account-delete/{id}', [App\Http\Controllers\MyaccountController::class, 'destroy'])->name('account-delete');
+
+
+
+
+
+
+
+Route::get('/login', [AuthController::class, 'login'])->name('login');
 
 Route::get('/register', [AuthController::class, 'register'])->name('register.show');
+
 Route::post('/register', [AuthController::class, 'registerPost'])->name('register.store');
 
 Route::get('/login', [AuthController::class, 'login'])->name('login.show');
+
 Route::post('/login', [AuthController::class, 'loginPost'])->name('login.user');
 
 Route::prefix('admin')->middleware('auth')->group(function () {
